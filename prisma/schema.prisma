@@ -1,0 +1,210 @@
+// Prisma Schema for Travally - Social Travel Companion & Activity Discovery Platform
+// Compatible with SQLite (local development) and PostgreSQL / Supabase (production)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         String    @default("USER") // USER, ADMIN
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  profile               Profile?
+  activitiesOrganized   Activity[]        @relation("OrganizedActivities")
+  travelPlansOrganized  TravelPlan[]      @relation("OrganizedTravelPlans")
+  joinRequestsSent      JoinRequest[]     @relation("SentRequests")
+  participants          Participant[]
+  messagesSent          Message[]         @relation("SentMessages")
+  notifications         Notification[]    @relation("UserNotifications")
+  blocksGiven           Block[]           @relation("BlocksGiven")
+  blocksReceived        Block[]           @relation("BlocksReceived")
+  reportsCreated        Report[]          @relation("ReportsCreated")
+}
+
+model Profile {
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName           String
+  avatarUrl             String?
+  bio                   String?
+  birthDate             DateTime?
+  age                   Int?
+  gender                String?   // MALE, FEMALE, NON_BINARY, OTHER, PREFER_NOT_TO_SAY
+  city                  String?
+  country               String?
+  interests             String    @default("[]") // JSON string array: ["Cinema", "Coffee", "Hiking"]
+  preferredActivities   String    @default("[]") // JSON string array
+  connectionPreferences String    @default("{}") // JSON string: { "dating": false, "friendship": true, "travel": true }
+  isVerified            Boolean   @default(false)
+  verificationStatus    String    @default("UNVERIFIED") // UNVERIFIED, PENDING, VERIFIED
+  linkedinUrl           String?
+  hideContactDetails    Boolean   @default(true)
+  discoveryVisible      Boolean   @default(true)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Activity {
+  id                     String         @id @default(cuid())
+  organizerId            String
+  organizer              User           @relation("OrganizedActivities", fields: [organizerId], references: [id], onDelete: Cascade)
+  title                  String
+  description            String
+  category               String         // MOVIES, FOOD_CAFES, WALKING, STUDYING, EVENTS, SHOPPING, CITY_EXPLORATION, OTHER
+  date                   DateTime
+  startTime              String         // "19:00"
+  approxDurationHours    Float          @default(2.0)
+  locationName           String
+  meetingPointVenue      String?
+  maxParticipants        Int            @default(2)
+  currentAcceptedCount   Int            @default(0)
+  preferredAgeMin        Int?
+  preferredAgeMax        Int?
+  genderPreference       String         @default("ANY") // ANY, FEMALE_ONLY, MALE_ONLY
+  additionalRequirements String?
+  visibility             String         @default("PUBLIC") // PUBLIC, FILTERED
+  cutoffHoursBeforeStart Int            @default(2)
+  status                 String         @default("OPEN") // OPEN, FULL, CANCELLED, EXPIRED
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+
+  requests               JoinRequest[]
+  participants           Participant[]
+  conversations          Conversation[]
+}
+
+model TravelPlan {
+  id                      String         @id @default(cuid())
+  organizerId             String
+  organizer               User           @relation("OrganizedTravelPlans", fields: [organizerId], references: [id], onDelete: Cascade)
+  destination             String
+  departureCity           String
+  startDate               DateTime
+  endDate                 DateTime
+  budgetMin               Float?
+  budgetMax               Float?
+  currency                String         @default("USD")
+  travelStyle             String         @default("CULTURAL") // BACKPACKING, CULTURAL, SLOW_TRAVEL, ADVENTURE, LUXURY, ROAD_TRIP, RELAXATION
+  interests               String         @default("[]") // JSON string: ["Photography", "Museums", "Food"]
+  plannedAttractions      String?        @default("[]") // JSON string: ["Senso-ji", "Akihabara"]
+  accommodationPreference String         @default("FLEXIBLE") // HOSTEL, HOTEL, AIRBNB, FLEXIBLE
+  transportPreference     String         @default("FLEXIBLE") // FLIGHT, TRAIN, ROAD_TRIP, FLEXIBLE
+  groupSizeMax            Int            @default(3)
+  currentAcceptedCount    Int            @default(0)
+  companionPreferences    String?        @default("{}") // JSON string
+  status                  String         @default("OPEN") // OPEN, FULL, COMPLETED, CANCELLED
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+
+  requests                JoinRequest[]
+  participants            Participant[]
+  conversations           Conversation[]
+}
+
+model JoinRequest {
+  id           String      @id @default(cuid())
+  type         String      // ACTIVITY, TRAVEL
+  activityId   String?
+  activity     Activity?   @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  travelPlanId String?
+  travelPlan   TravelPlan? @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
+  applicantId  String
+  applicant    User        @relation("SentRequests", fields: [applicantId], references: [id], onDelete: Cascade)
+  status       String      @default("PENDING") // PENDING, ACCEPTED, DECLINED, CANCELLED, EXPIRED
+  introMessage String?
+  createdAt    DateTime    @default(now())
+  respondedAt  DateTime?
+
+  @@index([applicantId, activityId])
+  @@index([applicantId, travelPlanId])
+}
+
+model Participant {
+  id           String      @id @default(cuid())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activityId   String?
+  activity     Activity?   @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  travelPlanId String?
+  travelPlan   TravelPlan? @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
+  role         String      @default("MEMBER") // ORGANIZER, MEMBER
+  joinedAt     DateTime    @default(now())
+
+  @@index([userId, activityId])
+  @@index([userId, travelPlanId])
+}
+
+model Conversation {
+  id           String      @id @default(cuid())
+  type         String      // ACTIVITY, TRAVEL
+  activityId   String?
+  activity     Activity?   @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  travelPlanId String?
+  travelPlan   TravelPlan? @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
+  title        String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  messages     Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  readBy         String       @default("[]") // JSON string array of user IDs
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // REQUEST_RECEIVED, REQUEST_ACCEPTED, REQUEST_DECLINED, NEW_MESSAGE, ACTIVITY_CANCELLED, TRIP_UPDATE
+  title     String
+  body      String
+  actionUrl String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+model Block {
+  id        String   @id @default(cuid())
+  blockerId String
+  blocker   User     @relation("BlocksGiven", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String
+  blocked   User     @relation("BlocksReceived", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  reporterId  String
+  reporter    User     @relation("ReportsCreated", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType  String   // USER, ACTIVITY, TRAVEL
+  targetId    String
+  reason      String
+  details     String?
+  status      String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
+  actionTaken String?
+  createdAt   DateTime @default(now())
+}
