@@ -34,37 +34,11 @@ import { TripCard } from "@/components/travel/TripCard";
 import type { Activity } from "@/types";
 
 /**
- * Lightweight GPU-accelerated Scroll Reveal Hook using IntersectionObserver
+ * Smooth GPU-stable hook that keeps layout stable and prevents scroll hitching
  */
-function useScrollReveal(threshold = 0.1) {
+function useScrollReveal() {
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  React.useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-      setIsVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold, rootMargin: "0px 0px -30px 0px" }
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isVisible };
+  return { ref, isVisible: true };
 }
 
 // ── Realistic Showcase Data for Companion Activity Card ──
@@ -196,7 +170,7 @@ export function LandingPageClient() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-white dark:bg-[#090d0b] text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans overflow-x-hidden">
+    <div className="relative min-h-screen bg-white dark:bg-[#090d0b] text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans overflow-x-clip">
       {/* ── Rich Saturated Atmospheric Background Gradient Meshes ── */}
       <div className="absolute top-0 left-1/4 w-96 sm:w-[38rem] h-96 sm:h-[38rem] bg-gradient-to-tr from-emerald-500/28 via-teal-500/22 to-emerald-400/18 rounded-full blur-[110px] pointer-events-none transform-gpu" />
       <div className="absolute top-1/3 right-4 w-80 sm:w-[34rem] h-80 sm:h-[34rem] bg-gradient-to-bl from-orange-500/28 via-amber-500/22 to-rose-500/18 rounded-full blur-[110px] pointer-events-none transform-gpu" />
