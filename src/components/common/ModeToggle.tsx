@@ -22,7 +22,7 @@ export const ModeToggle: React.FC<ModeToggleProps> = ({
     <div
       role="radiogroup"
       aria-label="Application Mode Selection"
-      className={`inline-flex items-center p-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-inner ${className}`}
+      className={`inline-flex items-center p-1 rounded-full bg-slate-100 dark:bg-[#131c18] border border-slate-200 dark:border-emerald-950/60 shadow-inner ${className}`}
     >
       <button
         type="button"
@@ -33,7 +33,7 @@ export const ModeToggle: React.FC<ModeToggleProps> = ({
           size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm"
         } ${
           currentMode === "companion"
-            ? "bg-teal-600 text-white shadow-sm font-semibold"
+            ? "bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 text-emerald-900 dark:text-emerald-200 border border-emerald-300/80 dark:border-emerald-800/70 shadow-xs font-bold"
             : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
         }`}
       >
@@ -50,7 +50,7 @@ export const ModeToggle: React.FC<ModeToggleProps> = ({
           size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm"
         } ${
           currentMode === "travel"
-            ? "bg-amber-600 text-white shadow-sm font-semibold"
+            ? "bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 dark:from-orange-950/80 dark:to-amber-950/70 text-orange-900 dark:text-orange-200 border border-orange-300/80 dark:border-orange-800/70 shadow-xs font-bold"
             : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
         }`}
       >

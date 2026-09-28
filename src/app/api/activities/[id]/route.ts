@@ -62,6 +62,14 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       activity,
       userRequest: activity.requests && activity.requests.length > 0 ? activity.requests[0] : null,
       isOrganizer: currentUser?.id === activity.organizerId,
+      currentUser: currentUser
+        ? {
+            id: currentUser.id,
+            displayName: currentUser.displayName,
+            email: currentUser.email,
+            isVerified: currentUser.isVerified,
+          }
+        : null,
     });
   } catch (error) {
     console.error("GET activity error:", error);

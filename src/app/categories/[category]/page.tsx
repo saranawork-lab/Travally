@@ -115,7 +115,7 @@ export default async function CategorySEOPage({
       </div>
 
       {/* Header */}
-      <div className="p-8 rounded-3xl bg-gradient-to-r from-teal-500/10 via-teal-500/5 to-transparent border border-teal-500/20 space-y-3">
+      <div className="p-8 rounded-3xl bg-gradient-to-r from-brand-500/10 via-brand-500/5 to-transparent border border-brand-500/20 space-y-3">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           {catInfo.title}
         </h1>
@@ -132,19 +132,19 @@ export default async function CategorySEOPage({
           </h2>
           <Link
             href="/activities/create"
-            className="text-xs font-semibold text-teal-600 dark:text-teal-400 hover:underline"
+            className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline"
           >
             + Post an Activity in this Category
           </Link>
         </div>
 
         {activities.length === 0 ? (
-          <div className="p-12 text-center bg-white dark:bg-slate-850 rounded-3xl border border-slate-200 dark:border-slate-800 text-xs text-slate-400 space-y-3">
-            <Sparkles className="w-8 h-8 text-teal-500 mx-auto" />
+          <div className="p-12 text-center bg-white dark:bg-dark-card rounded-3xl border border-slate-200 dark:border-dark-border text-xs text-slate-400 space-y-3">
+            <Sparkles className="w-8 h-8 text-brand-500 mx-auto" />
             <p>No open activities currently in this category. Be the first to start one!</p>
             <Link
               href="/activities/create"
-              className="inline-flex px-4 py-2 rounded-xl text-xs font-semibold text-white bg-teal-600"
+              className="inline-flex px-4 py-2 rounded-xl text-xs font-semibold text-white bg-brand-600 hover:bg-brand-500 transition shadow-sm"
             >
               Organize an Activity
             </Link>

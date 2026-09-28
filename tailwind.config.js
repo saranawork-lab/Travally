@@ -9,46 +9,86 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Travally Primary Brand: Vibrant Emerald & Forest Green
         brand: {
-          50: "#f0fdfa",
-          100: "#ccfbf1",
-          200: "#99f6e4",
-          300: "#5eead4",
-          400: "#2dd4bf",
-          500: "#14b8a6",
-          600: "#0d9488",
-          700: "#0f766e",
-          800: "#115e59",
-          900: "#134e4a",
-          950: "#042f2e",
+          50: "#f0fdf4",
+          100: "#dcfce7",
+          200: "#bbf7d0",
+          300: "#86efac",
+          400: "#4ade80",
+          500: "#22c55e",
+          600: "#16a34a",
+          700: "#15803d",
+          800: "#166534",
+          900: "#14532d",
+          950: "#052e16",
         },
+        // Travally Travel & Adventure Accent: Energetic Warm Orange
         travel: {
-          50: "#fffbeb",
-          100: "#fef3c7",
-          200: "#fde68a",
-          300: "#fcd34d",
-          400: "#fbbf24",
-          500: "#f59e0b",
-          600: "#d97706",
-          700: "#b45309",
-          800: "#92400e",
-          900: "#78350f",
+          50: "#fff7ed",
+          100: "#ffedd5",
+          200: "#fed7aa",
+          300: "#fdba74",
+          400: "#fb923c",
+          500: "#f97316",
+          600: "#ea580c",
+          700: "#c2410c",
+          800: "#9a3412",
+          900: "#7c2d12",
+          950: "#431407",
         },
-        slate: {
-          850: "#131b2e",
-          950: "#070b14",
-        }
+        // Modern Dark Theme Surface Colors (Deep slate with emerald undertone)
+        dark: {
+          bg: "#090d0b",
+          surface: "#0f1613",
+          card: "#131c18",
+          elevated: "#18241f",
+          border: "rgba(34, 197, 94, 0.12)",
+          borderHover: "rgba(34, 197, 94, 0.25)",
+        },
+        // Override teal to map cleanly into the new Green palette for backward-compatibility
+        teal: {
+          50: "#f0fdf4",
+          100: "#dcfce7",
+          200: "#bbf7d0",
+          300: "#86efac",
+          400: "#4ade80",
+          500: "#22c55e",
+          600: "#16a34a",
+          700: "#15803d",
+          800: "#166534",
+          900: "#14532d",
+          950: "#052e16",
+        },
+        // Override amber to map cleanly into the new Orange palette for backward-compatibility
+        amber: {
+          50: "#fff7ed",
+          100: "#ffedd5",
+          200: "#fed7aa",
+          300: "#fdba74",
+          400: "#fb923c",
+          500: "#f97316",
+          600: "#ea580c",
+          700: "#c2410c",
+          800: "#9a3412",
+          900: "#7c2d12",
+          950: "#431407",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],
       },
       boxShadow: {
-        glow: "0 0 25px -5px rgba(20, 184, 166, 0.25)",
-        "glow-travel": "0 0 25px -5px rgba(245, 158, 11, 0.25)",
+        glow: "0 0 25px -5px rgba(34, 197, 94, 0.3)",
+        "glow-green": "0 0 25px -5px rgba(34, 197, 94, 0.35)",
+        "glow-travel": "0 0 25px -5px rgba(249, 115, 22, 0.35)",
+        "glow-orange": "0 0 25px -5px rgba(249, 115, 22, 0.35)",
       },
       animation: {
         "fade-in": "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
         "slide-up": "slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+        shimmer: "shimmer 2.5s ease-in-out infinite",
+        "pulse-slow": "pulseSlow 8s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -58,6 +98,14 @@ module.exports = {
         slideUp: {
           "0%": { opacity: "0", transform: "translateY(12px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-150%) skewX(-15deg)" },
+          "100%": { transform: "translateX(250%) skewX(-15deg)" },
+        },
+        pulseSlow: {
+          "0%, 100%": { opacity: "0.4", transform: "scale(1)" },
+          "50%": { opacity: "0.7", transform: "scale(1.08)" },
         },
       },
     },

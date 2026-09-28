@@ -90,6 +90,14 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       },
       userRequest: travelPlan.requests && travelPlan.requests.length > 0 ? travelPlan.requests[0] : null,
       isOrganizer: currentUser?.id === travelPlan.organizerId,
+      currentUser: currentUser
+        ? {
+            id: currentUser.id,
+            displayName: currentUser.displayName,
+            email: currentUser.email,
+            isVerified: currentUser.isVerified,
+          }
+        : null,
     });
   } catch (error) {
     console.error("GET travel plan error:", error);

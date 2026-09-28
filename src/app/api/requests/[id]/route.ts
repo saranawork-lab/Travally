@@ -46,7 +46,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ error: `Request has already been ${joinRequest.status.toLowerCase()}.` }, { status: 400 });
     }
 
-    if (action === "DECLINE") {
+    if (action === "DECLINE" || action === "NOT_INTERESTED") {
       const updated = await db.joinRequest.update({
         where: { id },
         data: {
@@ -60,12 +60,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           userId: joinRequest.applicantId,
           type: "REQUEST_DECLINED",
           title: "Request Update",
-          body: `Your request to join "${isActivity ? joinRequest.activity?.title : joinRequest.travelPlan?.destination}" was declined.`,
+          body: `The organizer was not able to accommodate your request for "${isActivity ? joinRequest.activity?.title : joinRequest.travelPlan?.destination}".`,
           actionUrl: "/discover",
         },
       });
 
-      return NextResponse.json({ success: true, request: updated });
+      return NextResponse.json({ success: true, request: updated, notInterested: action === "NOT_INTERESTED" });
     }
 
     // Handle ACCEPT
@@ -112,7 +112,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         where: { id: activity.id },
         data: {
           currentAcceptedCount: newAcceptedCount,
-          status: isNowFull ? "FULL" : activity.status,
+          status: isNowFull ? "CLOSED" : activity.status,
         },
       });
 
@@ -193,7 +193,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         where: { id: trip.id },
         data: {
           currentAcceptedCount: newAcceptedCount,
-          status: isNowFull ? "FULL" : trip.status,
+          status: isNowFull ? "CLOSED" : trip.status,
         },
       });
 
@@ -251,22 +251,104 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     const joinRequest = await db.joinRequest.findUnique({
       where: { id },
+      include: {
+        activity: true,
+        travelPlan: true,
+      },
     });
 
     if (!joinRequest) {
       return NextResponse.json({ error: "Request not found" }, { status: 404 });
     }
 
-    if (joinRequest.applicantId !== user.id) {
+    if (joinRequest.applicantId !== user.id && user.role !== "ADMIN") {
       return NextResponse.json({ error: "You can only cancel your own requests." }, { status: 403 });
     }
 
+    const wasAccepted = joinRequest.status === "ACCEPTED";
+
+    // 1. Mark request as CANCELLED
     const cancelled = await db.joinRequest.update({
       where: { id },
       data: { status: "CANCELLED" },
     });
 
-    return NextResponse.json({ success: true, message: "Request cancelled successfully", request: cancelled });
+    // 2. If participant was confirmed, remove participant and decrement capacity
+    if (wasAccepted) {
+      if (joinRequest.activityId && joinRequest.activity) {
+        const activity = joinRequest.activity;
+        // Remove from participants
+        await db.participant.deleteMany({
+          where: {
+            userId: user.id,
+            activityId: activity.id,
+          },
+        });
+
+        const newCount = Math.max(0, activity.currentAcceptedCount - 1);
+        const wasFull = activity.currentAcceptedCount >= activity.maxParticipants || activity.status === "CLOSED" || activity.status === "FULL";
+
+        // Do not reopen automatically! Keep CLOSED so it doesn't automatically expose to public feed
+        await db.activity.update({
+          where: { id: activity.id },
+          data: {
+            currentAcceptedCount: newCount,
+            status: wasFull ? "CLOSED" : activity.status,
+          },
+        });
+
+        // Trigger prompt notification to event creator
+        if (wasFull) {
+          await db.notification.create({
+            data: {
+              userId: activity.organizerId,
+              type: "SPOT_OPENED",
+              title: "A spot has opened up!",
+              body: `A participant left "${activity.title}". Would you like to reopen this event to the public? (${newCount}/${activity.maxParticipants} spots filled)`,
+              actionUrl: `/activities/${activity.id}?prompt=reopen`,
+            },
+          });
+        }
+      } else if (joinRequest.travelPlanId && joinRequest.travelPlan) {
+        const trip = joinRequest.travelPlan;
+        await db.participant.deleteMany({
+          where: {
+            userId: user.id,
+            travelPlanId: trip.id,
+          },
+        });
+
+        const newCount = Math.max(0, trip.currentAcceptedCount - 1);
+        const wasFull = trip.currentAcceptedCount >= trip.groupSizeMax || trip.status === "CLOSED" || trip.status === "FULL";
+
+        await db.travelPlan.update({
+          where: { id: trip.id },
+          data: {
+            currentAcceptedCount: newCount,
+            status: wasFull ? "CLOSED" : trip.status,
+          },
+        });
+
+        if (wasFull) {
+          await db.notification.create({
+            data: {
+              userId: trip.organizerId,
+              type: "SPOT_OPENED",
+              title: "A spot has opened up!",
+              body: `A traveler left "${trip.destination}". Would you like to reopen this trip to the public? (${newCount}/${trip.groupSizeMax} spots filled)`,
+              actionUrl: `/travel/${trip.id}?prompt=reopen`,
+            },
+          });
+        }
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Request cancelled successfully",
+      request: cancelled,
+      wasAccepted,
+    });
   } catch (error) {
     console.error("DELETE request error:", error);
     return NextResponse.json({ error: "Failed to cancel request" }, { status: 500 });

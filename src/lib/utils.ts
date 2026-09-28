@@ -1,6 +1,5 @@
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { format, formatDistanceToNow, isAfter, isBefore, addHours } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -8,32 +7,57 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
-  return format(d, "EEE, MMM d, yyyy");
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 export function formatShortDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
-  return format(d, "MMM d");
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+export function formatMessageTime(date: Date | string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 }
 
 export function formatTimeAgo(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
-  return formatDistanceToNow(d, { addSuffix: true });
+  if (isNaN(d.getTime())) return "";
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - d.getTime()) / 1000);
+  if (diffInSeconds < 60) return "just now";
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) return `${diffInDays}d ago`;
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 export function isActivityUpcoming(date: Date | string, startTime: string): boolean {
   const d = typeof date === "string" ? new Date(date) : new Date(date);
-  const [hours, minutes] = startTime.split(":").map(Number);
+  if (isNaN(d.getTime())) return false;
+  const [hours, minutes] = (startTime || "00:00").split(":").map(Number);
   d.setHours(hours || 0, minutes || 0, 0, 0);
-  return isAfter(d, new Date());
+  return d.getTime() > Date.now();
 }
 
 export function isPastCutoff(date: Date | string, startTime: string, cutoffHours: number): boolean {
   const d = typeof date === "string" ? new Date(date) : new Date(date);
-  const [hours, minutes] = startTime.split(":").map(Number);
+  if (isNaN(d.getTime())) return false;
+  const [hours, minutes] = (startTime || "00:00").split(":").map(Number);
   d.setHours(hours || 0, minutes || 0, 0, 0);
-  const cutoffTime = addHours(new Date(), cutoffHours);
-  return isBefore(d, cutoffTime);
+  const cutoffTime = Date.now() + cutoffHours * 60 * 60 * 1000;
+  return d.getTime() < cutoffTime;
 }
 
 export function safeJsonParse<T>(jsonString: string | null | undefined, fallback: T): T {

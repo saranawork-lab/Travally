@@ -11,6 +11,15 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search");
     const status = searchParams.get("status") || "OPEN";
 
+    // MVO80 Matching Algorithm Configuration
+    const SCORE_WEIGHTS = {
+      EXACT_CITY_MATCH: 50,
+      INTEREST_MATCH: 30,
+      VERIFIED_HOST: 15,
+      TRENDING_PER_USER: 5,
+      URGENCY_MAX: 20,
+    };
+
     const currentUser = await getCurrentUser();
 
     // Find blocked users to exclude
@@ -71,10 +80,130 @@ export async function GET(req: NextRequest) {
             }
           : false,
       },
-      orderBy: { date: "asc" },
     });
 
-    return NextResponse.json({ activities });
+    // Filter open activities and schedule background capacity sync without blocking GET
+    const fullActivityIdsToClose: string[] = [];
+    const sanitizedActivities = activities.filter((act) => {
+      const isFull = act.currentAcceptedCount >= act.maxParticipants;
+      if (isFull) {
+        if (act.status !== "CLOSED") {
+          fullActivityIdsToClose.push(act.id);
+          act.status = "CLOSED";
+        }
+        if (status === "OPEN") return false;
+      }
+      return true;
+    });
+
+    if (fullActivityIdsToClose.length > 0) {
+      db.activity
+        .updateMany({
+          where: { id: { in: fullActivityIdsToClose } },
+          data: { status: "CLOSED" },
+        })
+        .catch((err) => console.error("Non-blocking activity close error:", err));
+    }
+
+    // High-Level Matching Algorithm implementation
+    let matchedActivities = sanitizedActivities;
+
+    if (currentUser) {
+      // 1. Fetch user's profile to get interests, preferred activities, city, age, and gender
+      const userProfile = await db.profile.findUnique({
+        where: { userId: currentUser.id },
+      });
+
+      const userCity = userProfile?.city?.toLowerCase() || "";
+      const userAge = userProfile?.age;
+      const userGender = userProfile?.gender || "PREFER_NOT_TO_SAY";
+
+      let userInterests: string[] = [];
+      let userPreferredActs: string[] = [];
+      try {
+        if (userProfile?.interests) {
+          userInterests = JSON.parse(userProfile.interests as string).map((i: string) => i.toLowerCase());
+        }
+      } catch (e) {}
+      try {
+        if (userProfile?.preferredActivities) {
+          userPreferredActs = JSON.parse(userProfile.preferredActivities as string).map((a: string) => a.toLowerCase());
+        }
+      } catch (e) {}
+
+      const allUserPreferences = Array.from(new Set([...userInterests, ...userPreferredActs]));
+
+      // 2. Score each activity with Multi-Factor Matching Algorithm
+      const now = new Date().getTime();
+      const scoredActivities = sanitizedActivities.map((activity) => {
+        let score = 0;
+
+        // A. Location Match (City/Area/Locality)
+        if (userCity && activity.locationName && (
+          activity.locationName.toLowerCase().includes(userCity) ||
+          userCity.includes(activity.locationName.toLowerCase())
+        )) {
+          score += SCORE_WEIGHTS.EXACT_CITY_MATCH; // +50
+        }
+
+        // B. Interest & Category Semantic Affinity Match
+        const activityCategory = (activity.category || "").toLowerCase();
+        const activityTitle = activity.title.toLowerCase();
+        const activityDesc = activity.description.toLowerCase();
+
+        const hasCategoryMatch = allUserPreferences.some(pref =>
+          activityCategory.includes(pref) || pref.includes(activityCategory) ||
+          activityTitle.includes(pref) || activityDesc.includes(pref)
+        );
+        if (hasCategoryMatch) {
+          score += SCORE_WEIGHTS.INTEREST_MATCH; // +30
+        }
+
+        // C. Verified Host Trust Factor
+        if (activity.organizer.profile?.isVerified) {
+          score += SCORE_WEIGHTS.VERIFIED_HOST; // +15
+        }
+
+        // D. Demographic Alignment (Age & Gender preference)
+        if (userAge && activity.preferredAgeMin && activity.preferredAgeMax) {
+          if (userAge >= activity.preferredAgeMin && userAge <= activity.preferredAgeMax) {
+            score += 10;
+          }
+        }
+        if (activity.genderPreference === "ANY" || activity.genderPreference === userGender) {
+          score += 5;
+        }
+
+        // E. Social Proof & Urgency Sweet-Spot
+        const spotsRemaining = activity.maxParticipants - activity.currentAcceptedCount;
+        if (spotsRemaining === 1) {
+          score += 15; // Urgency bonus: almost full!
+        } else if (spotsRemaining > 1) {
+          score += (activity.currentAcceptedCount || 0) * SCORE_WEIGHTS.TRENDING_PER_USER;
+        }
+
+        // F. Time Proximity (Next 2-7 days gets peak relevance)
+        const activityTime = new Date(activity.date).getTime();
+        const timeDiffDays = (activityTime - now) / (1000 * 3600 * 24);
+        if (timeDiffDays >= 0 && timeDiffDays <= 7) {
+          score += Math.max(0, SCORE_WEIGHTS.URGENCY_MAX - (timeDiffDays * 2));
+        }
+
+        return { ...activity, matchScore: score };
+      });
+
+      // 3. Sort by matchScore descending, then by upcoming date
+      matchedActivities = scoredActivities.sort((a, b) => {
+        if (b.matchScore !== a.matchScore) {
+          return b.matchScore - a.matchScore;
+        }
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      });
+    } else {
+      matchedActivities = sanitizedActivities.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    }
+
+    return NextResponse.json({ activities: matchedActivities });
   } catch (error) {
     console.error("GET activities error:", error);
     return NextResponse.json({ error: "Failed to fetch activities" }, { status: 500 });
@@ -104,6 +233,7 @@ export async function POST(req: NextRequest) {
       genderPreference,
       additionalRequirements,
       cutoffHoursBeforeStart,
+      imageUrl,
     } = body;
 
     // Note: locationName and maxParticipants are now optional as requested
@@ -137,6 +267,8 @@ export async function POST(req: NextRequest) {
         genderPreference: genderPreference || "ANY",
         additionalRequirements: additionalRequirements ? additionalRequirements.trim() : null,
         cutoffHoursBeforeStart: cutoffHoursBeforeStart ? parseInt(cutoffHoursBeforeStart, 10) : 2,
+        // @ts-ignore: Schema updated but types may not reflect it yet without restarting dev server
+        imageUrl: imageUrl ? imageUrl.trim() : null,
         status: "OPEN",
       },
     });

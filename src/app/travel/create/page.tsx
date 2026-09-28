@@ -33,7 +33,7 @@ const STYLES: TravelStyleOption[] = [
   {
     id: "CULTURAL",
     label: "Cultural & Heritage",
-    icon: <Landmark className="w-5 h-5 text-amber-500" />,
+    icon: <Landmark className="w-5 h-5 text-orange-500" />,
     desc: "Historic districts, architecture, museums, culinary heritage",
     popular: true,
   },
@@ -47,31 +47,31 @@ const STYLES: TravelStyleOption[] = [
   {
     id: "BACKPACKING",
     label: "Backpacking & Hostels",
-    icon: <Backpack className="w-5 h-5 text-teal-500" />,
+    icon: <Backpack className="w-5 h-5 text-orange-600" />,
     desc: "Hostels, flexible transit, budget-conscious exploration",
   },
   {
     id: "ADVENTURE",
     label: "Adventure & Hiking",
-    icon: <Mountain className="w-5 h-5 text-indigo-500" />,
+    icon: <Mountain className="w-5 h-5 text-emerald-600" />,
     desc: "Mountain trails, outdoor trekking, coastal walks",
   },
   {
     id: "ROAD_TRIP",
     label: "Scenic Road Trip",
-    icon: <Car className="w-5 h-5 text-cyan-500" />,
+    icon: <Car className="w-5 h-5 text-orange-500" />,
     desc: "Coastal drives, countryside exploration, road journeys",
   },
   {
     id: "LUXURY",
     label: "Boutique & Luxury",
-    icon: <Sparkles className="w-5 h-5 text-rose-500" />,
+    icon: <Sparkles className="w-5 h-5 text-emerald-500" />,
     desc: "Curated boutique stays, fine dining, private tours",
   },
   {
     id: "RELAXATION",
     label: "Relaxation & Wellness",
-    icon: <Heart className="w-5 h-5 text-amber-600" />,
+    icon: <Heart className="w-5 h-5 text-orange-500" />,
     desc: "Hot springs, coastal retreats, peaceful escapes",
   },
 ];
@@ -88,24 +88,24 @@ export default function CreateTravelPlanPage() {
     departureCity: "",
     startDate: "",
     endDate: "",
-    budgetMin: "1500",
-    budgetMax: "2500",
-    currency: "USD",
-    accommodationPreference: "AIRBNB",
+    budgetMin: "8000",
+    budgetMax: "15000",
+    currency: "INR",
+    accommodationPreference: "HOSTEL",
     transportPreference: "TRAIN",
   });
 
   const [attractionInput, setAttractionInput] = useState("");
   const [attractions, setAttractions] = useState<string[]>([
-    "Historic Old Town & Temples",
-    "Local Street Food Crawl",
+    "Chalal Riverside Trail & Pine Forest",
+    "Manikaran Hot Springs & Gurudwara",
   ]);
 
   const [interestInput, setInterestInput] = useState("");
   const [interests, setInterests] = useState<string[]>([
-    "Photography",
-    "Architecture",
-    "Cultural Travel",
+    "Mountain Treks",
+    "Backpacking",
+    "Himachali Cafes",
   ]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,7 +114,7 @@ export default function CreateTravelPlanPage() {
   const selectedStyleObj = STYLES.find((s) => s.id === formData.travelStyle);
 
   const handleSelectStyle = (styleId: string) => {
-    setFormData((prev) => ({ ...prev, travelStyle: styleId }));
+    setFormData({ ...formData, travelStyle: styleId });
     setStep(2);
   };
 
@@ -150,7 +150,6 @@ export default function CreateTravelPlanPage() {
     setError(null);
 
     try {
-      // Location and max companions removed from form; sensible defaults sent
       const payload = {
         ...formData,
         groupSizeMax: "3",
@@ -182,25 +181,25 @@ export default function CreateTravelPlanPage() {
       <div>
         <Link
           href="/discover?mode=travel"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 transition"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-orange-500 dark:hover:text-orange-400 transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Travel Expeditions</span>
         </Link>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-300 dark:border-slate-800 p-6 sm:p-8 shadow-md relative overflow-hidden">
+      <div className="bg-white dark:bg-[#111815] rounded-3xl border border-slate-200 dark:border-emerald-950/70 p-6 sm:p-8 shadow-xl relative overflow-hidden">
         {/* Step Progress Header */}
-        <div className="mb-6 pb-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="mb-6 pb-4 border-b border-slate-100 dark:border-emerald-950/60 flex items-center justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-200 mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-950/80 text-orange-800 dark:text-orange-200 mb-2">
               <Compass className="w-3.5 h-3.5" />
               <span>Travel Mode</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Publish a Travel Plan
             </h1>
-            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-1 font-medium">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 font-medium">
               {step === 1
                 ? "First, select your travel style tag."
                 : "Enter your destination, dates, and journey details."}
@@ -208,28 +207,26 @@ export default function CreateTravelPlanPage() {
           </div>
 
           <div className="text-right">
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100 dark:bg-[#16201b] text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-emerald-950/60">
               Step {step} of 2
             </span>
           </div>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-800 text-xs font-semibold text-rose-800 dark:text-rose-200">
+          <div className="mb-6 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-900/60 text-xs font-semibold text-rose-800 dark:text-rose-200">
             {error}
           </div>
         )}
 
-        {/* ========================================================================= */}
         {/* STEP 1: CHOOSE TRAVEL STYLE TAG */}
-        {/* ========================================================================= */}
         {step === 1 && (
           <div className="animate-slide-in-left space-y-6">
             <div className="space-y-1">
               <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                 Select Your Travel Style
               </h2>
-              <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
                 Tap on any style tag below to slide forward to trip details.
               </p>
             </div>
@@ -244,11 +241,11 @@ export default function CreateTravelPlanPage() {
                     onClick={() => handleSelectStyle(st.id)}
                     className={`p-4 rounded-2xl text-left border-2 transition-all flex items-start gap-3.5 group hover:shadow-md ${
                       isSelected
-                        ? "bg-amber-50 dark:bg-amber-950/70 border-amber-600 text-slate-900 dark:text-white ring-2 ring-amber-500/30"
-                        : "bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 hover:border-amber-400 dark:hover:border-amber-500 hover:bg-white dark:hover:bg-slate-800"
+                        ? "bg-orange-50 dark:bg-orange-950/70 border-orange-500 text-slate-900 dark:text-white ring-2 ring-orange-500/30"
+                        : "bg-slate-50 dark:bg-[#16201b] border-slate-200 dark:border-emerald-950/70 text-slate-900 dark:text-slate-100 hover:border-orange-400 dark:hover:border-orange-500 hover:bg-white dark:hover:bg-[#18241f]"
                     }`}
                   >
-                    <div className="p-2.5 rounded-xl bg-white dark:bg-slate-700 shadow-sm border border-slate-200 dark:border-slate-600 shrink-0 group-hover:scale-110 transition-transform">
+                    <div className="p-2.5 rounded-xl bg-white dark:bg-[#1c2822] shadow-sm border border-slate-200 dark:border-emerald-950/80 shrink-0 group-hover:scale-110 transition-transform">
                       {st.icon}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -257,7 +254,7 @@ export default function CreateTravelPlanPage() {
                           {st.label}
                         </span>
                         {st.popular && (
-                          <span className="text-[10px] font-bold text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/60 px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] font-bold text-orange-800 dark:text-orange-200 bg-orange-100 dark:bg-orange-900/60 px-2 py-0.5 rounded-full">
                             Popular
                           </span>
                         )}
@@ -266,7 +263,7 @@ export default function CreateTravelPlanPage() {
                         {st.desc}
                       </span>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 self-center shrink-0 group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-orange-500 dark:group-hover:text-orange-400 self-center shrink-0 group-hover:translate-x-1 transition-all" />
                   </button>
                 );
               })}
@@ -274,19 +271,17 @@ export default function CreateTravelPlanPage() {
           </div>
         )}
 
-        {/* ========================================================================= */}
-        {/* STEP 2: TRIP DETAILS (SLIDES IN) */}
-        {/* ========================================================================= */}
+        {/* STEP 2: TRIP DETAILS */}
         {step === 2 && (
           <div className="animate-slide-in-right space-y-6">
             {/* Active Style Bar & Back Button */}
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800/60">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-white dark:bg-slate-800 shadow-xs">
+                <div className="p-2 rounded-xl bg-white dark:bg-[#16201b] shadow-xs">
                   {selectedStyleObj?.icon}
                 </div>
                 <div>
-                  <span className="text-[11px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider block">
+                  <span className="text-[11px] font-bold text-orange-800 dark:text-orange-300 uppercase tracking-wider block">
                     Selected Travel Style
                   </span>
                   <span className="text-sm font-extrabold text-slate-900 dark:text-white">
@@ -297,7 +292,7 @@ export default function CreateTravelPlanPage() {
               <button
                 type="button"
                 onClick={handleBackToStyles}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-800 dark:text-amber-300 bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-slate-700 transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-orange-800 dark:text-orange-300 bg-white dark:bg-[#16201b] border border-orange-300 dark:border-orange-700 hover:bg-orange-100 dark:hover:bg-[#1c2822] transition"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Change Style</span>
@@ -317,7 +312,7 @@ export default function CreateTravelPlanPage() {
                     placeholder="e.g. Tokyo & Kyoto, Japan"
                     value={formData.destination}
                     onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3.5 py-2.5 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                 </div>
 
@@ -331,7 +326,7 @@ export default function CreateTravelPlanPage() {
                     placeholder="e.g. San Francisco or Flexible"
                     value={formData.departureCity}
                     onChange={(e) => setFormData({ ...formData, departureCity: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3.5 py-2.5 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -348,7 +343,7 @@ export default function CreateTravelPlanPage() {
                     min={new Date().toISOString().split("T")[0]}
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3.5 py-2.5 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                 </div>
 
@@ -362,34 +357,34 @@ export default function CreateTravelPlanPage() {
                     min={formData.startDate || new Date().toISOString().split("T")[0]}
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3.5 py-2.5 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                 </div>
               </div>
 
-              {/* Budget & Accommodation (Max companions removed) */}
+              {/* Budget & Accommodation */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
-                    Min Budget ($)
+                    Min Budget (₹ INR)
                   </label>
                   <input
                     type="number"
                     value={formData.budgetMin}
                     onChange={(e) => setFormData({ ...formData, budgetMin: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
-                    Max Budget ($)
+                    Max Budget (₹ INR)
                   </label>
                   <input
                     type="number"
                     value={formData.budgetMax}
                     onChange={(e) => setFormData({ ...formData, budgetMax: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                 </div>
 
@@ -400,12 +395,12 @@ export default function CreateTravelPlanPage() {
                   <select
                     value={formData.accommodationPreference}
                     onChange={(e) => setFormData({ ...formData, accommodationPreference: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   >
-                    <option value="AIRBNB">Airbnb / Apartments</option>
-                    <option value="HOTEL">Hotels</option>
-                    <option value="HOSTEL">Hostels</option>
-                    <option value="FLEXIBLE">Flexible</option>
+                    <option value="HOSTEL">Zostel / Backpackers Hostels</option>
+                    <option value="HOMESTAY">Local Homestays</option>
+                    <option value="HOTEL">Boutique Hotels & Resorts</option>
+                    <option value="FLEXIBLE">Flexible / Camping</option>
                   </select>
                 </div>
               </div>
@@ -418,7 +413,7 @@ export default function CreateTravelPlanPage() {
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
-                    placeholder="Add an attraction (e.g. Senso-ji temple, Shibuya sky, tea tasting)"
+                    placeholder="Add an attraction (e.g. Kasol Chalal trail, Hampi ruins, Munnar tea estate)"
                     value={attractionInput}
                     onChange={(e) => setAttractionInput(e.target.value)}
                     onKeyDown={(e) => {
@@ -427,12 +422,12 @@ export default function CreateTravelPlanPage() {
                         addAttraction();
                       }
                     }}
-                    className="flex-1 rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="flex-1 rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3.5 py-2.5 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                   <button
                     type="button"
                     onClick={addAttraction}
-                    className="px-4 py-2 rounded-2xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 transition"
+                    className="px-4 py-2 rounded-2xl text-xs font-bold bg-slate-100 dark:bg-[#18241f] text-slate-900 dark:text-slate-100 hover:bg-slate-200 transition"
                   >
                     Add
                   </button>
@@ -441,7 +436,7 @@ export default function CreateTravelPlanPage() {
                   {attractions.map((att, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-[#16201b] text-xs font-medium text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-emerald-950/70"
                     >
                       <span>{att}</span>
                       <button
@@ -449,22 +444,22 @@ export default function CreateTravelPlanPage() {
                         onClick={() => removeAttraction(i)}
                         className="text-slate-400 hover:text-rose-500"
                       >
-                        <X className="w-3.5 h-3.5" />
+                        <X className="w-3 h-3" />
                       </button>
                     </span>
                   ))}
                 </div>
               </div>
 
-              {/* Travel Interests */}
+              {/* Trip Passions & Interests */}
               <div>
                 <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
-                  Trip Interests & Passions
+                  Trip Passions & Common Interests
                 </label>
                 <div className="flex gap-2 mb-2">
                   <input
                     type="text"
-                    placeholder="Add an interest tag (e.g. Photography, Street Food, Hiking)"
+                    placeholder="Add an interest (e.g. Hiking, Museums, Food tours)"
                     value={interestInput}
                     onChange={(e) => setInterestInput(e.target.value)}
                     onKeyDown={(e) => {
@@ -473,29 +468,29 @@ export default function CreateTravelPlanPage() {
                         addInterest();
                       }
                     }}
-                    className="flex-1 rounded-2xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500"
+                    className="flex-1 rounded-2xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] px-3.5 py-2.5 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/25 focus:border-orange-500"
                   />
                   <button
                     type="button"
                     onClick={addInterest}
-                    className="px-4 py-2 rounded-2xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-200 transition"
+                    className="px-4 py-2 rounded-2xl text-xs font-bold bg-slate-100 dark:bg-[#18241f] text-slate-900 dark:text-slate-100 hover:bg-slate-200 transition"
                   >
                     Add
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {interests.map((int, i) => (
+                  {interests.map((it, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 text-xs font-semibold border border-amber-300/80 dark:border-amber-800/80"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-orange-50 dark:bg-orange-950/50 text-xs font-medium text-orange-800 dark:text-orange-200 border border-orange-200 dark:border-orange-800/60"
                     >
-                      <span>{int}</span>
+                      <span>{it}</span>
                       <button
                         type="button"
                         onClick={() => removeInterest(i)}
-                        className="text-amber-600 hover:text-rose-500"
+                        className="text-orange-400 hover:text-rose-500"
                       >
-                        <X className="w-3.5 h-3.5" />
+                        <X className="w-3 h-3" />
                       </button>
                     </span>
                   ))}
@@ -503,11 +498,11 @@ export default function CreateTravelPlanPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-2 flex items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="pt-4 flex items-center justify-between gap-3 border-t border-slate-100 dark:border-emerald-950/60">
                 <button
                   type="button"
                   onClick={handleBackToStyles}
-                  className="px-4 py-2.5 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#16201b] transition flex items-center gap-1.5"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back to Styles</span>
@@ -516,16 +511,16 @@ export default function CreateTravelPlanPage() {
                 <div className="flex items-center gap-3">
                   <Link
                     href="/discover?mode=travel"
-                    className="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                    className="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#16201b] transition"
                   >
                     Cancel
                   </Link>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-2.5 rounded-full text-xs font-extrabold text-white bg-amber-600 hover:bg-amber-700 disabled:opacity-60 transition shadow-md hover:shadow-amber-500/25 flex items-center gap-1.5"
+                    className="px-6 py-2.5 rounded-full text-xs font-extrabold text-orange-950 dark:text-orange-200 bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 dark:from-orange-950/80 dark:to-amber-950/70 hover:from-orange-200 hover:to-amber-100 border border-orange-300/80 dark:border-orange-800/60 disabled:opacity-60 transition shadow-xs flex items-center gap-1.5"
                   >
-                    <CheckCircle2 className="w-4 h-4" />
+                    <CheckCircle2 className="w-4 h-4 text-orange-700 dark:text-orange-300" />
                     <span>{isSubmitting ? "Publishing..." : "Publish Travel Plan"}</span>
                   </button>
                 </div>

@@ -50,6 +50,10 @@ model Profile {
   linkedinUrl           String?
   hideContactDetails    Boolean   @default(true)
   discoveryVisible      Boolean   @default(true)
+  membershipStatus      String    @default("ACTIVE") // ACTIVE, INACTIVE, SUSPENDED
+  membershipTier        String    @default("FOUNDING_EXPLORER") // FOUNDING_EXPLORER, VOYAGER, GLOBETROTTER
+  membershipNumber      String?   // e.g. "TRV-849201"
+  memberSince           DateTime  @default(now())
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 }
@@ -75,12 +79,18 @@ model Activity {
   visibility             String         @default("PUBLIC") // PUBLIC, FILTERED
   cutoffHoursBeforeStart Int            @default(2)
   status                 String         @default("OPEN") // OPEN, FULL, CANCELLED, EXPIRED
+  imageUrl               String?
+  videoUrl               String?
   createdAt              DateTime       @default(now())
   updatedAt              DateTime       @updatedAt
 
   requests               JoinRequest[]
   participants           Participant[]
   conversations          Conversation[]
+
+  @@index([status])
+  @@index([organizerId])
+  @@index([category])
 }
 
 model TravelPlan {
@@ -103,12 +113,18 @@ model TravelPlan {
   currentAcceptedCount    Int            @default(0)
   companionPreferences    String?        @default("{}") // JSON string
   status                  String         @default("OPEN") // OPEN, FULL, COMPLETED, CANCELLED
+  imageUrl                String?
+  videoUrl                String?
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @updatedAt
 
   requests                JoinRequest[]
   participants            Participant[]
   conversations           Conversation[]
+
+  @@index([status])
+  @@index([organizerId])
+  @@index([travelStyle])
 }
 
 model JoinRequest {
@@ -127,6 +143,9 @@ model JoinRequest {
 
   @@index([applicantId, activityId])
   @@index([applicantId, travelPlanId])
+  @@index([status])
+  @@index([activityId])
+  @@index([travelPlanId])
 }
 
 model Participant {
@@ -156,6 +175,9 @@ model Conversation {
   updatedAt    DateTime    @updatedAt
 
   messages     Message[]
+
+  @@index([activityId])
+  @@index([travelPlanId])
 }
 
 model Message {
@@ -191,6 +213,7 @@ model Block {
   blocker   User     @relation("BlocksGiven", fields: [blockerId], references: [id], onDelete: Cascade)
   blockedId String
   blocked   User     @relation("BlocksReceived", fields: [blockedId], references: [id], onDelete: Cascade)
+  type      String   @default("BLOCK") // BLOCK, RESTRICT
   createdAt DateTime @default(now())
 
   @@unique([blockerId, blockedId])

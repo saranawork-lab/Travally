@@ -20,6 +20,20 @@ export async function GET() {
       },
     });
 
+    let profile = fullUser?.profile;
+    if (profile && !profile.membershipNumber) {
+      const generatedNumber = `TRV-${Math.floor(100000 + Math.random() * 900000)}`;
+      profile = await db.profile.update({
+        where: { id: profile.id },
+        data: {
+          membershipNumber: generatedNumber,
+          membershipStatus: profile.membershipStatus || "ACTIVE",
+          membershipTier: profile.membershipTier || "FOUNDING_EXPLORER",
+        },
+      });
+      if (fullUser) fullUser.profile = profile;
+    }
+
     return NextResponse.json({ user: fullUser });
   } catch (error) {
     console.error("GET profile error:", error);

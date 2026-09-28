@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
+  },
   images: {
     remotePatterns: [
       {
@@ -10,6 +13,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "avatar.vercel.sh",
+      },
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
       },
     ],
   },

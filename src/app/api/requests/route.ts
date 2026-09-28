@@ -3,6 +3,8 @@ import db from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { isPastCutoff } from "@/lib/utils";
 
+import { cleanupExpiredRequests } from "@/lib/server/cleanup";
+
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
@@ -11,6 +13,9 @@ export async function GET(req: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Automatically remove all requests where event time has passed by 30 mins (runs in background)
+    cleanupExpiredRequests().catch(() => {});
 
     const { searchParams } = new URL(req.url);
     const view = searchParams.get("view") || "received"; // received or sent
@@ -88,8 +93,16 @@ export async function GET(req: NextRequest) {
             },
           },
         },
-        activity: true,
-        travelPlan: true,
+        activity: {
+          include: {
+            conversations: { select: { id: true } },
+          },
+        },
+        travelPlan: {
+          include: {
+            conversations: { select: { id: true } },
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });

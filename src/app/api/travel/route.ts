@@ -91,8 +91,31 @@ export async function GET(req: NextRequest) {
       orderBy: { startDate: "asc" },
     });
 
+    // Filter open trips and schedule background capacity sync without blocking GET
+    const fullTripIdsToClose: string[] = [];
+    const sanitizedTrips = travelPlans.filter((trip) => {
+      const isFull = trip.currentAcceptedCount >= trip.groupSizeMax;
+      if (isFull) {
+        if (trip.status !== "CLOSED") {
+          fullTripIdsToClose.push(trip.id);
+          trip.status = "CLOSED";
+        }
+        return false; // Exclude closed/full trips from public discovery
+      }
+      return true;
+    });
+
+    if (fullTripIdsToClose.length > 0) {
+      db.travelPlan
+        .updateMany({
+          where: { id: { in: fullTripIdsToClose } },
+          data: { status: "CLOSED" },
+        })
+        .catch((err) => console.error("Non-blocking travelPlan close error:", err));
+    }
+
     // Augment with transparent compatibility score
-    const plansWithCompatibility = travelPlans.map((trip) => {
+    const plansWithCompatibility = sanitizedTrips.map((trip) => {
       const compatibility = calculateTravelCompatibility(userTravelProfile, {
         destination: trip.destination,
         departureCity: trip.departureCity,
@@ -167,7 +190,7 @@ export async function POST(req: NextRequest) {
         endDate: end,
         budgetMin: budgetMin ? parseFloat(budgetMin) : null,
         budgetMax: budgetMax ? parseFloat(budgetMax) : null,
-        currency: currency || "USD",
+        currency: currency || "INR",
         travelStyle: (travelStyle || "CULTURAL").toUpperCase(),
         interests: JSON.stringify(Array.isArray(interests) ? interests : []),
         plannedAttractions: plannedAttractions ? JSON.stringify(plannedAttractions) : "[]",

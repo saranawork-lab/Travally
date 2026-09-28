@@ -14,11 +14,14 @@ import {
   Plus,
   X,
   ExternalLink,
+  LogOut,
 } from "lucide-react";
 import { VerificationBadge } from "@/components/common/VerificationBadge";
 import { safeJsonParse } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 
 export default function MyProfilePage() {
+  const { logout } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -154,25 +157,44 @@ export default function MyProfilePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 pb-24">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          My Profile & Preferences
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Control your public persona, companion preferences, verified badges, and privacy settings.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            My Profile & Preferences
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Control your public persona, companion preferences, verified badges, and privacy settings.
+          </p>
+        </div>
+        <div className="flex items-center gap-2 self-start sm:self-center flex-wrap">
+          <Link
+            href="/settings"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-bold text-xs border border-emerald-200 dark:border-emerald-800/60 transition shadow-xs"
+          >
+            <span>View Member Pass &rarr;</span>
+          </Link>
+          <button
+            type="button"
+            onClick={async () => {
+              await logout();
+              window.location.href = "/login";
+            }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold text-xs border border-rose-200 dark:border-rose-800/60 transition shadow-xs"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* Profile Card & Avatar */}
-        <div className="bg-white dark:bg-slate-850 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
+        <div className="bg-white dark:bg-dark-card rounded-3xl border border-slate-200 dark:border-dark-border p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-dark-border">
             <div className="flex items-center gap-4">
-              <img
-                src={avatarUrl || "https://avatar.vercel.sh/user"}
-                alt={displayName}
-                className="w-16 h-16 rounded-full object-cover ring-4 ring-teal-500/20"
-              />
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-black text-2xl flex items-center justify-center ring-4 ring-emerald-500/20 shadow-md shrink-0">
+                {(displayName || "U").charAt(0).toUpperCase()}
+              </div>
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="font-bold text-lg text-slate-900 dark:text-white">
@@ -190,7 +212,7 @@ export default function MyProfilePage() {
             </div>
 
             {/* Verification Status Box */}
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs max-w-xs space-y-1">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-elevated border border-slate-200/60 dark:border-dark-border text-xs max-w-xs space-y-1">
               <span className="font-semibold text-slate-800 dark:text-slate-200 block">
                 Trust & Verification Status
               </span>
@@ -215,7 +237,7 @@ export default function MyProfilePage() {
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                className="w-full rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
               />
             </div>
 
@@ -228,7 +250,7 @@ export default function MyProfilePage() {
                 placeholder="e.g. San Francisco, CA"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                className="w-full rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
               />
             </div>
 
@@ -239,7 +261,7 @@ export default function MyProfilePage() {
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                className="w-full rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
               >
                 <option value="FEMALE">Female</option>
                 <option value="MALE">Male</option>
@@ -260,38 +282,23 @@ export default function MyProfilePage() {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Tell others about what you enjoy doing on weekends, what inspires you, and your favorite travel spots..."
-              className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 leading-relaxed"
+              className="w-full rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated p-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 leading-relaxed"
             />
           </div>
 
-          {/* Avatar URL & LinkedIn */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5">
-                Profile Photo URL
-              </label>
-              <input
-                type="url"
-                placeholder="https://images.unsplash.com/..."
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1.5">
-                <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />
-                <span>LinkedIn Profile URL (Optional)</span>
-              </label>
-              <input
-                type="url"
-                placeholder="https://linkedin.com/in/username"
-                value={linkedinUrl}
-                onChange={(e) => setLinkedinUrl(e.target.value)}
-                className="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
-              />
-            </div>
+          {/* LinkedIn Verification Link */}
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-200 mb-1.5 flex items-center gap-1.5">
+              <Linkedin className="w-3.5 h-3.5 text-[#0A66C2]" />
+              <span>LinkedIn Profile URL (Optional Verification)</span>
+            </label>
+            <input
+              type="url"
+              placeholder="https://linkedin.com/in/username"
+              value={linkedinUrl}
+              onChange={(e) => setLinkedinUrl(e.target.value)}
+              className="w-full rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+            />
           </div>
 
           {/* Interests Tags */}
@@ -311,12 +318,12 @@ export default function MyProfilePage() {
                     addInterest();
                   }
                 }}
-                className="flex-1 rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                className="flex-1 rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
               />
               <button
                 type="button"
                 onClick={addInterest}
-                className="px-4 py-2 rounded-2xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 transition"
+                className="px-4 py-2 rounded-2xl text-xs font-semibold bg-slate-100 dark:bg-dark-elevated hover:bg-slate-200 dark:hover:bg-slate-700 transition"
               >
                 Add
               </button>
@@ -325,7 +332,7 @@ export default function MyProfilePage() {
               {interests.map((t, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 text-xs border border-teal-200 dark:border-teal-800"
+                  className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-brand-50 dark:bg-brand-950/40 text-brand-800 dark:text-brand-300 text-xs border border-brand-200 dark:border-brand-800"
                 >
                   <span>{t}</span>
                   <button type="button" onClick={() => removeInterest(t)} className="hover:text-rose-500">
@@ -351,8 +358,8 @@ export default function MyProfilePage() {
                     onClick={() => toggleActivityPref(act)}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition ${
                       isSelected
-                        ? "bg-teal-600 text-white font-semibold shadow-sm"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200"
+                        ? "bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 text-emerald-950 dark:text-emerald-200 border border-emerald-300/80 dark:border-emerald-700 font-bold shadow-xs"
+                        : "bg-slate-100 dark:bg-dark-elevated text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                     }`}
                   >
                     {act}
@@ -363,7 +370,7 @@ export default function MyProfilePage() {
           </div>
 
           {/* Connection Preferences */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 space-y-3">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-elevated border border-slate-200/80 dark:border-dark-border space-y-3">
             <span className="font-bold text-xs text-slate-800 dark:text-slate-200 block">
               Connection Intent & Preferences
             </span>
@@ -377,7 +384,7 @@ export default function MyProfilePage() {
                   type="checkbox"
                   checked={connPrefs.friendship}
                   onChange={(e) => setConnPrefs({ ...connPrefs, friendship: e.target.checked })}
-                  className="rounded text-teal-600 focus:ring-teal-500"
+                  className="rounded text-brand-600 focus:ring-brand-500"
                 />
                 <span>Friendship</span>
               </label>
@@ -387,7 +394,7 @@ export default function MyProfilePage() {
                   type="checkbox"
                   checked={connPrefs.activityPartner}
                   onChange={(e) => setConnPrefs({ ...connPrefs, activityPartner: e.target.checked })}
-                  className="rounded text-teal-600 focus:ring-teal-500"
+                  className="rounded text-brand-600 focus:ring-brand-500"
                 />
                 <span>Activity Partner</span>
               </label>
@@ -397,7 +404,7 @@ export default function MyProfilePage() {
                   type="checkbox"
                   checked={connPrefs.travel}
                   onChange={(e) => setConnPrefs({ ...connPrefs, travel: e.target.checked })}
-                  className="rounded text-teal-600 focus:ring-teal-500"
+                  className="rounded text-travel-600 focus:ring-travel-500"
                 />
                 <span>Travel Partner</span>
               </label>
@@ -407,7 +414,7 @@ export default function MyProfilePage() {
                   type="checkbox"
                   checked={connPrefs.dating}
                   onChange={(e) => setConnPrefs({ ...connPrefs, dating: e.target.checked })}
-                  className="rounded text-teal-600 focus:ring-teal-500"
+                  className="rounded text-brand-600 focus:ring-brand-500"
                 />
                 <span>Open to Dating</span>
               </label>
@@ -415,7 +422,7 @@ export default function MyProfilePage() {
           </div>
 
           {/* Privacy & Safety Controls */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 space-y-3">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-elevated border border-slate-200/80 dark:border-dark-border space-y-3">
             <span className="font-bold text-xs text-slate-800 dark:text-slate-200 block">
               Privacy Settings
             </span>
@@ -426,7 +433,7 @@ export default function MyProfilePage() {
                   type="checkbox"
                   checked={hideContactDetails}
                   onChange={(e) => setHideContactDetails(e.target.checked)}
-                  className="rounded text-teal-600 focus:ring-teal-500"
+                  className="rounded text-brand-600 focus:ring-brand-500"
                 />
                 <span>Hide exact contact details (email and exact address) from public cards</span>
               </label>
@@ -436,7 +443,7 @@ export default function MyProfilePage() {
                   type="checkbox"
                   checked={discoveryVisible}
                   onChange={(e) => setDiscoveryVisible(e.target.checked)}
-                  className="rounded text-teal-600 focus:ring-teal-500"
+                  className="rounded text-brand-600 focus:ring-brand-500"
                 />
                 <span>Make profile discoverable in member directory</span>
               </label>
@@ -454,14 +461,40 @@ export default function MyProfilePage() {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-full text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 disabled:opacity-60 transition shadow-md flex items-center gap-1.5"
+              className="px-6 py-2.5 rounded-full text-xs font-bold text-emerald-950 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 disabled:opacity-60 transition shadow-xs flex items-center gap-1.5"
             >
-              <Save className="w-4 h-4" />
+              <Save className="w-4 h-4 text-emerald-700 dark:text-emerald-300" />
               <span>{saving ? "Saving..." : "Save Profile Changes"}</span>
             </button>
           </div>
         </div>
       </form>
+
+      {/* ── PERSISTENT ACCOUNT SESSION & SIGN OUT ── */}
+      <div className="pt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0">
+              <LogOut className="w-5 h-5" />
+            </div>
+            <div>
+              <strong className="block text-xs font-bold text-slate-900 dark:text-white">Active Session</strong>
+              <span className="text-[11px] text-slate-500">Signed in as {profile?.displayName || "Travally Member"}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={async () => {
+              await logout();
+              window.location.href = "/login";
+            }}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 transition min-h-[44px]"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

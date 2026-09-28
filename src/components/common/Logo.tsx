@@ -6,83 +6,71 @@ interface LogoProps {
   showText?: boolean;
   textClassName?: string;
   variant?: "full" | "icon";
+  animate?: boolean;
 }
 
 /**
- * Wayfellow Logo: Two independent paths converging into a shared forward journey.
- * Uses Teal (#0D9488) for the Companion path and Amber (#F59E0B) for the Travel path,
- * flowing together with precision geometric bezier curves.
+ * Travally Brand Emblem:
+ * Four-leaf compass flora with cardinal waypoints and warm golden sunrise beacon.
+ * Features a periodic wheel spin like a chakra in place, without wobble.
  */
-export const LogoMark: React.FC<{ size?: number; className?: string }> = ({
-  size = 32,
+export const LogoMark: React.FC<{
+  size?: number;
+  className?: string;
+  animate?: boolean;
+}> = ({
+  size = 36,
   className = "",
+  animate = true,
 }) => {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
+    <div
+      className={`relative inline-flex items-center justify-center shrink-0 select-none filter drop-shadow-[0_0_8px_rgba(16,185,129,0.2)] ${className}`}
+      style={{ width: size, height: size }}
       aria-label="Travally Logo"
     >
-      <defs>
-        <linearGradient id="companionPathGrad" x1="6" y1="42" x2="34" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#0D9488" />
-          <stop offset="100%" stopColor="#2DD4BF" />
-        </linearGradient>
-        <linearGradient id="travelPathGrad" x1="42" y1="42" x2="14" y2="12" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#D97706" />
-          <stop offset="100%" stopColor="#F59E0B" />
-        </linearGradient>
-        <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.15" />
-        </filter>
-      </defs>
-
-      {/* Path 1: Companion Path (Teal) */}
-      <path
-        d="M8 38C14 38 18 28 24 24C28 21.3 32 17 38 10"
-        stroke="url(#companionPathGrad)"
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        filter="url(#glowEffect)"
+      <img
+        src="/brand-logo.png"
+        alt="Travally Compass Rose Logo"
+        width={size}
+        height={size}
+        className={`w-full h-full object-contain block transition-transform duration-300 group-hover:scale-105 ${
+          animate ? "animate-spin-stay" : ""
+        }`}
+        style={{
+          transformOrigin: "center center",
+        }}
       />
-
-      {/* Path 2: Travel Path (Amber) */}
-      <path
-        d="M40 38C34 38 30 28 24 24C20 21.3 16 17 10 10"
-        stroke="url(#travelPathGrad)"
-        strokeWidth="4.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        filter="url(#glowEffect)"
-      />
-
-      {/* Shared Forward Apex / Convergence Point */}
-      <circle cx="24" cy="24" r="3.2" fill="#0F172A" stroke="#FFFFFF" strokeWidth="2" />
-      <circle cx="38" cy="10" r="2.5" fill="#2DD4BF" />
-      <circle cx="10" cy="10" r="2.5" fill="#F59E0B" />
-    </svg>
+    </div>
   );
 };
 
 export const Logo: React.FC<LogoProps> = ({
   className = "",
-  size = 32,
+  size = 36,
   showText = true,
-  textClassName = "text-xl font-extrabold tracking-tight text-slate-900 dark:text-white",
+  textClassName = "text-xl font-black tracking-tight",
   variant = "full",
+  animate = true,
 }) => {
   return (
-    <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
-      <LogoMark size={size} />
+    <div className={`inline-flex items-center gap-2.5 select-none group ${className}`}>
+      <LogoMark size={size} animate={animate} />
       {showText && variant === "full" && (
-        <span className={textClassName}>
-          Trav<span className="text-teal-600 dark:text-teal-400">ally</span>
-        </span>
+        <div className={`flex items-center tracking-tight font-black select-none ${textClassName}`}>
+          <span className="text-orange-500 dark:text-orange-400">Tra</span>
+          <span
+            className="bg-gradient-to-r from-orange-500 to-emerald-500 dark:from-orange-400 dark:to-emerald-400 bg-clip-text text-transparent inline-block"
+            style={{
+              backgroundImage: "linear-gradient(to right, #f97316 0%, #10b981 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            va
+          </span>
+          <span className="text-emerald-600 dark:text-emerald-400">lly</span>
+        </div>
       )}
     </div>
   );

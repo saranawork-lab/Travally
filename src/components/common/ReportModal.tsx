@@ -58,7 +58,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 relative">
+      <div className="w-full max-w-md bg-white dark:bg-dark-card rounded-3xl shadow-2xl border border-slate-200 dark:border-dark-border p-6 relative">
         <button
           onClick={onClose}
           className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
@@ -68,7 +68,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
         {submitted ? (
           <div className="py-8 text-center space-y-3">
-            <CheckCircle className="w-12 h-12 text-teal-600 mx-auto" />
+            <CheckCircle className="w-12 h-12 text-brand-500 mx-auto" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">Report Submitted</h3>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
               Thank you for keeping Travally safe. Our community moderation team has received your report and will take action if guidelines are breached.

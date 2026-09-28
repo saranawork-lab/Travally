@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import { cleanupExpiredConversations, getChatRetentionInfo } from "@/lib/chatRetention";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,9 @@ export async function GET(req: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Automatically purge conversations that exceeded their 7-day validity post-event
+    await cleanupExpiredConversations();
 
     // 1. Get all activities and trips where the user is a participant
     const participations = await db.participant.findMany({
@@ -36,8 +40,10 @@ export async function GET(req: NextRequest) {
             category: true,
             date: true,
             startTime: true,
+            approxDurationHours: true,
             locationName: true,
             status: true,
+            updatedAt: true,
           },
         },
         travelPlan: {
@@ -49,6 +55,7 @@ export async function GET(req: NextRequest) {
             endDate: true,
             travelStyle: true,
             status: true,
+            updatedAt: true,
           },
         },
         messages: {
@@ -67,7 +74,13 @@ export async function GET(req: NextRequest) {
       orderBy: { updatedAt: "desc" },
     });
 
-    return NextResponse.json({ conversations });
+    // Decorate each conversation with its 7-day retention details
+    const decorated = conversations.map((conv) => ({
+      ...conv,
+      retentionInfo: getChatRetentionInfo(conv),
+    }));
+
+    return NextResponse.json({ conversations: decorated });
   } catch (error) {
     console.error("GET chats error:", error);
     return NextResponse.json({ error: "Failed to fetch conversations" }, { status: 500 });

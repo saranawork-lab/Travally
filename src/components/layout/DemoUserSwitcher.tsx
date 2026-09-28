@@ -1,62 +1,55 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { UserCheck, ShieldAlert, ArrowRightLeft } from "lucide-react";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { UserCheck, ArrowRightLeft, Sparkles, Loader2 } from "lucide-react";
 
 interface DemoAccount {
   id: string;
   email: string;
   displayName: string;
   role: string;
-  avatarUrl: string;
   description: string;
+  badge: "Host" | "Member" | "Trip Planner" | "Admin";
 }
 
 const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: "sarah",
     email: "sarah@travally.app",
-    displayName: "Sarah Jenkins",
+    displayName: "Ananya Sharma",
     role: "Organizer & Movie Host",
-    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80",
-    description: "Organizes movies & cafes in SF. Has pending join requests.",
+    description: "Organizes indie cinema & filter coffee walks in Bengaluru. Has join requests.",
+    badge: "Host",
   },
   {
     id: "alex",
     email: "alex@travally.app",
-    displayName: "Alex Rivera",
-    role: "Applicant & Explorer",
-    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80",
-    description: "Accepted participant in Perfect Days screening. Has active chat.",
+    displayName: "Rohan Verma",
+    role: "Explorer & Architecture Buff",
+    description: "Bandra heritage walk enthusiast from Mumbai. Has active chats.",
+    badge: "Member",
   },
   {
     id: "maya",
     email: "maya@travally.app",
-    displayName: "Maya Chen",
-    role: "Travel Planner",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80",
-    description: "Organizer of Tokyo & Kyoto Slow Travel Plan.",
-  },
-  {
-    id: "david",
-    email: "david@travally.app",
-    displayName: "David Ross",
-    role: "Event & Hiking Explorer",
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80",
-    description: "Interlaken trip host and live gig attendee.",
+    displayName: "Priya Iyer",
+    role: "Travel Planner & Trekker",
+    description: "Organizer of Kasol & Tosh Parvati Valley Autumn trek (₹8,500).",
+    badge: "Trip Planner",
   },
   {
     id: "admin",
     email: "admin@travally.app",
-    displayName: "Admin Moderator",
-    role: "Trust & Safety Admin",
-    avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80",
-    description: "Platform moderator with access to /admin.",
+    displayName: "Travally India Safety Team",
+    role: "Community Moderator",
+    description: "Platform safety & verification team with access to /admin.",
+    badge: "Admin",
   },
 ];
 
 export const DemoUserSwitcher: React.FC = () => {
+  const pathname = usePathname();
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const [isSwitching, setIsSwitching] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -72,6 +65,11 @@ export const DemoUserSwitcher: React.FC = () => {
       .catch(() => {});
   }, []);
 
+  // Hide in active chat rooms so floating button doesn't cover input bar
+  if (pathname?.startsWith("/chats/") && pathname !== "/chats") {
+    return null;
+  }
+
   const handleSwitchAccount = async (account: DemoAccount) => {
     setIsSwitching(true);
     try {
@@ -82,7 +80,7 @@ export const DemoUserSwitcher: React.FC = () => {
       });
       if (res.ok) {
         setCurrentUserEmail(account.email);
-        window.location.reload();
+        window.location.href = account.id === "admin" ? "/admin" : "/discover";
       } else {
         alert("Failed to switch account");
       }
@@ -94,26 +92,32 @@ export const DemoUserSwitcher: React.FC = () => {
     }
   };
 
-  const activeAccount = DEMO_ACCOUNTS.find((a) => a.email === currentUserEmail);
+  const activeAccount = DEMO_ACCOUNTS.find(
+    (a) =>
+      a.email === currentUserEmail ||
+      (currentUserEmail === "sarah@travally.app" && a.id === "sarah") ||
+      (currentUserEmail === "alex@travally.app" && a.id === "alex") ||
+      (currentUserEmail === "maya@travally.app" && a.id === "maya")
+  );
 
   return (
     <div className="fixed bottom-20 md:bottom-5 right-4 z-50">
       {isOpen ? (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-4 w-80 text-xs animate-slide-up">
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-1.5 font-semibold text-slate-800 dark:text-slate-200">
-              <ArrowRightLeft className="w-4 h-4 text-teal-600" />
-              <span>Multi-Account Persona Switcher</span>
+        <div className="bg-white dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 rounded-2xl shadow-2xl p-4 w-80 text-xs animate-slide-up">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-emerald-950/60">
+            <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
+              <Sparkles className="w-4 h-4 text-orange-500" />
+              <span>Quick Persona Switcher</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold"
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold p-1"
             >
               ✕
             </button>
           </div>
-          <p className="text-slate-500 mb-3 text-[11px] leading-relaxed">
-            Switch between real database accounts to test organizer vs. applicant workflows, chat unlocks, and approval pipelines.
+          <p className="text-slate-500 dark:text-slate-400 mb-3 text-[11px] leading-relaxed">
+            One-click switch between seeded accounts to test organizer vs. applicant workflows, chat unlocks, and trip discovery.
           </p>
           <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
             {DEMO_ACCOUNTS.map((acc) => {
@@ -123,29 +127,31 @@ export const DemoUserSwitcher: React.FC = () => {
                   key={acc.id}
                   disabled={isSwitching}
                   onClick={() => handleSwitchAccount(acc)}
-                  className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left transition-colors ${
+                  className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left transition-colors relative ${
                     isSelected
-                      ? "bg-teal-50 dark:bg-teal-950/60 border border-teal-300 dark:border-teal-700"
-                      : "hover:bg-slate-50 dark:hover:bg-slate-800/80 border border-transparent"
+                      ? "bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700/60"
+                      : "hover:bg-slate-50 dark:hover:bg-[#16201b] border border-transparent"
                   }`}
                 >
-                  <img
-                    src={acc.avatarUrl}
-                    alt={acc.displayName}
-                    className="w-8 h-8 rounded-full object-cover shrink-0"
-                  />
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-xs font-black text-emerald-800 dark:text-emerald-300 shrink-0 shadow-sm">
+                    {acc.displayName.charAt(0)}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-slate-900 dark:text-slate-100 truncate">
+                      <span className="font-semibold text-slate-900 dark:text-slate-100 truncate">
                         {acc.displayName}
                       </span>
-                      {isSelected && (
-                        <span className="text-[10px] font-semibold text-teal-600 dark:text-teal-400 bg-teal-100 dark:bg-teal-900/50 px-1.5 py-0.5 rounded">
+                      {isSelected ? (
+                        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/50 px-1.5 py-0.5 rounded">
                           Active
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-semibold text-slate-500 dark:text-slate-400">
+                          {acc.badge}
                         </span>
                       )}
                     </div>
-                    <p className="text-[10px] text-slate-500 truncate">{acc.role}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{acc.role}</p>
                   </div>
                 </button>
               );
@@ -155,13 +161,16 @@ export const DemoUserSwitcher: React.FC = () => {
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 bg-slate-900/95 dark:bg-slate-800/95 text-white backdrop-blur px-3 py-2 rounded-full shadow-lg border border-slate-700 hover:border-teal-500 text-xs transition-all hover:scale-105"
+          className="flex items-center gap-2 bg-[#090d0b] dark:bg-[#131c18] text-white px-3.5 py-2 rounded-full shadow-xl border border-emerald-800/60 hover:border-emerald-500 text-xs transition-all hover:scale-105"
         >
-          <UserCheck className="w-3.5 h-3.5 text-teal-400" />
+          <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
           <span>
-            Acting as: <strong className="font-semibold text-teal-300">{activeAccount?.displayName || "Guest / Log In"}</strong>
+            Acting as:{" "}
+            <strong className="font-bold text-emerald-300">
+              {activeAccount?.displayName || "Guest / Log In"}
+            </strong>
           </span>
-          <ArrowRightLeft className="w-3 h-3 text-slate-400" />
+          <ArrowRightLeft className="w-3 h-3 text-orange-400" />
         </button>
       )}
     </div>

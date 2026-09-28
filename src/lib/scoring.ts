@@ -154,19 +154,19 @@ export function calculateTravelCompatibility(
   );
 
   let matchLevel: "High" | "Good" | "Moderate" | "Exploratory" = "Good";
-  let badgeColor = "bg-amber-500/10 text-amber-600 border-amber-500/20";
+  let badgeColor = "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30";
   if (overall >= 85) {
     matchLevel = "High";
-    badgeColor = "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
+    badgeColor = "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
   } else if (overall >= 70) {
     matchLevel = "Good";
-    badgeColor = "bg-teal-500/10 text-teal-600 border-teal-500/20";
+    badgeColor = "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
   } else if (overall >= 55) {
     matchLevel = "Moderate";
-    badgeColor = "bg-blue-500/10 text-blue-600 border-blue-500/20";
+    badgeColor = "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30";
   } else {
     matchLevel = "Exploratory";
-    badgeColor = "bg-slate-500/10 text-slate-600 border-slate-500/20";
+    badgeColor = "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30";
   }
 
   const topFactor = [...factors].sort((a, b) => b.score - a.score)[0];

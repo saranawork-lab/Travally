@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import BottomNav from "@/components/layout/BottomNav";
 import Footer from "@/components/layout/Footer";
-import DemoUserSwitcher from "@/components/layout/DemoUserSwitcher";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -40,20 +40,45 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+import { getCurrentUser } from "@/lib/auth";
+import { AuthProvider } from "@/context/AuthContext";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const currentUser = await getCurrentUser();
+
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} min-h-screen flex flex-col antialiased`}>
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <BottomNav />
-        <DemoUserSwitcher />
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const t = localStorage.getItem('travally_theme');
+                if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
+      <body className={`${inter.className} min-h-screen flex flex-col antialiased bg-[#f8fafc] dark:bg-[#090d0b] text-slate-900 dark:text-slate-100`}>
+        <ThemeProvider>
+          <AuthProvider initialUser={currentUser}>
+            <Navbar initialUser={currentUser} />
+            <main className="flex-1">{children}</main>
+            <Footer initialUser={currentUser} />
+            <BottomNav initialUser={currentUser} />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+

@@ -86,6 +86,10 @@ export async function POST(req: NextRequest) {
             linkedinUrl: linkedinUrl ? linkedinUrl.trim() : null,
             hideContactDetails: true,
             discoveryVisible: true,
+            membershipStatus: "ACTIVE",
+            membershipTier: "FOUNDING_EXPLORER",
+            membershipNumber: `TRV-${Math.floor(100000 + Math.random() * 900000)}`,
+            memberSince: new Date(),
           },
         },
       },
@@ -117,7 +121,7 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60,
+      maxAge: 90 * 24 * 60 * 60, // 90 days persistent session
       path: "/",
     });
 
