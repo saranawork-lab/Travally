@@ -34,6 +34,7 @@ import {
   Radio,
   Trash2,
   Copy,
+  Share2,
   Ban,
 } from "lucide-react";
 import { formatTimeAgo, formatMessageTime } from "@/lib/utils";
@@ -135,6 +136,8 @@ export default function ActiveChatPage() {
   const [copiedMsgId, setCopiedMsgId] = useState<string | null>(null);
   const longPressTimerRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
+  const [swipingMsgId, setSwipingMsgId] = useState<string | null>(null);
+  const [swipeOffset, setSwipeOffset] = useState<number>(0);
 
   const [activeReactionMsgId, setActiveReactionMsgId] = useState<string | null>(null);
   const [heartBurstMsgId, setHeartBurstMsgId] = useState<string | null>(null);
@@ -599,28 +602,52 @@ export default function ActiveChatPage() {
     handleToggleReaction(messageId, "❤️");
   };
 
-  // Long-press and context menu handlers (Eliminates hover popups)
+  // Long-press and context menu handlers with WhatsApp-style swipe-to-reply
   const handleTouchStart = (msg: any, parsed: MessagePayload, e: React.TouchEvent) => {
     if (parsed.isDeleted) return;
     touchStartPosRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    setSwipingMsgId(msg.id);
+    setSwipeOffset(0);
+
     if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
     longPressTimerRef.current = setTimeout(() => {
       setSelectedMessage({ msg, parsed });
+      setSwipingMsgId(null);
+      setSwipeOffset(0);
       if (typeof navigator !== "undefined" && navigator.vibrate) {
         navigator.vibrate(40);
       }
-    }, 400);
+    }, 450);
   };
 
   const handleTouchMove = (msg: any, parsed: MessagePayload, e: React.TouchEvent) => {
     if (!touchStartPosRef.current) return;
     const dx = e.touches[0].clientX - touchStartPosRef.current.x;
     const dy = Math.abs(e.touches[0].clientY - touchStartPosRef.current.y);
-    if (Math.abs(dx) > 10 || dy > 10) {
+
+    // Cancel long-press when movement is detected
+    if (Math.abs(dx) > 8 || dy > 8) {
       if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
     }
 
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    // If vertical scroll is dominant, cancel horizontal swipe
+    if (dy > 12 && dy > Math.abs(dx)) {
+      setSwipeOffset(0);
+      return;
+    }
+
+    // Drag rightwards (WhatsApp swipe gesture)
+    if (dx > 0) {
+      const damped = Math.min(dx * 0.75, 75);
+      setSwipingMsgId(msg.id);
+      setSwipeOffset(damped);
+    }
+  };
+
+  const handleTouchEnd = (msg: any, parsed: MessagePayload) => {
+    if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+
+    if (swipingMsgId === msg.id && swipeOffset > 42) {
       const isMe =
         msg.senderId === currentUser?.id ||
         msg.sender?.id === currentUser?.id ||
@@ -636,15 +663,13 @@ export default function ActiveChatPage() {
         senderName,
         text: parsed.text || parsed.mediaType || "Message",
       });
-      touchStartPosRef.current = null; 
       if (typeof navigator !== "undefined" && navigator.vibrate) {
         navigator.vibrate(30);
       }
     }
-  };
 
-  const handleTouchEnd = () => {
-    if (longPressTimerRef.current) clearTimeout(longPressTimerRef.current);
+    setSwipingMsgId(null);
+    setSwipeOffset(0);
     touchStartPosRef.current = null;
   };
 
@@ -1114,16 +1139,36 @@ export default function ActiveChatPage() {
                       </div>
                     )}
 
-                    {/* ── BUBBLE CONTAINER (TOUCH LONG-PRESS / RIGHT-CLICK TO SELECT) ── */}
+                    {/* ── BUBBLE CONTAINER (TOUCH LONG-PRESS / RIGHT-CLICK TO SELECT + SWIPE TO REPLY) ── */}
                     <div
-                      onDoubleClick={(e) => handleDoubleTap(msg.id, e)}
-                      onTouchStart={(e) => handleTouchStart(msg, parsed, e)}
-                      onTouchMove={(e) => handleTouchMove(msg, parsed, e)}
-                      onTouchEnd={handleTouchEnd}
-                      onContextMenu={(e) => handleContextMenu(msg, parsed, e)}
-                      className={`relative group rounded-[20px] transition-all select-text cursor-pointer ${
-                        selectedMessage?.msg?.id === msg.id ? "ring-2 ring-orange-500/50 scale-[1.01]" : ""
-                      } ${
+                      className="relative flex items-center"
+                      style={{
+                        transform: swipingMsgId === msg.id ? `translateX(${swipeOffset}px)` : "translateX(0px)",
+                        transition: swipingMsgId === msg.id ? "none" : "transform 0.22s cubic-bezier(0.2, 0, 0, 1)",
+                      }}
+                    >
+                      {/* Swipe reply indicator popping on left */}
+                      {swipingMsgId === msg.id && swipeOffset > 8 && (
+                        <div
+                          className="absolute -left-9 flex items-center justify-center w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-950/90 text-emerald-600 dark:text-emerald-400 shadow-sm pointer-events-none transition-transform"
+                          style={{
+                            opacity: Math.min(1, swipeOffset / 35),
+                            transform: `scale(${Math.min(1.1, swipeOffset / 35)}) rotate(${swipeOffset > 42 ? "0deg" : "-20deg"})`,
+                          }}
+                        >
+                          <CornerDownRight className="w-4 h-4" />
+                        </div>
+                      )}
+
+                      <div
+                        onDoubleClick={(e) => handleDoubleTap(msg.id, e)}
+                        onTouchStart={(e) => handleTouchStart(msg, parsed, e)}
+                        onTouchMove={(e) => handleTouchMove(msg, parsed, e)}
+                        onTouchEnd={() => handleTouchEnd(msg, parsed)}
+                        onContextMenu={(e) => handleContextMenu(msg, parsed, e)}
+                        className={`relative group rounded-[20px] transition-all select-text cursor-pointer ${
+                          selectedMessage?.msg?.id === msg.id ? "ring-2 ring-orange-500/50 scale-[1.01]" : ""
+                        } ${
                         isEmojiOnly
                           ? "bg-transparent p-0.5 shadow-none"
                           : isMe
@@ -1314,6 +1359,7 @@ export default function ActiveChatPage() {
                         </div>
                       )}
                     </div>
+                  </div>
 
                     {/* ── REACTION CHIPS DOCKED AT BOTTOM OF BUBBLE ── */}
                     {!parsed.isDeleted && reactionKeys.length > 0 && (
@@ -1538,11 +1584,11 @@ export default function ActiveChatPage() {
           onClick={() => setSelectedMessage(null)}
         >
           <div
-            className="w-full max-w-[280px] rounded-3xl bg-white dark:bg-[#15201b] border border-slate-200 dark:border-emerald-950/80 shadow-2xl p-3 flex flex-col gap-2.5 animate-in zoom-in-95 duration-150"
+            className="w-full max-w-[230px] rounded-2xl bg-white dark:bg-[#15201b] border border-slate-200 dark:border-emerald-950/80 shadow-2xl p-2.5 flex flex-col gap-2 animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Quick Reactions Row */}
-            <div className="flex items-center justify-between px-2 py-1.5 rounded-2xl bg-slate-50 dark:bg-[#1a2822] border border-slate-100 dark:border-emerald-900/40">
+            <div className="flex items-center justify-between px-1.5 py-1 rounded-xl bg-slate-50 dark:bg-[#1a2822] border border-slate-100 dark:border-emerald-900/40">
               {QUICK_REACTIONS.map((emoji) => (
                 <button
                   key={emoji}
@@ -1551,28 +1597,12 @@ export default function ActiveChatPage() {
                     handleToggleReaction(selectedMessage.msg.id, emoji);
                     setSelectedMessage(null);
                   }}
-                  className="w-8 h-8 rounded-full hover:scale-125 transition-transform flex items-center justify-center text-lg active:scale-90"
+                  className="w-7 h-7 rounded-full hover:scale-125 transition-transform flex items-center justify-center text-base active:scale-90"
                   title={`React ${emoji}`}
                 >
-                  <RealisticEmoji emoji={emoji} size={24} />
+                  <RealisticEmoji emoji={emoji} size={20} />
                 </button>
               ))}
-            </div>
-
-            {/* Message Preview Snippet */}
-            <div className="px-2.5 py-1.5 rounded-xl bg-slate-100/70 dark:bg-[#111a16] border border-slate-200/60 dark:border-emerald-950/60 text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
-              <span className="font-semibold text-slate-700 dark:text-slate-300 mr-1.5">
-                {selectedMessage.msg.senderId === currentUser?.id ||
-                selectedMessage.msg.sender?.id === currentUser?.id ||
-                selectedMessage.msg.sender?.email === currentUser?.email
-                  ? "You"
-                  : selectedMessage.msg.sender?.displayName ||
-                    selectedMessage.msg.sender?.name ||
-                    selectedMessage.msg.sender?.email?.split("@")[0] ||
-                    "Traveler"}
-                :
-              </span>
-              {selectedMessage.parsed.text || (selectedMessage.parsed.mediaType ? `[${selectedMessage.parsed.mediaType}]` : "Message")}
             </div>
 
             {/* Actions Menu */}
@@ -1598,40 +1628,44 @@ export default function ActiveChatPage() {
                   });
                   setSelectedMessage(null);
                 }}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-[#1f2e27] text-slate-700 dark:text-slate-200 font-medium text-sm transition text-left"
+                className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1f2e27] text-slate-700 dark:text-slate-200 font-medium text-xs transition text-left"
               >
-                <CornerDownRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <CornerDownRight className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Reply</span>
               </button>
 
-              {/* Copy Text */}
+              {/* Copy */}
               {selectedMessage.parsed.text && (
                 <button
                   type="button"
                   onClick={() => handleCopyText(selectedMessage.parsed.text, selectedMessage.msg.id)}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-[#1f2e27] text-slate-700 dark:text-slate-200 font-medium text-sm transition text-left"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1f2e27] text-slate-700 dark:text-slate-200 font-medium text-xs transition text-left"
                 >
-                  <Copy className="w-4 h-4 text-blue-500" />
-                  <span>{copiedMsgId === selectedMessage.msg.id ? "Copied!" : "Copy Text"}</span>
+                  <Copy className="w-3.5 h-3.5 text-blue-500" />
+                  <span>{copiedMsgId === selectedMessage.msg.id ? "Copied!" : "Copy"}</span>
                 </button>
               )}
 
-              {/* Share Text */}
+              {/* Share */}
               {selectedMessage.parsed.text && (
                 <button
                   type="button"
                   onClick={() => {
-                    if (navigator.share) {
-                      navigator.share({
-                        title: "Message from Travally",
-                        text: selectedMessage.parsed.text,
-                      }).catch(() => {});
+                    if (typeof navigator !== "undefined" && navigator.share) {
+                      navigator
+                        .share({
+                          title: "Message from Travally",
+                          text: selectedMessage.parsed.text,
+                        })
+                        .catch(() => {});
+                    } else {
+                      handleCopyText(selectedMessage.parsed.text, selectedMessage.msg.id);
                     }
                     setSelectedMessage(null);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-[#1f2e27] text-slate-700 dark:text-slate-200 font-medium text-sm transition text-left"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-[#1f2e27] text-slate-700 dark:text-slate-200 font-medium text-xs transition text-left"
                 >
-                  <Share2 className="w-4 h-4 text-emerald-500" />
+                  <Share2 className="w-3.5 h-3.5 text-emerald-500" />
                   <span>Share</span>
                 </button>
               )}
@@ -1652,25 +1686,25 @@ export default function ActiveChatPage() {
 
                 return (
                   <>
-                    {/* Delete for Everyone (Only author within 15 minutes) */}
+                    {/* Delete for Everyone */}
                     {isMe && (
                       <button
                         type="button"
                         disabled={!canDeleteForEveryone || isDeletingMsg}
                         onClick={() => handleDeleteMessage(selectedMessage.msg.id, "everyone")}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl font-medium text-sm transition text-left ${
+                        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg font-medium text-xs transition text-left ${
                           canDeleteForEveryone
                             ? "hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400"
                             : "opacity-40 cursor-not-allowed text-slate-400 dark:text-slate-600"
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <Trash2 className="w-4 h-4" />
-                          <span>Delete for Everyone</span>
+                        <div className="flex items-center gap-2.5">
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Delete for everyone</span>
                         </div>
                         {canDeleteForEveryone ? (
-                          <span className="text-[11px] font-normal text-rose-500/80">
-                            {remainingMinutes}m left
+                          <span className="text-[10px] font-normal text-rose-500/80">
+                            {remainingMinutes}m
                           </span>
                         ) : (
                           <span className="text-[10px] font-normal text-slate-400">
@@ -1680,31 +1714,28 @@ export default function ActiveChatPage() {
                       </button>
                     )}
 
-                    {/* Delete for Me (Always available) */}
+                    {/* Delete for Me */}
                     <button
                       type="button"
                       disabled={isDeletingMsg}
                       onClick={() => handleDeleteMessage(selectedMessage.msg.id, "me")}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-medium text-sm transition text-left"
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-medium text-xs transition text-left"
                     >
-                      <div className="flex items-center gap-3">
-                        <Trash2 className="w-4 h-4" />
-                        <span>Delete for Me</span>
+                      <div className="flex items-center gap-2.5">
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete for me</span>
                       </div>
-                      <span className="text-[11px] font-normal text-slate-400">
-                        This device only
-                      </span>
                     </button>
                   </>
                 );
               })()}
             </div>
 
-            {/* Cancel / Dismiss Button */}
+            {/* Cancel Button */}
             <button
               type="button"
               onClick={() => setSelectedMessage(null)}
-              className="mt-1 w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-[#1a2822] dark:hover:bg-[#22352d] text-slate-600 dark:text-slate-300 font-medium text-xs transition"
+              className="mt-0.5 w-full py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-[#1a2822] dark:hover:bg-[#22352d] text-slate-600 dark:text-slate-300 font-medium text-[11px] transition text-center"
             >
               Cancel
             </button>
