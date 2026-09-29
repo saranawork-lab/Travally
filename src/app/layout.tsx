@@ -40,15 +40,18 @@ export const metadata: Metadata = {
   },
 };
 
+import { getCurrentUser } from "@/lib/auth";
 import { AuthProvider } from "@/context/AuthContext";
 
 import BrandIntroLoader from "@/components/common/BrandIntroLoader";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const currentUser = await getCurrentUser();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -70,11 +73,11 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen flex flex-col antialiased bg-[#f8fafc] dark:bg-[#090d0b] text-slate-900 dark:text-slate-100`}>
         <ThemeProvider>
           <BrandIntroLoader />
-          <AuthProvider initialUser={undefined}>
-            <Navbar />
+          <AuthProvider initialUser={currentUser}>
+            <Navbar initialUser={currentUser} />
             <main className="flex-1">{children}</main>
-            <Footer />
-            <BottomNav />
+            <Footer initialUser={currentUser} />
+            <BottomNav initialUser={currentUser} />
           </AuthProvider>
         </ThemeProvider>
       </body>
