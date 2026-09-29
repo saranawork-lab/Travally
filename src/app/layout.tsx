@@ -43,6 +43,8 @@ export const metadata: Metadata = {
 import { getCurrentUser } from "@/lib/auth";
 import { AuthProvider } from "@/context/AuthContext";
 
+import BrandIntroLoader from "@/components/common/BrandIntroLoader";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -57,8 +59,8 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                const t = localStorage.getItem('travally_theme');
-                if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                var t = localStorage.getItem('travally_theme');
+                if (t === 'dark') {
                   document.documentElement.classList.add('dark');
                 } else {
                   document.documentElement.classList.remove('dark');
@@ -70,6 +72,7 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col antialiased bg-[#f8fafc] dark:bg-[#090d0b] text-slate-900 dark:text-slate-100`}>
         <ThemeProvider>
+          <BrandIntroLoader />
           <AuthProvider initialUser={currentUser}>
             <Navbar initialUser={currentUser} />
             <main className="flex-1">{children}</main>

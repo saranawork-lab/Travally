@@ -3,36 +3,22 @@
 import React, { useState, useEffect } from "react";
 
 export const BrandIntroLoader: React.FC = () => {
-  const [phase, setPhase] = useState<"spinning" | "fit" | "gliding" | "done">("spinning");
+  const [phase, setPhase] = useState<"spinning" | "gliding" | "done">("spinning");
 
   useEffect(() => {
-    // Only run on initial site entry/fresh tab load
-    const seen = sessionStorage.getItem("travally_intro_seen");
-    if (seen) {
-      setPhase("done");
-      return;
-    }
-
-    // Phase 1: Realistic Compass Gyroscope Orientation (0 -> 700ms)
+    // 1. Center spinning animation runs for 650ms
     const t1 = setTimeout(() => {
-      setPhase("fit");
-    }, 700);
-
-    // Phase 2: Settle and Glide to the Navbar (1250ms -> 1750ms)
-    const t2 = setTimeout(() => {
       setPhase("gliding");
-    }, 1250);
+    }, 650);
 
-    // Phase 3: Seamless finish & cleanup (1750ms)
-    const t3 = setTimeout(() => {
+    // 2. Gliding & zoom to top navbar logo position completes at 1200ms
+    const t2 = setTimeout(() => {
       setPhase("done");
-      sessionStorage.setItem("travally_intro_seen", "true");
-    }, 1750);
+    }, 1250);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
-      clearTimeout(t3);
     };
   }, []);
 
@@ -40,94 +26,88 @@ export const BrandIntroLoader: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] pointer-events-none flex items-center justify-center transition-opacity duration-500 ease-out select-none ${
+      className={`fixed inset-0 z-[9999] pointer-events-none flex items-center justify-center transition-opacity duration-500 ease-out select-none ${
         phase === "gliding" ? "opacity-0" : "opacity-100"
       }`}
       style={{
-        backgroundColor: "rgba(5, 8, 6, 0.94)",
-        backdropFilter: "blur(16px)",
+        backgroundColor: "rgba(255, 255, 255, 0.96)",
+        backdropFilter: "blur(12px)",
       }}
     >
-      {/* ── Realistic Optical Radial Bloom & Compass Rays ── */}
+      {/* ── Soft Emerald & Warm Amber Aura behind center emblem ── */}
       <div
-        className={`absolute rounded-full pointer-events-none transition-all duration-700 ${
-          phase === "fit" ? "scale-125 opacity-70" : "scale-90 opacity-40"
+        className={`absolute rounded-full pointer-events-none transition-all duration-700 ease-out ${
+          phase === "spinning" ? "scale-100 opacity-60" : "scale-50 opacity-0"
         }`}
         style={{
-          width: "480px",
-          height: "480px",
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.28) 0%, rgba(245, 158, 11, 0.18) 35%, rgba(5, 150, 105, 0.05) 60%, transparent 80%)",
-          filter: "blur(40px)",
+          width: "360px",
+          height: "360px",
+          background:
+            "radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(245, 158, 11, 0.15) 35%, rgba(16, 185, 129, 0.04) 65%, transparent 75%)",
+          filter: "blur(32px)",
         }}
       />
 
-      {/* Realistic Compass Degree Dial Ring behind the emblem */}
+      {/* ── Center Emblem that Spins and Glides to Top Navbar Position ── */}
       <div
-        className={`absolute pointer-events-none rounded-full border border-emerald-500/20 transition-all duration-700 ${
-          phase === "fit" ? "scale-100 opacity-60" : "scale-75 opacity-20"
-        }`}
-        style={{
-          width: "280px",
-          height: "280px",
-          boxShadow: "0 0 50px rgba(16, 185, 129, 0.15), inset 0 0 30px rgba(245, 158, 11, 0.1)",
-        }}
-      >
-        {/* Cardinal North/South/East/West Compass Ticks */}
-        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-3 bg-emerald-400/80 rounded-full" />
-        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-3 bg-emerald-400/40 rounded-full" />
-        <div className="absolute left-1 top-1/2 -translate-y-1/2 h-1.5 w-3 bg-emerald-400/40 rounded-full" />
-        <div className="absolute right-1 top-1/2 -translate-y-1/2 h-1.5 w-3 bg-amber-400/80 rounded-full" />
-      </div>
-
-      {/* ── Realistic Emblem with Physics-Based Inertia Rotation & Navbar Glide ── */}
-      <div
-        className="fixed z-[101] transform-gpu pointer-events-none"
+        className="fixed z-[10000] pointer-events-none transform-gpu"
         style={
           phase === "spinning"
             ? {
                 top: "50%",
                 left: "50%",
-                transform: "translate(-50%, -50%) scale(0.65) rotate(-360deg)",
-                transition: "transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease",
-                opacity: 0.85,
-              }
-            : phase === "fit"
-            ? {
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%) scale(1) rotate(0deg)",
-                transition: "transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                opacity: 1,
+                transform: "translate(-50%, -50%) scale(1)",
+                transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
               }
             : {
-                // Gliding seamlessly to top-left Navbar logo position
-                top: "1.25rem",
-                left: "2rem",
-                transform: "translate(0, 0) scale(0.28) rotate(360deg)",
-                transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-                opacity: 0.95,
+                // Glides directly into the top-left Navbar logo slot
+                top: "1.1rem",
+                left: "1.5rem",
+                transform: "translate(0, 0) scale(0.32)",
+                transition: "all 0.55s cubic-bezier(0.16, 1, 0.3, 1)",
               }
         }
       >
         <div className="relative flex flex-col items-center justify-center">
-          {/* High-Resolution Retina Logo with Soft Ambient Illumination */}
-          <img
-            src="/brand-logo.png"
-            alt="Travally Compass Rose Logo"
-            className="w-36 h-36 sm:w-44 sm:h-44 object-contain filter drop-shadow-[0_0_30px_rgba(52,211,153,0.5)] drop-shadow-[0_0_60px_rgba(245,158,11,0.35)]"
-          />
+          {/* Spinning Logo Wheel */}
+          <div className="relative flex items-center justify-center">
+            <img
+              src="/brand-logo.png"
+              alt="Travally Logo"
+              className={`w-28 h-28 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_4px_20px_rgba(16,185,129,0.3)] ${
+                phase === "spinning" ? "animate-spin" : ""
+              }`}
+              style={{
+                animationDuration: "1.2s",
+                animationTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            />
+          </div>
 
-          {/* Minimalist Subtitle that appears only while fit in center */}
-          {phase === "fit" && (
-            <div className="mt-5 text-center animate-fade-in-up">
-              <span className="text-2xl font-black tracking-tight text-white">
-                Trav<span className="text-emerald-400">ally</span>
+          {/* Brand Name Text during center spin phase */}
+          <div
+            className={`mt-4 text-center transition-all duration-300 ${
+              phase === "spinning" ? "opacity-100 scale-100" : "opacity-0 scale-75"
+            }`}
+          >
+            <div className="text-xl sm:text-2xl font-black tracking-tight flex items-center justify-center gap-1">
+              <span className="text-orange-500">Tra</span>
+              <span
+                className="bg-gradient-to-r from-orange-500 to-emerald-500 bg-clip-text text-transparent inline-block"
+                style={{
+                  backgroundImage: "linear-gradient(to right, #f97316 0%, #10b981 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                va
               </span>
-              <p className="text-[10px] font-bold text-amber-400/90 tracking-widest uppercase mt-0.5">
-                Your Solo Travel Companion
-              </p>
+              <span className="text-emerald-600">lly</span>
             </div>
-          )}
+            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase mt-1">
+              Your Solo Travel Companion
+            </p>
+          </div>
         </div>
       </div>
     </div>
