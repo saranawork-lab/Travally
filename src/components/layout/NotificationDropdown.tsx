@@ -89,7 +89,10 @@ export const NotificationDropdown: React.FC = () => {
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 10000); // 10s poll
+    const interval = setInterval(() => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      fetchNotifications();
+    }, 20000); // 20s poll with visibility gate
     return () => clearInterval(interval);
   }, []);
 

@@ -178,6 +178,7 @@ model Conversation {
 
   @@index([activityId])
   @@index([travelPlanId])
+  @@index([updatedAt])
 }
 
 model Message {
@@ -191,6 +192,7 @@ model Message {
   createdAt      DateTime     @default(now())
 
   @@index([conversationId, createdAt])
+  @@index([senderId])
 }
 
 model Notification {
@@ -205,6 +207,7 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@index([userId, isRead])
+  @@index([userId, createdAt])
 }
 
 model Block {

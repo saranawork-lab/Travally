@@ -71,7 +71,10 @@ export const ChatsSidebar: React.FC<ChatsSidebarProps> = ({
 
   useEffect(() => {
     fetchChats();
-    const interval = setInterval(fetchChats, 10000);
+    const interval = setInterval(() => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      fetchChats();
+    }, 15000);
     return () => clearInterval(interval);
   }, []);
 

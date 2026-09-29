@@ -19,7 +19,9 @@ export async function GET() {
 
     const unreadCount = notifications.filter((n) => !n.isRead).length;
 
-    return NextResponse.json({ notifications, unreadCount });
+    const response = NextResponse.json({ notifications, unreadCount });
+    response.headers.set("Cache-Control", "private, s-maxage=5, stale-while-revalidate=15");
+    return response;
   } catch (error) {
     console.error("GET notifications error:", error);
     return NextResponse.json({ error: "Failed to fetch notifications" }, { status: 500 });

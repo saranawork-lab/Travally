@@ -18,7 +18,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         organizer: {
           select: {
             id: true,
-            email: true,
             profile: {
               select: {
                 displayName: true,
@@ -97,7 +96,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         ? {
             id: currentUser.id,
             displayName: currentUser.displayName,
-            email: currentUser.email,
             isVerified: currentUser.isVerified,
           }
         : null,

@@ -56,7 +56,7 @@ export default function ChatsInboxPage() {
     const interval = setInterval(() => {
       if (typeof document !== "undefined" && document.hidden) return;
       fetchChats();
-    }, 8000);
+    }, 15000);
     return () => clearInterval(interval);
   }, []);
 

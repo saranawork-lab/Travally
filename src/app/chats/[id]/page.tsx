@@ -339,11 +339,11 @@ export default function ActiveChatPage() {
 
     if (conversationId) {
       fetchChatData();
-      // High-speed active 1000ms polling for split-second real-time delivery
+      // Delta sync polling at 2500ms — fast enough for real-time feel, avoids server exhaustion
       const interval = setInterval(() => {
         if (typeof document !== "undefined" && document.hidden) return;
         fetchChatData();
-      }, 1000);
+      }, 2500);
       return () => clearInterval(interval);
     }
   }, [conversationId]);
@@ -380,8 +380,8 @@ export default function ActiveChatPage() {
     };
 
     checkCalls();
-    // Throttled to 3500ms to eliminate redundant requests and server load
-    const callInterval = setInterval(checkCalls, 3500);
+    // Throttled to 5000ms — calls are rare events, no need for aggressive polling
+    const callInterval = setInterval(checkCalls, 5000);
     return () => clearInterval(callInterval);
   }, [conversationId, currentUser, isCallModalOpen]);
 

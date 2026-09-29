@@ -76,7 +76,6 @@ export async function GET(req: NextRequest) {
         applicant: {
           select: {
             id: true,
-            email: true,
             profile: {
               select: {
                 displayName: true,

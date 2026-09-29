@@ -27,7 +27,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
         applicant: {
           select: {
             id: true,
-            email: true,
             profile: { select: { displayName: true } },
           },
         },

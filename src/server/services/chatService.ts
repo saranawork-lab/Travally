@@ -419,7 +419,21 @@ export const ChatService = {
   async toggleReaction(conversationId: string, messageId: string, userId: string, emoji: string) {
     const message = await db.message.findUnique({
       where: { id: messageId },
-      include: { sender: { include: { profile: true } } },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            profile: {
+              select: {
+                displayName: true,
+                avatarUrl: true,
+                isVerified: true,
+                verificationStatus: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!message || message.conversationId !== conversationId) {
