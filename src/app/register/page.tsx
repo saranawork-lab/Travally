@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [city, setCity] = useState("San Francisco");
+  const [city, setCity] = useState("Bengaluru");
   const [birthDate, setBirthDate] = useState("1998-06-15");
   const [gender, setGender] = useState("PREFER_NOT_TO_SAY");
   const [linkedinUrl, setLinkedinUrl] = useState("");

@@ -15,24 +15,24 @@ interface DemoAccount {
 
 const DEMO_ACCOUNTS: DemoAccount[] = [
   {
-    id: "sarah",
-    email: "sarah@travally.app",
+    id: "ananya",
+    email: "ananya@travally.app",
     displayName: "Ananya Sharma",
     role: "Organizer & Movie Host",
     description: "Organizes indie cinema & filter coffee walks in Bengaluru. Has join requests.",
     badge: "Host",
   },
   {
-    id: "alex",
-    email: "alex@travally.app",
+    id: "rohan",
+    email: "rohan@travally.app",
     displayName: "Rohan Verma",
     role: "Explorer & Architecture Buff",
     description: "Bandra heritage walk enthusiast from Mumbai. Has active chats.",
     badge: "Member",
   },
   {
-    id: "maya",
-    email: "maya@travally.app",
+    id: "priya",
+    email: "priya@travally.app",
     displayName: "Priya Iyer",
     role: "Travel Planner & Trekker",
     description: "Organizer of Kasol & Tosh Parvati Valley Autumn trek (₹8,500).",

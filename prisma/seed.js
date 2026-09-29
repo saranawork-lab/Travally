@@ -26,7 +26,7 @@ async function main() {
   // Persona 1: Ananya Sharma (Bangalore - Culture, Indie Cinema & Specialty Filter Coffee)
   const ananya = await prisma.user.create({
     data: {
-      email: "sarah@travally.app",
+      email: "ananya@travally.app",
       passwordHash,
       role: "USER",
       profile: {
@@ -56,7 +56,7 @@ async function main() {
   // Persona 2: Rohan Verma (Mumbai - Heritage Architecture & Western Ghats Treks)
   const rohan = await prisma.user.create({
     data: {
-      email: "alex@travally.app",
+      email: "rohan@travally.app",
       passwordHash,
       role: "USER",
       profile: {
@@ -86,7 +86,7 @@ async function main() {
   // Persona 3: Priya Iyer (Delhi NCR - Solo Backpacker & Himalayan Trek Leader)
   const priya = await prisma.user.create({
     data: {
-      email: "maya@travally.app",
+      email: "priya@travally.app",
       passwordHash,
       role: "USER",
       profile: {
@@ -132,6 +132,32 @@ async function main() {
       },
     },
     include: { profile: true },
+  });
+
+  // Aliases for backward compatibility:
+  await prisma.user.create({
+    data: {
+      email: "sarah@travally.app",
+      passwordHash,
+      role: "USER",
+      profile: { create: { displayName: "Ananya Sharma (Sarah)", city: "Bengaluru", isVerified: true, verificationStatus: "VERIFIED" } },
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: "alex@travally.app",
+      passwordHash,
+      role: "USER",
+      profile: { create: { displayName: "Rohan Verma (Alex)", city: "Mumbai", isVerified: true, verificationStatus: "VERIFIED" } },
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: "maya@travally.app",
+      passwordHash,
+      role: "USER",
+      profile: { create: { displayName: "Priya Iyer (Maya)", city: "New Delhi", isVerified: true, verificationStatus: "VERIFIED" } },
+    },
   });
 
   // Additional Active Indian Community Members

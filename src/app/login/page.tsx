@@ -76,7 +76,7 @@ export default function LoginPage() {
       }
 
       // Hard redirect to ensure browser reloads session cookies cleanly
-      const targetUrl = data?.user?.role === "ADMIN" ? "/admin" : "/discover";
+      const targetUrl = data?.redirectUrl || (data?.user?.role === "ADMIN" ? "/admin" : "/discover");
       window.location.href = targetUrl;
     } catch (err: any) {
       setError(err.message || "Failed to log in");
