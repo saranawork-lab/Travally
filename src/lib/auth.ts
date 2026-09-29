@@ -48,10 +48,29 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       return null;
     }
 
-    const user = await db.user.findUnique({
-      where: { id: decoded.userId },
-      include: { profile: true },
-    });
+    let user: any = null;
+    try {
+      user = await db.user.findUnique({
+        where: { id: decoded.userId },
+        include: { profile: true },
+      });
+    } catch (dbError: any) {
+      if (dbError?.message?.includes("Malformed ObjectID")) {
+        return null;
+      }
+      console.warn("DB lookup error in getCurrentUser, falling back to session token:", dbError?.message);
+      // Graceful fallback to avoid session drops during intermittent database connection hiccups
+      return {
+        id: decoded.userId,
+        email: decoded.email,
+        role: decoded.role,
+        displayName: decoded.email.split("@")[0],
+        avatarUrl: null,
+        isVerified: true,
+        verificationStatus: "VERIFIED",
+        city: null,
+      };
+    }
 
     if (!user) return null;
 

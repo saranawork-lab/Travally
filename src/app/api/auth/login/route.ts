@@ -6,6 +6,7 @@ import { signToken, AuthService } from "@/lib/auth";
 // Default Indian demo persona profiles if needed for on-the-fly MongoDB seeding
 const DEFAULT_DEMO_USERS: Record<string, any> = {
   "ananya@travally.app": {
+    id: "6abbae1957dd73964376c65d",
     email: "ananya@travally.app",
     role: "USER",
     profile: {
@@ -26,6 +27,7 @@ const DEFAULT_DEMO_USERS: Record<string, any> = {
     },
   },
   "rohan@travally.app": {
+    id: "6abbae1957dd73964376c65f",
     email: "rohan@travally.app",
     role: "USER",
     profile: {
@@ -46,6 +48,7 @@ const DEFAULT_DEMO_USERS: Record<string, any> = {
     },
   },
   "priya@travally.app": {
+    id: "6abbae1957dd73964376c661",
     email: "priya@travally.app",
     role: "USER",
     profile: {
@@ -66,6 +69,7 @@ const DEFAULT_DEMO_USERS: Record<string, any> = {
     },
   },
   "admin@travally.app": {
+    id: "6abbae1957dd73964376c663",
     email: "admin@travally.app",
     role: "ADMIN",
     profile: {
@@ -117,25 +121,29 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Try finding exact primary match first, then candidate aliases
-    let user = await db.user.findFirst({
-      where: {
-        email: { in: [targetPrimary, normalized] },
-      },
-      include: { profile: true },
-    });
-
-    if (!user) {
-      const candidateAliases = ALIAS_MAP[targetPrimary] || [normalized];
+    let user: any = null;
+    try {
       user = await db.user.findFirst({
         where: {
-          email: { in: candidateAliases },
+          email: { in: [targetPrimary, normalized] },
         },
         include: { profile: true },
       });
+
+      if (!user) {
+        const candidateAliases = ALIAS_MAP[targetPrimary] || [normalized];
+        user = await db.user.findFirst({
+          where: {
+            email: { in: candidateAliases },
+          },
+          include: { profile: true },
+        });
+      }
+    } catch (dbQueryErr: any) {
+      console.warn("MongoDB connection issue during findUser:", dbQueryErr?.message);
     }
 
-    // If demo user is missing in MongoDB for any reason, auto-create it with full Indian profile
+    // If demo user is missing in MongoDB for any reason (or DB is unreachable), ensure demo persona works
     if (!user && DEFAULT_DEMO_USERS[targetPrimary]) {
       const demoData = DEFAULT_DEMO_USERS[targetPrimary];
       const defaultHash = await bcrypt.hash("Password123!", 10);
@@ -151,13 +159,16 @@ export async function POST(req: NextRequest) {
           },
           include: { profile: true },
         });
-      } catch (createErr) {
-        console.error("Auto-seed demo account error:", createErr);
-        // Fallback: try finding again in case of race condition
-        user = await db.user.findUnique({
-          where: { email: demoData.email },
-          include: { profile: true },
-        });
+      } catch (createErr: any) {
+        console.warn("Could not upsert demo user to DB (connection issue):", createErr?.message);
+        // Resilient fallback: Provide instant demo user session so 1-click logins NEVER hang or fail
+        user = {
+          id: demoData.id || "6abbae1957dd73964376c65d",
+          email: demoData.email,
+          role: demoData.role,
+          passwordHash: defaultHash,
+          profile: demoData.profile,
+        };
       }
     }
 
@@ -219,8 +230,14 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error);
+    const msg = error?.message || "";
+    if (msg.includes("Server selection timeout") || msg.includes("InternalError") || msg.includes("connect")) {
+      return NextResponse.json({
+        error: "Database connection failed. Please ensure your IP or 0.0.0.0/0 is allowed in MongoDB Atlas Network Access."
+      }, { status: 503 });
+    }
     return NextResponse.json({ error: "Internal server error during authentication" }, { status: 500 });
   }
 }
