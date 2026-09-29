@@ -1,17 +1,17 @@
 // Prisma Schema for Travally - Social Travel Companion & Activity Discovery Platform
-// Compatible with SQLite (local development) and PostgreSQL / Supabase (production)
+// Configured for MongoDB Atlas Cloud
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id           String    @id @default(cuid())
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
   email        String    @unique
   passwordHash String
   role         String    @default("USER") // USER, ADMIN
@@ -31,8 +31,8 @@ model User {
 }
 
 model Profile {
-  id                    String    @id @default(cuid())
-  userId                String    @unique
+  id                    String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId                String    @unique @db.ObjectId
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   displayName           String
   avatarUrl             String?
@@ -59,8 +59,8 @@ model Profile {
 }
 
 model Activity {
-  id                     String         @id @default(cuid())
-  organizerId            String
+  id                     String         @id @default(auto()) @map("_id") @db.ObjectId
+  organizerId            String         @db.ObjectId
   organizer              User           @relation("OrganizedActivities", fields: [organizerId], references: [id], onDelete: Cascade)
   title                  String
   description            String
@@ -94,8 +94,8 @@ model Activity {
 }
 
 model TravelPlan {
-  id                      String         @id @default(cuid())
-  organizerId             String
+  id                      String         @id @default(auto()) @map("_id") @db.ObjectId
+  organizerId             String         @db.ObjectId
   organizer               User           @relation("OrganizedTravelPlans", fields: [organizerId], references: [id], onDelete: Cascade)
   destination             String
   departureCity           String
@@ -128,13 +128,13 @@ model TravelPlan {
 }
 
 model JoinRequest {
-  id           String      @id @default(cuid())
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
   type         String      // ACTIVITY, TRAVEL
-  activityId   String?
+  activityId   String?     @db.ObjectId
   activity     Activity?   @relation(fields: [activityId], references: [id], onDelete: Cascade)
-  travelPlanId String?
+  travelPlanId String?     @db.ObjectId
   travelPlan   TravelPlan? @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
-  applicantId  String
+  applicantId  String      @db.ObjectId
   applicant    User        @relation("SentRequests", fields: [applicantId], references: [id], onDelete: Cascade)
   status       String      @default("PENDING") // PENDING, ACCEPTED, DECLINED, CANCELLED, EXPIRED
   introMessage String?
@@ -149,12 +149,12 @@ model JoinRequest {
 }
 
 model Participant {
-  id           String      @id @default(cuid())
-  userId       String
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String      @db.ObjectId
   user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  activityId   String?
+  activityId   String?     @db.ObjectId
   activity     Activity?   @relation(fields: [activityId], references: [id], onDelete: Cascade)
-  travelPlanId String?
+  travelPlanId String?     @db.ObjectId
   travelPlan   TravelPlan? @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
   role         String      @default("MEMBER") // ORGANIZER, MEMBER
   joinedAt     DateTime    @default(now())
@@ -164,11 +164,11 @@ model Participant {
 }
 
 model Conversation {
-  id           String      @id @default(cuid())
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
   type         String      // ACTIVITY, TRAVEL
-  activityId   String?
+  activityId   String?     @db.ObjectId
   activity     Activity?   @relation(fields: [activityId], references: [id], onDelete: Cascade)
-  travelPlanId String?
+  travelPlanId String?     @db.ObjectId
   travelPlan   TravelPlan? @relation(fields: [travelPlanId], references: [id], onDelete: Cascade)
   title        String
   createdAt    DateTime    @default(now())
@@ -181,10 +181,10 @@ model Conversation {
 }
 
 model Message {
-  id             String       @id @default(cuid())
-  conversationId String
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String       @db.ObjectId
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  senderId       String
+  senderId       String       @db.ObjectId
   sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
   content        String
   readBy         String       @default("[]") // JSON string array of user IDs
@@ -194,8 +194,8 @@ model Message {
 }
 
 model Notification {
-  id        String   @id @default(cuid())
-  userId    String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
   user      User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
   type      String   // REQUEST_RECEIVED, REQUEST_ACCEPTED, REQUEST_DECLINED, NEW_MESSAGE, ACTIVITY_CANCELLED, TRIP_UPDATE
   title     String
@@ -208,10 +208,10 @@ model Notification {
 }
 
 model Block {
-  id        String   @id @default(cuid())
-  blockerId String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  blockerId String   @db.ObjectId
   blocker   User     @relation("BlocksGiven", fields: [blockerId], references: [id], onDelete: Cascade)
-  blockedId String
+  blockedId String   @db.ObjectId
   blocked   User     @relation("BlocksReceived", fields: [blockedId], references: [id], onDelete: Cascade)
   type      String   @default("BLOCK") // BLOCK, RESTRICT
   createdAt DateTime @default(now())
@@ -220,8 +220,8 @@ model Block {
 }
 
 model Report {
-  id          String   @id @default(cuid())
-  reporterId  String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  reporterId  String   @db.ObjectId
   reporter    User     @relation("ReportsCreated", fields: [reporterId], references: [id], onDelete: Cascade)
   targetType  String   // USER, ACTIVITY, TRAVEL
   targetId    String

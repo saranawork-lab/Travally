@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isValidObjectId } from "@/lib/auth";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Activity not found" }, { status: 404 });
+    }
     const currentUser = await getCurrentUser();
 
     const activity = await db.activity.findUnique({
@@ -85,6 +88,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     const { id } = params;
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Activity not found" }, { status: 404 });
+    }
     const { status } = await req.json();
 
     const activity = await db.activity.findUnique({

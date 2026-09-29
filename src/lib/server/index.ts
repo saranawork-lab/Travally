@@ -11,6 +11,7 @@ export {
   getCurrentUser,
   signToken,
   verifyToken,
+  isValidObjectId,
   AuthService,
 } from "../auth";
 export type { SessionUser } from "../auth";

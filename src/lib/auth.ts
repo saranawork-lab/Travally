@@ -28,6 +28,11 @@ export function verifyToken(token: string): { userId: string; email: string; rol
   }
 }
 
+export function isValidObjectId(id?: string | null): boolean {
+  if (!id || typeof id !== "string") return false;
+  return /^[0-9a-fA-F]{24}$/.test(id);
+}
+
 /**
  * Retrieves the current session user from HTTP-only cookie.
  * Also checks database to return full profile and role.
@@ -39,7 +44,9 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     if (!token) return null;
 
     const decoded = verifyToken(token);
-    if (!decoded || !decoded.userId) return null;
+    if (!decoded || !decoded.userId || !isValidObjectId(decoded.userId)) {
+      return null;
+    }
 
     const user = await db.user.findUnique({
       where: { id: decoded.userId },
@@ -58,7 +65,10 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       verificationStatus: user.profile?.verificationStatus || "UNVERIFIED",
       city: user.profile?.city || null,
     };
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.message?.includes("Malformed ObjectID")) {
+      return null;
+    }
     console.error("Error in getCurrentUser:", error);
     return null;
   }

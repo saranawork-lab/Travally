@@ -49,3 +49,5 @@ next-env.d.ts.bak
 # Local Scratch
 scratch_*
 *.log
+
+.vercel

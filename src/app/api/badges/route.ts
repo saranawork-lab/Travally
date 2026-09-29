@@ -24,12 +24,13 @@ export async function GET(req: NextRequest) {
     let totalUnreadMessages = 0;
 
     if (activityIds.length > 0 || travelPlanIds.length > 0) {
+      const orFilters = [];
+      if (activityIds.length > 0) orFilters.push({ activityId: { in: activityIds } });
+      if (travelPlanIds.length > 0) orFilters.push({ travelPlanId: { in: travelPlanIds } });
+
       const conversations = await db.conversation.findMany({
         where: {
-          OR: [
-            activityIds.length > 0 ? { activityId: { in: activityIds } } : {},
-            travelPlanIds.length > 0 ? { travelPlanId: { in: travelPlanIds } } : {},
-          ],
+          OR: orFilters,
         },
         select: {
           id: true,

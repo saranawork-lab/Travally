@@ -35,6 +35,7 @@ export default function ActivityDetailPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [reopening, setReopening] = useState(false);
 
   const fetchActivity = async () => {
     try {
@@ -116,8 +117,6 @@ export default function ActivityDetailPage() {
   const isCancelled = activity.status === "CANCELLED";
   const isPast = isPastCutoff(activity.date, activity.startTime, activity.cutoffHoursBeforeStart);
   const spotsLeft = Math.max(0, activity.maxParticipants - activity.currentAcceptedCount);
-
-  const [reopening, setReopening] = useState(false);
 
   const handleReopenActivity = async () => {
     setReopening(true);

@@ -36,6 +36,7 @@ export default function TravelPlanDetailPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [reopening, setReopening] = useState(false);
 
   const fetchTrip = async () => {
     try {
@@ -101,8 +102,6 @@ export default function TravelPlanDetailPage() {
   const spotsLeft = Math.max(0, trip.groupSizeMax - trip.currentAcceptedCount);
   const attractionsList: string[] = safeJsonParse(trip.plannedAttractions, []);
   const interestsList: string[] = safeJsonParse(trip.interests, []);
-
-  const [reopening, setReopening] = useState(false);
 
   const handleReopenTrip = async () => {
     setReopening(true);

@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isValidObjectId } from "@/lib/auth";
 import { calculateTravelCompatibility, UserTravelProfile } from "@/lib/scoring";
 import { safeJsonParse } from "@/lib/utils";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Travel plan not found" }, { status: 404 });
+    }
     const currentUser = await getCurrentUser();
 
     const travelPlan = await db.travelPlan.findUnique({

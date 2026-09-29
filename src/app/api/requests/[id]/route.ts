@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isValidObjectId } from "@/lib/auth";
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const { id } = params;
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+    }
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = params;
     const { action } = await req.json(); // "ACCEPT" | "DECLINE"
 
     if (action !== "ACCEPT" && action !== "DECLINE") {
@@ -248,6 +251,9 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     }
 
     const { id } = params;
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+    }
 
     const joinRequest = await db.joinRequest.findUnique({
       where: { id },
