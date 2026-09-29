@@ -39,7 +39,7 @@ import { RealisticEmoji } from "@/components/chat/RealisticEmoji";
 import { EmojiPickerPopover } from "@/components/chat/EmojiPickerPopover";
 import { VoiceCallModal, CallParticipant } from "@/components/chat/VoiceCallModal";
 import { AttachmentPopover } from "@/components/chat/AttachmentPopover";
-import { MessageStatusBeacon } from "@/components/chat/MessageStatusBeacon";
+import { MessageStatusBeacon, type MessageDeliveryStatus } from "@/components/chat/MessageStatusBeacon";
 import { E2EESecurityModal } from "@/components/chat/E2EESecurityModal";
 import { ChatsSidebar } from "@/components/chat/ChatsSidebar";
 import { GroupMembersDrawer } from "@/components/chat/GroupMembersDrawer";
@@ -216,11 +216,31 @@ export default function ActiveChatPage() {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const decryptedCacheRef = useRef<Map<string, string>>(new Map());
+  const lastMessageCreatedAtRef = useRef<string | null>(null);
 
-  // Fetch current user and chat data with transparent E2EE decryption
+  // High-performance decrypted message cache: Prevents redundant re-decryptions on every cycle
+  const decryptFast = async (msg: any): Promise<string> => {
+    if (decryptedCacheRef.current.has(msg.id)) {
+      return decryptedCacheRef.current.get(msg.id)!;
+    }
+    let plainText = msg.content;
+    if (isE2EEMessage(msg.content)) {
+      plainText = await decryptChatMessage(msg.content, conversationId);
+    }
+    decryptedCacheRef.current.set(msg.id, plainText);
+    return plainText;
+  };
+
+  // Fetch current user and chat data with fast delta sync and transparent E2EE decryption
   const fetchChatData = async () => {
     try {
-      const res = await fetch(`/api/chats/${conversationId}/messages`);
+      const lastCreated = lastMessageCreatedAtRef.current;
+      const url = lastCreated
+        ? `/api/chats/${conversationId}/messages?since=${encodeURIComponent(lastCreated)}`
+        : `/api/chats/${conversationId}/messages`;
+
+      const res = await fetch(url);
       if (res.status === 410) {
         setIsChatExpired(true);
         return;
@@ -231,18 +251,51 @@ export default function ActiveChatPage() {
       }
       if (res.ok) {
         const data = await res.json();
-        setConversation(data.conversation);
-        const rawMessages = data.messages || [];
-        const decryptedList = await Promise.all(
-          rawMessages.map(async (msg: any) => {
-            let plainText = msg.content;
-            if (isE2EEMessage(msg.content)) {
-              plainText = await decryptChatMessage(msg.content, conversationId);
+
+        if (data.isDelta) {
+          const rawDelta = data.messages || [];
+          if (rawDelta.length > 0) {
+            const newDecrypted = await Promise.all(
+              rawDelta.map(async (msg: any) => ({
+                ...msg,
+                content: await decryptFast(msg),
+              }))
+            );
+
+            setMessages((prev) => {
+              // Deduplicate against optimistic placeholders or existing messages
+              const existingIds = new Set(prev.map((m) => m.id));
+              const filtered = newDecrypted.filter((m: any) => !existingIds.has(m.id));
+              if (filtered.length === 0) return prev;
+              return [...prev, ...filtered];
+            });
+
+            const latest = rawDelta[rawDelta.length - 1];
+            if (latest?.createdAt) {
+              lastMessageCreatedAtRef.current = latest.createdAt;
             }
-            return { ...msg, content: plainText };
-          })
-        );
-        setMessages(decryptedList);
+          }
+        } else {
+          // Full initial load
+          if (data.conversation) {
+            setConversation(data.conversation);
+          }
+          const rawMessages = data.messages || [];
+          const decryptedList = await Promise.all(
+            rawMessages.map(async (msg: any) => ({
+              ...msg,
+              content: await decryptFast(msg),
+            }))
+          );
+          setMessages(decryptedList);
+
+          if (rawMessages.length > 0) {
+            const latest = rawMessages[rawMessages.length - 1];
+            if (latest?.createdAt) {
+              lastMessageCreatedAtRef.current = latest.createdAt;
+            }
+          }
+        }
       }
     } catch (e) {
       console.error(e);
@@ -261,7 +314,11 @@ export default function ActiveChatPage() {
 
     if (conversationId) {
       fetchChatData();
-      const interval = setInterval(fetchChatData, 3500);
+      // High-speed active 1000ms polling for split-second real-time delivery
+      const interval = setInterval(() => {
+        if (typeof document !== "undefined" && document.hidden) return;
+        fetchChatData();
+      }, 1000);
       return () => clearInterval(interval);
     }
   }, [conversationId]);
@@ -373,7 +430,7 @@ export default function ActiveChatPage() {
     }
   }, [inputMessage]);
 
-  // Send message
+  // Send message with instant split-second optimistic rendering
   const handleSendMessage = async (customPayload?: MessagePayload) => {
     const textToSend = customPayload ? customPayload.text : inputMessage.trim();
     if (!textToSend && !customPayload?.mediaType) return;
@@ -391,8 +448,37 @@ export default function ActiveChatPage() {
       setReplyingTo(null);
     }
 
+    const plaintextJson = JSON.stringify(payload);
+    const tempId = `optimistic_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+
+    // ⚡ INSTANT OPTIMISTIC UI: Appears on user's screen in 0 milliseconds!
+    const optimisticMsg = {
+      id: tempId,
+      conversationId,
+      senderId: currentUser?.id,
+      sender: {
+        id: currentUser?.id,
+        email: currentUser?.email,
+        profile: {
+          displayName: currentUser?.displayName || currentUser?.email?.split("@")[0] || "Me",
+          avatarUrl: currentUser?.avatarUrl,
+          isVerified: currentUser?.isVerified,
+        },
+      },
+      content: plaintextJson,
+      createdAt: new Date().toISOString(),
+      readBy: JSON.stringify([currentUser?.id]),
+      status: "sending" as const,
+      isOptimistic: true,
+    };
+
+    decryptedCacheRef.current.set(tempId, plaintextJson);
+
+    // Immediately render in local messages state (split-second!)
+    setMessages((prev) => [...prev, optimisticMsg]);
+    scrollToBottom(true);
+
     try {
-      const plaintextJson = JSON.stringify(payload);
       // Encrypt with 256-bit AES-GCM
       const encryptedContent = await encryptChatMessage(plaintextJson, conversationId);
 
@@ -404,18 +490,33 @@ export default function ActiveChatPage() {
 
       if (res.ok) {
         const data = await res.json();
-        const decryptedMsg = {
+        const serverMsg = {
           ...data.message,
           content: plaintextJson,
+          status: "sent" as const,
         };
-        setMessages((prev) => [...prev, decryptedMsg]);
-        scrollToBottom();
+        decryptedCacheRef.current.set(serverMsg.id, plaintextJson);
+
+        if (serverMsg.createdAt) {
+          lastMessageCreatedAtRef.current = serverMsg.createdAt;
+        }
+
+        // Seamlessly update optimistic message to confirmed server message
+        setMessages((prev) =>
+          prev.map((m) => (m.id === tempId ? serverMsg : m))
+        );
       } else {
         const err = await res.json();
-        alert(err.error || "Failed to send message");
+        console.error("Message send error:", err);
+        setMessages((prev) =>
+          prev.map((m) => (m.id === tempId ? { ...m, status: "failed" } : m))
+        );
       }
     } catch (err) {
-      console.error(err);
+      console.error("Message send network error:", err);
+      setMessages((prev) =>
+        prev.map((m) => (m.id === tempId ? { ...m, status: "failed" } : m))
+      );
     } finally {
       setSending(false);
     }
@@ -825,7 +926,14 @@ export default function ActiveChatPage() {
             const hasSubsequentReply = messages.slice(idx + 1).some((m) => m.senderId !== msg.senderId);
             const isRead = isReadByOthers || hasSubsequentReply;
             const isDelivered = Date.now() - new Date(msg.createdAt).getTime() > 2000;
-            const deliveryStatus = isRead ? "read" : isDelivered ? "delivered" : "sent";
+            const deliveryStatus: MessageDeliveryStatus =
+              msg.status === "sending"
+                ? "sending"
+                : isRead
+                ? "read"
+                : isDelivered
+                ? "delivered"
+                : "sent";
 
             const otherParticipantName = messages.find((m) => m.senderId !== currentUser?.id)?.sender?.profile?.displayName || "Companion";
 
