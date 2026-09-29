@@ -265,8 +265,7 @@ export async function POST(req: NextRequest) {
         preferredAgeMin: preferredAgeMin ? parseInt(preferredAgeMin, 10) : null,
         preferredAgeMax: preferredAgeMax ? parseInt(preferredAgeMax, 10) : null,
         genderPreference: genderPreference || "ANY",
-        additionalRequirements: additionalRequirements ? additionalRequirements.trim() : null,
-        cutoffHoursBeforeStart: cutoffHoursBeforeStart ? parseInt(cutoffHoursBeforeStart, 10) : 2,
+        cutoffHoursBeforeStart: cutoffHoursBeforeStart ? Math.max(0.5, parseFloat(cutoffHoursBeforeStart)) : 1,
         // @ts-ignore: Schema updated but types may not reflect it yet without restarting dev server
         imageUrl: imageUrl ? imageUrl.trim() : null,
         status: "OPEN",

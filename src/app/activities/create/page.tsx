@@ -109,7 +109,7 @@ export default function CreateActivityPage() {
     approxDurationHours: "2.0",
     genderPreference: "ANY",
     additionalRequirements: "",
-    cutoffHoursBeforeStart: "2",
+    cutoffHoursBeforeStart: "1",
     imageUrl: "",
   });
 
@@ -408,16 +408,21 @@ export default function CreateActivityPage() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-900 dark:text-slate-100 mb-1.5">
-                    Request Cutoff (Hours before start)
+                    Close Requests Before Event
                   </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="48"
+                  <select
                     value={formData.cutoffHoursBeforeStart}
                     onChange={(e) => setFormData({ ...formData, cutoffHoursBeforeStart: e.target.value })}
                     className="w-full rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated px-3.5 py-2 text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
-                  />
+                  >
+                    <option value="1">1 hour before start (Default)</option>
+                    <option value="0.5">30 minutes before start</option>
+                    <option value="2">2 hours before start</option>
+                    <option value="3">3 hours before start</option>
+                    <option value="6">6 hours before start</option>
+                    <option value="12">12 hours before start</option>
+                    <option value="24">24 hours before start</option>
+                  </select>
                 </div>
               </div>
 

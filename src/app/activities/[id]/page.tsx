@@ -16,11 +16,14 @@ import {
   Flag,
   ArrowLeft,
   Share2,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import { formatDate, isPastCutoff } from "@/lib/utils";
 import { VerificationBadge } from "@/components/common/VerificationBadge";
 import { JoinRequestModal } from "@/components/activities/JoinRequestModal";
 import { ReportModal } from "@/components/common/ReportModal";
+import { EditActivityModal } from "@/components/activities/EditActivityModal";
 
 export default function ActivityDetailPage() {
   const params = useParams();
@@ -33,8 +36,10 @@ export default function ActivityDetailPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [reopening, setReopening] = useState(false);
 
   const fetchActivity = async () => {
@@ -71,6 +76,24 @@ export default function ActivityDetailPage() {
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleDeleteActivity = async () => {
+    if (!confirm("Are you sure you want to permanently delete this activity? This will remove all join requests and group conversations.")) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/activities/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        router.push("/discover?mode=companion");
+      } else {
+        alert("Failed to delete activity");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error deleting activity");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -349,21 +372,37 @@ export default function ActivityDetailPage() {
 
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             {isOrganizer ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsEditOpen(true)}
+                  className="px-3.5 py-2 rounded-xl text-xs font-bold text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 dark:hover:bg-orange-900/40 border border-orange-200 dark:border-orange-800/60 shadow-xs transition flex items-center gap-1.5 hover:scale-105 active:scale-95"
+                >
+                  <Edit className="w-3.5 h-3.5 text-orange-500" />
+                  <span>Edit Activity</span>
+                </button>
                 <Link
                   href="/requests"
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 shadow-xs transition"
+                  className="px-3.5 py-2 rounded-xl text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 shadow-xs transition"
                 >
                   Manage Requests
                 </Link>
                 {!isCancelled && (
                   <button
                     onClick={handleCancelActivity}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-rose-200 transition"
+                    className="px-3.5 py-2 rounded-xl text-xs font-semibold text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 border border-amber-300 dark:border-amber-800/60 transition"
                   >
-                    Cancel Activity
+                    Cancel
                   </button>
                 )}
+                <button
+                  onClick={handleDeleteActivity}
+                  disabled={isDeleting}
+                  className="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 transition flex items-center gap-1"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>{isDeleting ? "Deleting..." : "Delete"}</span>
+                </button>
               </div>
             ) : userRequest ? (
               userRequest.status === "PENDING" ? (
@@ -433,6 +472,13 @@ export default function ActivityDetailPage() {
         targetType="ACTIVITY"
         targetId={activity.id}
         targetName={activity.title}
+      />
+
+      <EditActivityModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        activity={activity}
+        onSuccess={() => fetchActivity()}
       />
     </div>
   );

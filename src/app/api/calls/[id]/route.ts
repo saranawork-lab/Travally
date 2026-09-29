@@ -22,7 +22,7 @@ export async function GET(
 
     const call = getCallById(params.id);
     if (!call) {
-      return NextResponse.json({ error: "Call not found" }, { status: 404 });
+      return NextResponse.json({ call: null, ended: true }, { status: 200 });
     }
 
     return NextResponse.json({ call });
@@ -50,7 +50,7 @@ export async function POST(
 
     const call = getCallById(params.id);
     if (!call) {
-      return NextResponse.json({ error: "Call not found" }, { status: 404 });
+      return NextResponse.json({ call: null, ended: true, message: "Call has ended" }, { status: 200 });
     }
 
     let updated = call;

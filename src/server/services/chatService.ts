@@ -19,6 +19,13 @@ export interface GetMessagesOptions {
   cursor?: string | null;
 }
 
+export interface DeleteMessageInput {
+  conversationId: string;
+  messageId: string;
+  userId: string;
+  deleteType: "everyone" | "me";
+}
+
 /**
  * Backend ChatService:
  * Core server-side business logic for messaging, real-time delta sync,
@@ -457,6 +464,132 @@ export const ChatService = {
     });
 
     return { success: true, reactions, updatedMessage };
+  },
+
+  /**
+   * Deletes a message:
+   * - "everyone": Available only to sender within 15 minutes of sending.
+   * - "me": Hides message for the requesting user.
+   */
+  async deleteMessage({
+    conversationId,
+    messageId,
+    userId,
+    deleteType,
+  }: DeleteMessageInput) {
+    const message = await db.message.findUnique({
+      where: { id: messageId },
+    });
+
+    if (!message || message.conversationId !== conversationId) {
+      return { error: "Message not found in this conversation", status: 404 };
+    }
+
+    if (deleteType === "everyone") {
+      // 1. Verify sender
+      if (message.senderId !== userId) {
+        return { error: "You can only delete your own messages for everyone", status: 403 };
+      }
+
+      // 2. Verify 15-minute time window
+      const messageAgeMs = Date.now() - new Date(message.createdAt).getTime();
+      const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
+      if (messageAgeMs > FIFTEEN_MINUTES_MS) {
+        return {
+          error: "Delete for everyone is only available within 15 minutes of sending",
+          status: 400,
+        };
+      }
+
+      // 3. Mark message as deleted for everyone
+      const deletedPayload = {
+        isDeleted: true,
+        deletedForEveryone: true,
+        deletedAt: new Date().toISOString(),
+        text: "This message was deleted",
+      };
+
+      let newContent = JSON.stringify(deletedPayload);
+      if (message.content.startsWith("e2ee:")) {
+        const { encryptChatMessage } = await import("@/lib/crypto");
+        newContent = await encryptChatMessage(newContent, conversationId);
+      }
+
+      const updatedMessage = await db.message.update({
+        where: { id: messageId },
+        data: { content: newContent },
+        include: {
+          sender: {
+            select: {
+              id: true,
+              profile: {
+                select: {
+                  displayName: true,
+                  avatarUrl: true,
+                  isVerified: true,
+                  verificationStatus: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return { success: true, message: updatedMessage };
+    } else {
+      // Delete for me: record user in deletedFor list
+      let parsedContent: any = {};
+      let isEncrypted = false;
+      let plainText = message.content;
+
+      try {
+        if (plainText.startsWith("e2ee:")) {
+          isEncrypted = true;
+          plainText = await decryptChatMessage(message.content, conversationId);
+        }
+        parsedContent = JSON.parse(plainText);
+      } catch {
+        parsedContent = { text: plainText };
+      }
+
+      const deletedForList: string[] = Array.isArray(parsedContent.deletedFor)
+        ? parsedContent.deletedFor
+        : [];
+
+      if (!deletedForList.includes(userId)) {
+        deletedForList.push(userId);
+      }
+
+      parsedContent.deletedFor = deletedForList;
+      let newContent = JSON.stringify(parsedContent);
+
+      if (isEncrypted) {
+        const { encryptChatMessage } = await import("@/lib/crypto");
+        newContent = await encryptChatMessage(newContent, conversationId);
+      }
+
+      const updatedMessage = await db.message.update({
+        where: { id: messageId },
+        data: { content: newContent },
+        include: {
+          sender: {
+            select: {
+              id: true,
+              profile: {
+                select: {
+                  displayName: true,
+                  avatarUrl: true,
+                  isVerified: true,
+                  verificationStatus: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return { success: true, message: updatedMessage, deletedForMe: true };
+    }
   },
 };
 

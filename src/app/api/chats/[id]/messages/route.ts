@@ -110,3 +110,38 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: "Failed to toggle reaction" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id: conversationId } = params;
+    const { searchParams } = new URL(req.url);
+    const body = await req.json().catch(() => ({}));
+    const messageId = body?.messageId || searchParams.get("messageId");
+    const deleteType = (body?.deleteType || searchParams.get("deleteType") || "everyone") as "everyone" | "me";
+
+    if (!messageId) {
+      return NextResponse.json({ error: "messageId is required" }, { status: 400 });
+    }
+
+    const result = await ChatService.deleteMessage({
+      conversationId,
+      messageId,
+      userId: user.id,
+      deleteType,
+    });
+
+    if ("error" in result && result.error) {
+      return NextResponse.json({ error: result.error }, { status: result.status || 400 });
+    }
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("DELETE message error:", error);
+    return NextResponse.json({ error: "Failed to delete message" }, { status: 500 });
+  }
+}
