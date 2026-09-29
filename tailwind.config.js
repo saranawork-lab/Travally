@@ -89,6 +89,8 @@ module.exports = {
         "slide-up": "slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
         shimmer: "shimmer 2.5s ease-in-out infinite",
         "pulse-slow": "pulseSlow 8s ease-in-out infinite",
+        "telegram-pop": "telegram-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        "telegram-float": "telegram-float 2.8s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -106,6 +108,15 @@ module.exports = {
         pulseSlow: {
           "0%, 100%": { opacity: "0.4", transform: "scale(1)" },
           "50%": { opacity: "0.7", transform: "scale(1.08)" },
+        },
+        "telegram-pop": {
+          "0%": { transform: "scale(0.85)" },
+          "50%": { transform: "scale(1.22)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "telegram-float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-3px)" },
         },
       },
     },

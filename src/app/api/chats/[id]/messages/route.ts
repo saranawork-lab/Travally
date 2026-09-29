@@ -19,19 +19,26 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     const { id: conversationId } = params;
     const since = req.nextUrl.searchParams.get("since");
+    const limitParam = req.nextUrl.searchParams.get("limit");
+    const cursor = req.nextUrl.searchParams.get("cursor");
+    const limit = limitParam ? parseInt(limitParam, 10) : undefined;
 
     const result = await ChatService.getMessages({
       conversationId,
       userId: user.id,
       userRole: user.role,
       since,
+      limit,
+      cursor,
     });
 
     if ("error" in result && result.error) {
       return NextResponse.json({ error: result.error }, { status: result.status || 400 });
     }
 
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+    response.headers.set("Cache-Control", "private, no-cache, no-store, must-revalidate");
+    return response;
   } catch (error) {
     console.error("GET messages error:", error);
     return NextResponse.json({ error: "Failed to fetch messages" }, { status: 500 });

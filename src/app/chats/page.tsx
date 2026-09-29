@@ -53,7 +53,10 @@ export default function ChatsInboxPage() {
 
   useEffect(() => {
     fetchChats();
-    const interval = setInterval(fetchChats, 8000);
+    const interval = setInterval(() => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      fetchChats();
+    }, 8000);
     return () => clearInterval(interval);
   }, []);
 

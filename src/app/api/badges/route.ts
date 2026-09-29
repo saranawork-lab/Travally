@@ -86,11 +86,13 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       unreadChatsCount,
       totalUnreadMessages,
       pendingRequestsCount,
     });
+    response.headers.set("Cache-Control", "private, s-maxage=5, stale-while-revalidate=15");
+    return response;
   } catch (error) {
     console.error("GET /api/badges error:", error);
     return NextResponse.json({ unreadChatsCount: 0, pendingRequestsCount: 0, totalUnreadMessages: 0 });

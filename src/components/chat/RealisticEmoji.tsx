@@ -112,9 +112,14 @@ export const RealisticEmoji: React.FC<RealisticEmojiProps> = ({
 }) => {
   const [isPopping, setIsPopping] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const cleanEmoji = emoji.trim();
-  const assetUrl = TELEGRAM_EMOJIS[cleanEmoji];
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const cleanEmoji = emoji ? emoji.trim() : "";
+  const assetUrl = cleanEmoji ? TELEGRAM_EMOJIS[cleanEmoji] : undefined;
 
   let pxSize = 28;
   if (typeof size === "number") {
@@ -162,15 +167,16 @@ export const RealisticEmoji: React.FC<RealisticEmojiProps> = ({
         isolation: "isolate",
       }}
     >
-      {assetUrl && !imgError ? (
+      {mounted && assetUrl && !imgError ? (
         <img
           src={assetUrl}
           alt={cleanEmoji}
           width={pxSize}
           height={pxSize}
-          loading="eager"
+          loading="lazy"
+          decoding="async"
           onError={() => setImgError(true)}
-          className="w-full h-full object-contain pointer-events-none select-none"
+          className="w-full h-full object-contain pointer-events-none select-none transition-opacity duration-200"
           style={{
             imageRendering: "auto",
             filter: "none",

@@ -328,6 +328,9 @@ export default function ActiveChatPage() {
     if (!conversationId || !currentUser) return;
 
     const checkCalls = async () => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      if (isCallModalOpen) return;
+
       try {
         const res = await fetch(`/api/calls?conversationId=${conversationId}`);
         if (!res.ok) return;
@@ -352,7 +355,8 @@ export default function ActiveChatPage() {
     };
 
     checkCalls();
-    const callInterval = setInterval(checkCalls, 2000);
+    // Throttled to 3500ms to eliminate redundant requests and server load
+    const callInterval = setInterval(checkCalls, 3500);
     return () => clearInterval(callInterval);
   }, [conversationId, currentUser, isCallModalOpen]);
 

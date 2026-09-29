@@ -26,6 +26,8 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
   const [activeTab, setActiveTab] = useState("popular");
   const [search, setSearch] = useState("");
   const popoverRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -38,16 +40,16 @@ export const EmojiPickerPopover: React.FC<EmojiPickerPopoverProps> = ({
       if (target && target.closest("[data-emoji-toggle]")) {
         return;
       }
-      onClose();
+      onCloseRef.current();
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, { passive: true });
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

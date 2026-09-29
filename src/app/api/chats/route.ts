@@ -12,10 +12,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Automatically purge conversations that exceeded their 7-day validity post-event
-    await cleanupExpiredConversations();
+    // 1. Non-blocking background purge of conversations exceeding 7-day retention
+    cleanupExpiredConversations().catch((err) =>
+      console.warn("Background chat retention cleanup warning:", err)
+    );
 
-    // 1. Get all activities and trips where the user is a participant
+    // 2. Get all activities and trips where the user is a participant
     const participations = await db.participant.findMany({
       where: { userId: user.id },
       select: { activityId: true, travelPlanId: true },
@@ -24,15 +26,27 @@ export async function GET(req: NextRequest) {
     const activityIds = participations.map((p) => p.activityId).filter(Boolean) as string[];
     const travelPlanIds = participations.map((p) => p.travelPlanId).filter(Boolean) as string[];
 
-    // 2. Fetch conversations matching these activities or trips
+    if (activityIds.length === 0 && travelPlanIds.length === 0) {
+      const emptyRes = NextResponse.json({ conversations: [] });
+      emptyRes.headers.set("Cache-Control", "private, s-maxage=10, stale-while-revalidate=59");
+      return emptyRes;
+    }
+
+    // 3. Fetch conversations matching these activities or trips
     const conversations = await db.conversation.findMany({
       where: {
         OR: [
-          { activityId: { in: activityIds } },
-          { travelPlanId: { in: travelPlanIds } },
+          ...(activityIds.length > 0 ? [{ activityId: { in: activityIds } }] : []),
+          ...(travelPlanIds.length > 0 ? [{ travelPlanId: { in: travelPlanIds } }] : []),
         ],
       },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        type: true,
+        updatedAt: true,
+        activityId: true,
+        travelPlanId: true,
         activity: {
           select: {
             id: true,
@@ -61,11 +75,15 @@ export async function GET(req: NextRequest) {
         messages: {
           take: 1,
           orderBy: { createdAt: "desc" },
-          include: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            senderId: true,
             sender: {
               select: {
                 id: true,
-                profile: { select: { displayName: true } },
+                profile: { select: { displayName: true, avatarUrl: true } },
               },
             },
           },
@@ -80,7 +98,9 @@ export async function GET(req: NextRequest) {
       retentionInfo: getChatRetentionInfo(conv),
     }));
 
-    return NextResponse.json({ conversations: decorated });
+    const response = NextResponse.json({ conversations: decorated });
+    response.headers.set("Cache-Control", "private, s-maxage=10, stale-while-revalidate=59");
+    return response;
   } catch (error) {
     console.error("GET chats error:", error);
     return NextResponse.json({ error: "Failed to fetch conversations" }, { status: 500 });

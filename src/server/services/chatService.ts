@@ -15,6 +15,8 @@ export interface GetMessagesOptions {
   userId: string;
   userRole?: string;
   since?: string | null;
+  limit?: number;
+  cursor?: string | null;
 }
 
 /**
@@ -27,7 +29,7 @@ export const ChatService = {
    * Retrieves messages for a conversation.
    * If `since` is provided, performs an ultra-fast delta fetch (only messages newer than `since`).
    */
-  async getMessages({ conversationId, userId, userRole, since }: GetMessagesOptions) {
+  async getMessages({ conversationId, userId, userRole, since, limit, cursor }: GetMessagesOptions) {
     // 1. Fast incremental delta check
     if (since) {
       const sinceDate = new Date(since);
@@ -41,7 +43,6 @@ export const ChatService = {
             sender: {
               select: {
                 id: true,
-                email: true,
                 profile: {
                   select: {
                     displayName: true,
@@ -101,7 +102,6 @@ export const ChatService = {
                 user: {
                   select: {
                     id: true,
-                    email: true,
                     profile: {
                       select: {
                         displayName: true,
@@ -118,7 +118,6 @@ export const ChatService = {
             organizer: {
               select: {
                 id: true,
-                email: true,
                 profile: {
                   select: {
                     displayName: true,
@@ -139,7 +138,6 @@ export const ChatService = {
                 user: {
                   select: {
                     id: true,
-                    email: true,
                     profile: {
                       select: {
                         displayName: true,
@@ -156,7 +154,6 @@ export const ChatService = {
             organizer: {
               select: {
                 id: true,
-                email: true,
                 profile: {
                   select: {
                     displayName: true,
@@ -194,14 +191,14 @@ export const ChatService = {
       return { error: "Access denied", status: 403 };
     }
 
-    // Load conversation messages
-    const messages = await db.message.findMany({
+    // Load conversation messages with pagination (default latest 50)
+    const fetchLimit = limit ? Math.min(Math.max(limit, 1), 100) : 50;
+    const messagesQuery: any = {
       where: { conversationId },
       include: {
         sender: {
           select: {
             id: true,
-            email: true,
             profile: {
               select: {
                 displayName: true,
@@ -213,8 +210,18 @@ export const ChatService = {
           },
         },
       },
-      orderBy: { createdAt: "asc" },
-    });
+      take: fetchLimit,
+      orderBy: { createdAt: "desc" },
+    };
+
+    if (cursor) {
+      messagesQuery.cursor = { id: cursor };
+      messagesQuery.skip = 1;
+    }
+
+    const rawMessages = await db.message.findMany(messagesQuery);
+    // Reverse to chronological order (asc) so client renders in natural sequence
+    const messages = rawMessages.reverse();
 
     // Mark unread in background
     const unreadMessagesToUpdate: { id: string; readBy: string }[] = [];
@@ -334,7 +341,6 @@ export const ChatService = {
         sender: {
           select: {
             id: true,
-            email: true,
             profile: {
               select: {
                 displayName: true,

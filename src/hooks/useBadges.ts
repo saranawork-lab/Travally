@@ -26,6 +26,11 @@ function notifySubscribers() {
 }
 
 async function doFetchBadges(force = false) {
+  // Never poll while tab is hidden in the background unless forced
+  if (typeof document !== "undefined" && document.hidden && !force) {
+    return;
+  }
+
   const now = Date.now();
   // Don't refetch if fetched within last 8 seconds unless forced
   if (!force && now - lastFetchTime < 8000) {
@@ -71,6 +76,12 @@ function ensureGlobalInterval() {
   const handleUpdate = () => doFetchBadges(true);
   window.addEventListener("travally_badges_updated", handleUpdate);
   window.addEventListener("storage", handleUpdate);
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && Date.now() - lastFetchTime > 8000) {
+      doFetchBadges();
+    }
+  });
 }
 
 export function useBadges() {
