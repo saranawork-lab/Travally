@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -15,13 +15,98 @@ import {
   BadgeCheck,
   ChevronRight,
   Film,
-  Coffee,
   Mountain,
   Clock,
+  Clock3,
   Wallet,
   CheckCircle2,
   HeartHandshake,
+  Tag,
+  Bookmark,
+  Menu,
 } from "lucide-react";
+
+/**
+ * 3D Tilt Component with Interactive Mouse Perspective & Ambient Mobile Float
+ */
+function Card3DContainer({
+  children,
+  accentColor = "emerald",
+}: {
+  children: React.ReactNode;
+  accentColor?: "emerald" | "orange";
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState<string>(
+    "perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)"
+  );
+  const [glare, setGlare] = useState<{ x: number; y: number; opacity: number }>({
+    x: 50,
+    y: 50,
+    opacity: 0,
+  });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -10;
+    const rotateY = ((x - centerX) / centerX) * 10;
+
+    setTransform(
+      `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
+    );
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 0.35,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTransform(
+      "perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)"
+    );
+    setGlare((prev) => ({ ...prev, opacity: 0 }));
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative transition-all duration-300 ease-out transform-gpu cursor-pointer select-none group/3d"
+      style={{
+        transform,
+        transformStyle: "preserve-3d",
+      }}
+    >
+      {/* 3D Ambient Backdrop Glow */}
+      <div
+        className={`absolute -inset-4 rounded-3xl blur-2xl opacity-40 group-hover/3d:opacity-70 transition-opacity duration-500 pointer-events-none ${
+          accentColor === "emerald"
+            ? "bg-gradient-to-tr from-emerald-500/40 via-teal-500/30 to-emerald-400/20"
+            : "bg-gradient-to-tr from-orange-500/40 via-amber-500/30 to-rose-500/20"
+        }`}
+      />
+
+      {/* Dynamic Lighting Glare Sheen */}
+      <div
+        className="absolute inset-0 pointer-events-none rounded-3xl z-40 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.45) 0%, transparent 65%)`,
+          opacity: glare.opacity,
+        }}
+      />
+
+      {children}
+    </div>
+  );
+}
 
 function useScrollReveal() {
   const ref = useRef<HTMLDivElement>(null);
@@ -29,7 +114,8 @@ function useScrollReveal() {
 }
 
 export function LandingPageClient() {
-  const featuresReveal = useScrollReveal();
+  const companionReveal = useScrollReveal();
+  const travelReveal = useScrollReveal();
   const howItWorksReveal = useScrollReveal();
   const destinationsReveal = useScrollReveal();
   const testimonialsReveal = useScrollReveal();
@@ -98,7 +184,7 @@ export function LandingPageClient() {
 
           {/* Natural, Human-Centric Subtitle */}
           <p className="animate-fade-in-up animation-delay-300 text-sm sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
-            Whether you want to try a new specialty café in Indiranagar, catch an indie film screening, or team up for a Himalayan trek, Travally connects verified people who share your vibe, timing, and travel budget.
+            Whether you want to try an artisanal café in Indiranagar, catch an indie film screening, or team up for a Himalayan trek, Travally connects verified people who share your vibe, timing, and travel budget.
           </p>
 
           {/* High-Converting CTA Buttons */}
@@ -159,112 +245,385 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* ── 2. TWO MODES OF TRAVALLY ── */}
+      {/* ── 2. SECTION 1: COMPANION CARD SECTION (CARD ON LEFT, TEXT ON RIGHT) ── */}
       <section
-        ref={featuresReveal.ref}
-        className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${
-          featuresReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        ref={companionReveal.ref}
+        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${
+          companionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
       >
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-500/30">
-            <Sparkles className="w-3.5 h-3.5 text-orange-500" />
-            <span>DISCOVER YOUR WAY</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-            One Community. Two Ways to Connect.
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-            Log in to access your city&apos;s companion feed or multi-day travel expeditions.
-          </p>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* LEFT COLUMN: 3D Animated Duplicate Companion Card */}
+          <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none">
+            <Card3DContainer accentColor="emerald">
+              <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#f2faf8] to-[#e4f3f0] dark:from-[#0d1713] dark:to-[#08100d] border-2 border-emerald-500/50 shadow-[0_20px_50px_rgba(16,185,129,0.25)] p-5">
+                {/* 3D Floating Pill Badges */}
+                <div
+                  className="flex items-center justify-between mb-4"
+                  style={{ transform: "translateZ(30px)" }}
+                >
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md">
+                    <Film className="w-3 h-3" />
+                    <span>COMPANION ACTIVITY</span>
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-bold shadow-md shadow-emerald-500/40 animate-pulse">
+                    1 spot left
+                  </span>
+                </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Companion Mode Showcase Card */}
-          <div className="relative rounded-3xl p-8 bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/40 dark:from-[#101b16] dark:via-[#0c1410] dark:to-[#08120e] border border-emerald-200/90 dark:border-emerald-900/60 shadow-lg flex flex-col justify-between group hover:border-emerald-500/80 transition-all duration-300">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
-                <Film className="w-3.5 h-3.5" />
-                <span>CITY COMPANION MODE</span>
+                {/* Cover Image Banner */}
+                <div
+                  className="relative h-48 rounded-2xl overflow-hidden mb-4 shadow-md group"
+                  style={{ transform: "translateZ(20px)" }}
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80"
+                    alt="Suchitra Film Society Screening & Filter Coffee"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3 text-white">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+                      Movies &amp; Cinema
+                    </span>
+                    <h3 className="text-base font-black leading-tight drop-shadow-sm">
+                      Suchitra Film Society Screening &amp; Filter Coffee
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Host Info Box */}
+                <div
+                  className="p-3 rounded-2xl bg-white/90 dark:bg-[#121c17]/90 border border-emerald-200/80 dark:border-emerald-900/60 shadow-xs mb-3 flex items-center justify-between"
+                  style={{ transform: "translateZ(25px)" }}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 text-emerald-800 dark:text-emerald-300 font-black text-xs flex items-center justify-center shadow-xs">
+                      A
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-slate-900 dark:text-white">
+                          Ananya Sharma
+                        </span>
+                        <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                        Indiranagar, Bengaluru • Govt ID &amp; LinkedIn Verified
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                    Host
+                  </span>
+                </div>
+
+                {/* Meetup Details Grid */}
+                <div
+                  className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-white/80 dark:bg-[#121c17]/80 border border-emerald-100 dark:border-emerald-900/40 text-center mb-4 text-[11px]"
+                  style={{ transform: "translateZ(25px)" }}
+                >
+                  <div className="p-1">
+                    <p className="text-[10px] text-slate-400 font-medium">Date &amp; Time</p>
+                    <p className="font-bold text-slate-800 dark:text-slate-200">Oct 1 • 17:00</p>
+                    <p className="text-[9px] text-emerald-600 font-semibold">3h duration</p>
+                  </div>
+                  <div className="p-1 border-x border-slate-200 dark:border-slate-800">
+                    <p className="text-[10px] text-slate-400 font-medium">Meeting Point</p>
+                    <p className="font-bold text-slate-800 dark:text-slate-200 truncate">Indiranagar</p>
+                    <p className="text-[9px] text-slate-500">Public Society</p>
+                  </div>
+                  <div className="p-1">
+                    <p className="text-[10px] text-slate-400 font-medium">Attendees</p>
+                    <p className="font-bold text-slate-800 dark:text-slate-200">1 of 2 joined</p>
+                    <p className="text-[9px] text-emerald-600 font-semibold">1 spot left</p>
+                  </div>
+                </div>
+
+                {/* Action Preview Button */}
+                <div style={{ transform: "translateZ(30px)" }}>
+                  <div className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30">
+                    <span>Request to Join Activity</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                Everyday Local Activities
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Connect with local buddies for weekend activities: movie screenings, artisan cafe crawls, live stand-up gigs, art galleries, and morning sports sessions in your city.
-              </p>
+            </Card3DContainer>
+          </div>
 
-              <div className="space-y-2.5 pt-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Public meeting venues designated in advance</span>
+          {/* RIGHT COLUMN: Narrative & Details of "What All It Shows" */}
+          <div className="lg:col-span-6 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-black shadow-md shadow-emerald-600/30 uppercase tracking-wider">
+              <Film className="w-3.5 h-3.5" />
+              <span>COMPANION MODE • CITY ACTIVITIES</span>
+            </div>
+
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
+              Discover verified partners for{" "}
+              <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 dark:from-emerald-400 dark:via-teal-300 dark:to-emerald-200 bg-clip-text text-transparent">
+                movies, cafes, and everyday urban outings.
+              </span>
+            </h2>
+
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              Companion Mode gives you a structured, reassuring interface for discovering weekend activities happening in your city. Every detail is established up front:
+            </p>
+
+            {/* Feature Breakdown Grid Explaining What the Card Shows */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+                  <BadgeCheck className="w-4 h-4" />
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Intimate meetups (1-on-1 or small groups of 2-3)</span>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  1. Verified Host Identity
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  The card displays the host’s verified credentials (Govt ID or LinkedIn badge) so you know exactly who you are joining.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+                  <MapPin className="w-4 h-4" />
                 </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Automatic 2-hour cutoff gates before events start</span>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  2. Public Meeting Venues
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Every activity designates a safe public spot (such as Indiranagar cafes or cultural centers) before meetups occur.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+                  <Users className="w-4 h-4" />
                 </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  3. Strict Spots Left Pill
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Clear spot indicators (e.g. &ldquo;1 spot left&rdquo;) ensure meetups remain intimate (1-on-1 or 2–3 companions max) without chaotic crowds.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  4. Mutual Approval Chat Gate
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Direct group messaging unlocks only when the host reviews and accepts your request. Zero unsolicited messages.
+                </p>
               </div>
             </div>
 
-            <div className="pt-8">
+            {/* CTA Link */}
+            <div className="pt-2">
               <Link
                 href="/register"
-                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition-all hover:scale-[1.01]"
+                className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-600/35 hover:shadow-emerald-600/50 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span>Sign Up to Explore Activities</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Travel Mode Showcase Card */}
-          <div className="relative rounded-3xl p-8 bg-gradient-to-br from-orange-50/80 via-white to-amber-50/40 dark:from-[#1f1712] dark:via-[#16100c] dark:to-[#120a06] border border-orange-200/90 dark:border-orange-950/60 shadow-lg flex flex-col justify-between group hover:border-orange-500/80 transition-all duration-300">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 dark:bg-orange-950/80 text-orange-800 dark:text-orange-300 text-xs font-bold">
-                <Mountain className="w-3.5 h-3.5" />
-                <span>TRAVEL EXPEDITIONS MODE</span>
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                Multi-Day Travel Itineraries
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Find verified partners for road trips, Himalayan treks, and coastal explorations. Split cab fares, share homestays, and travel with confidence.
-              </p>
-
-              <div className="space-y-2.5 pt-2">
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400 shrink-0" />
-                  <span>Transparent rupee budget ranges up front</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400 shrink-0" />
-                  <span>Smart AI compatibility matching for travel pace &amp; style</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-200">
-                  <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400 shrink-0" />
-                  <span>Ephemeral encrypted group chats that auto-expire after trip</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-8">
-              <Link
-                href="/register"
-                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-md shadow-orange-600/30 transition-all hover:scale-[1.01]"
-              >
-                <span>Sign Up to Plan Trips</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Join Free to Meet Companions</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 3. ROADMAP: 3 SAFE STEPS ── */}
+      {/* ── 3. SECTION 2: TRAVEL CARD SECTION (VICE VERSA! TEXT ON LEFT, CARD ON RIGHT) ── */}
+      <section
+        ref={travelReveal.ref}
+        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${
+          travelReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* LEFT COLUMN: Narrative & Details of "What All It Shows" (Alternating!) */}
+          <div className="lg:col-span-6 space-y-6 order-2 lg:order-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white text-xs font-black shadow-md shadow-orange-500/30 uppercase tracking-wider">
+              <Mountain className="w-3.5 h-3.5" />
+              <span>TRAVEL EXPEDITIONS • MULTI-DAY ITINERARIES</span>
+            </div>
+
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
+              Multi-day trips with travelers who match your{" "}
+              <span className="bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 dark:from-orange-400 dark:via-amber-300 dark:to-rose-200 bg-clip-text text-transparent">
+                dates, pace, and rupee budget.
+              </span>
+            </h2>
+
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              Solo travel in India is thrilling, but sharing cabs, homestays, and trekking trails makes the journey significantly safer and more affordable. The Travel Card displays complete clarity up front:
+            </p>
+
+            {/* Feature Breakdown Grid Explaining What the Card Shows */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
+                  <Wallet className="w-4 h-4" />
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  1. Transparent Rupee Budget
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  The card states clear cost ranges (e.g. ₹8,500 – ₹14,500) covering shared transit and stays. Zero uncomfortable money talks.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
+                  <HeartHandshake className="w-4 h-4" />
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  2. 94%+ AI Compatibility Score
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Smart compatibility analyzes travel style (Adventure vs Relaxation), pace, departure cities, and common interests before matching.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  3. Planned Route &amp; Attractions
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Every card tags daily route highlights (Chalal trail, Manikaran hot springs) and accommodation preference (cozy hostels or boutique camps).
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
+                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
+                  4. Ephemeral 7-Day Chat Expiry
+                </h4>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Group chats automatically delete from the database 7 days after the trip completes for permanent privacy &amp; clean storage.
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Link */}
+            <div className="pt-2">
+              <Link
+                href="/register"
+                className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-extrabold text-sm shadow-xl shadow-orange-500/35 hover:shadow-orange-500/50 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span>Join Free to Plan Trips</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+              </Link>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: 3D Animated Duplicate Travel Card (Alternating!) */}
+          <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none order-1 lg:order-2">
+            <Card3DContainer accentColor="orange">
+              <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#fcf7f2] to-[#faeee3] dark:from-[#1b140f] dark:to-[#120a06] border-2 border-orange-500/50 shadow-[0_20px_50px_rgba(249,115,22,0.25)] p-5">
+                {/* 3D Floating Pill Badges */}
+                <div
+                  className="flex items-center justify-between mb-4"
+                  style={{ transform: "translateZ(30px)" }}
+                >
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md">
+                    <Mountain className="w-3 h-3" />
+                    <span>TRAVEL EXPEDITION</span>
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-orange-500 text-white text-[11px] font-bold shadow-md shadow-orange-500/40">
+                    ⚡ 94% Compatibility
+                  </span>
+                </div>
+
+                {/* Cover Image Banner */}
+                <div
+                  className="relative h-48 rounded-2xl overflow-hidden mb-4 shadow-md group"
+                  style={{ transform: "translateZ(20px)" }}
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80"
+                    alt="Kasol & Tosh: Parvati Valley Trek"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3 text-white">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-orange-300">
+                      Himalayan Trekking • 6 Days
+                    </span>
+                    <h3 className="text-base font-black leading-tight drop-shadow-sm">
+                      Kasol &amp; Tosh: Parvati Valley Trek
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Host Info Box */}
+                <div
+                  className="p-3 rounded-2xl bg-white/90 dark:bg-[#18110a]/90 border border-orange-200/80 dark:border-orange-900/60 shadow-xs mb-3 flex items-center justify-between"
+                  style={{ transform: "translateZ(25px)" }}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-orange-100 dark:bg-orange-950 border border-orange-300 text-orange-800 dark:text-orange-300 font-black text-xs flex items-center justify-center shadow-xs">
+                      P
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-slate-900 dark:text-white">
+                          Priya Iyer
+                        </span>
+                        <BadgeCheck className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
+                      </div>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                        Bengaluru / Delhi • Frequent Backpacker &amp; ID Verified
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300">
+                    Leader
+                  </span>
+                </div>
+
+                {/* Trip Details Grid */}
+                <div
+                  className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-white/80 dark:bg-[#18110a]/80 border border-orange-100 dark:border-orange-900/40 text-center mb-4 text-[11px]"
+                  style={{ transform: "translateZ(25px)" }}
+                >
+                  <div className="p-1">
+                    <p className="text-[10px] text-slate-400 font-medium">Est. Budget</p>
+                    <p className="font-bold text-slate-800 dark:text-slate-200">₹8.5k – ₹14.5k</p>
+                    <p className="text-[9px] text-orange-600 font-semibold">Cabs &amp; Stays</p>
+                  </div>
+                  <div className="p-1 border-x border-slate-200 dark:border-slate-800">
+                    <p className="text-[10px] text-slate-400 font-medium">Dates</p>
+                    <p className="font-bold text-slate-800 dark:text-slate-200">Oct 12 – 18</p>
+                    <p className="text-[9px] text-slate-500">6 Days Total</p>
+                  </div>
+                  <div className="p-1">
+                    <p className="text-[10px] text-slate-400 font-medium">Group Size</p>
+                    <p className="font-bold text-slate-800 dark:text-slate-200">Max 3 Travelers</p>
+                    <p className="text-[9px] text-orange-600 font-semibold">1 Spot Open</p>
+                  </div>
+                </div>
+
+                {/* Action Preview Button */}
+                <div style={{ transform: "translateZ(30px)" }}>
+                  <div className="w-full py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30">
+                    <span>Request to Join Expedition</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+              </div>
+            </Card3DContainer>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. ROADMAP: 3 SAFE STEPS ── */}
       <section
         ref={howItWorksReveal.ref}
         className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
@@ -344,7 +703,7 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* ── 4. POPULAR DESTINATIONS ── */}
+      {/* ── 5. POPULAR DESTINATIONS ── */}
       <section
         ref={destinationsReveal.ref}
         className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
@@ -435,7 +794,7 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* ── 5. VERIFIED COMMUNITY TESTIMONIALS ── */}
+      {/* ── 6. VERIFIED COMMUNITY TESTIMONIALS ── */}
       <section
         ref={testimonialsReveal.ref}
         className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
@@ -495,7 +854,7 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* ── 6. SAFETY BANNER ── */}
+      {/* ── 7. SAFETY BANNER ── */}
       <section
         ref={safetyReveal.ref}
         className={`py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
@@ -524,7 +883,7 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* ── 7. BOTTOM CTA ── */}
+      {/* ── 8. BOTTOM CTA ── */}
       <section
         ref={ctaReveal.ref}
         className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
