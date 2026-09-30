@@ -13,6 +13,8 @@ export interface SessionUser {
   verificationStatus: string;
   city: string | null;
   mode?: "companion" | "traveler";
+  joinRank?: number;
+  membershipNumber?: string | null;
 }
 
 interface AuthContextType {

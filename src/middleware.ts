@@ -27,10 +27,29 @@ function isTokenActive(token: string | undefined): boolean {
   }
 }
 
+function getUserRoleFromToken(token: string | undefined): string | null {
+  if (!token) return null;
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    while (base64.length % 4 !== 0) {
+      base64 += "=";
+    }
+    const payload = JSON.parse(atob(base64));
+    return payload.role || "USER";
+  } catch {
+    return null;
+  }
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(COOKIE_NAME)?.value;
   const isAuthenticated = isTokenActive(token);
+  const userRole = getUserRoleFromToken(token);
+  const isAdmin = userRole === "ADMIN";
+  const isLaunchUnlocked = process.env.NEXT_PUBLIC_LAUNCH_UNLOCKED === "true";
 
   // Allow all static public assets (images, files with extensions like .png, .jpg, .svg, .ico)
   if (pathname.includes(".")) {
@@ -52,16 +71,34 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 1. If user is already authenticated and visits landing or auth pages,
-  // redirect them straight to /discover (never show landing/auth page once logged in)
+  // 1. If user is already authenticated and visits landing or auth pages:
+  // Redirect them to the Pre-Launch Early Access Hub (/launch) or /discover if unlocked
   if (isAuthenticated && (pathname === "/" || pathname === "/login" || pathname === "/register")) {
-    const discoverUrl = new URL("/discover", request.url);
-    return NextResponse.redirect(discoverUrl);
+    const targetUrl = new URL(isLaunchUnlocked ? "/discover" : "/launch", request.url);
+    return NextResponse.redirect(targetUrl);
   }
 
-  // 2. If user is NOT authenticated:
+  // 2. Pre-launch gate:
+  // When launch is not unlocked, non-admin members are held at /launch
+  // (Full platform features /discover, /activities, /travel, /chats, /requests are guarded)
+  if (isAuthenticated && !isLaunchUnlocked && !isAdmin) {
+    const restrictedPrefixes = [
+      "/discover",
+      "/activities",
+      "/travel",
+      "/chats",
+      "/requests",
+      "/categories",
+      "/destinations",
+    ];
+    const isRestricted = restrictedPrefixes.some((prefix) => pathname.startsWith(prefix));
+    if (isRestricted) {
+      return NextResponse.redirect(new URL("/launch", request.url));
+    }
+  }
+
+  // 3. If user is NOT authenticated:
   // ONLY landing page (/), login (/login), register (/register), and safety (/safety) are public.
-  // Any attempt to visit /discover or protected pages must redirect straight to the landing page (/)
   const isPublicPage =
     pathname === "/" ||
     pathname === "/login" ||

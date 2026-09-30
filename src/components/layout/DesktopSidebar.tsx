@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 import { useBadges } from "@/hooks/useBadges";
 import { useAuth } from "@/context/AuthContext";
+import { AvatarBadge } from "@/components/common/AvatarBadge";
+import { getBadgeForRank, parseRankFromMembership } from "@/lib/badges";
+import { Award } from "lucide-react";
 
 interface DesktopSidebarProps {
   initialUser?: any;
@@ -40,6 +43,9 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
 
   // Sync mode (companion vs travel) from URL or user preference
   const [mode, setMode] = useState<"companion" | "travel">("companion");
+
+  const userRank = currentUser?.joinRank || parseRankFromMembership(currentUser?.membershipNumber);
+  const userBadge = getBadgeForRank(userRank);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -313,19 +319,15 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
             >
               {/* Profile Avatar circle in fixed stationary slot (exact 34px center anchor) */}
               <div className="w-[52px] h-12 shrink-0 flex items-center justify-center relative">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-xs font-bold text-emerald-800 dark:text-emerald-300 shadow-sm shrink-0 overflow-hidden ring-1.5 ring-emerald-500/40 transition-transform duration-200 group-hover:scale-105">
-                  {currentUser.avatarUrl ? (
-                    <img
-                      src={currentUser.avatarUrl}
-                      alt={currentUser.displayName || "User"}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : currentUser.displayName ? (
-                    currentUser.displayName.charAt(0).toUpperCase()
-                  ) : (
-                    <User className="w-4 h-4" />
-                  )}
-                </div>
+                <AvatarBadge
+                  src={currentUser.avatarUrl}
+                  name={currentUser.displayName}
+                  rank={userRank}
+                  badge={userBadge}
+                  size="xs"
+                  showCrown={true}
+                  className="transition-transform duration-200 group-hover:scale-105"
+                />
               </div>
 
               {/* Text Label & Subtitle in expanded mode: Smoothly fades with 0px movement on avatar */}
@@ -337,11 +339,18 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
                 }`}
               >
                 <div className="min-w-0">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                    {currentUser.displayName || "My Profile"}
-                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                      {currentUser.displayName || "My Profile"}
+                    </p>
+                    {userBadge && (
+                      <span className="text-[9px] font-black px-1.5 py-0.2 rounded-md bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-400/40 shrink-0">
+                        #{userRank}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                    Profile &amp; Settings
+                    {userBadge ? userBadge.title : "Profile & Settings"}
                   </p>
                 </div>
                 <ChevronRight
@@ -362,31 +371,44 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
               >
                 {/* Header with avatar, name & email */}
                 <div className="px-4 py-2.5 border-b border-slate-100 dark:border-emerald-950/60 flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-xs font-bold text-emerald-800 dark:text-emerald-300 shadow-sm shrink-0 overflow-hidden">
-                    {currentUser.avatarUrl ? (
-                      <img
-                        src={currentUser.avatarUrl}
-                        alt={currentUser.displayName || "User"}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : currentUser.displayName ? (
-                      currentUser.displayName.charAt(0).toUpperCase()
-                    ) : (
-                      <User className="w-4 h-4" />
-                    )}
-                  </div>
+                  <AvatarBadge
+                    src={currentUser.avatarUrl}
+                    name={currentUser.displayName}
+                    rank={userRank}
+                    badge={userBadge}
+                    size="sm"
+                    showCrown={true}
+                  />
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-xs text-slate-900 dark:text-white truncate">
-                      {currentUser.displayName || "Travally Traveler"}
-                    </p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                      {currentUser.email}
+                    <div className="flex items-center gap-1.5">
+                      <p className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                        {currentUser.displayName || "Travally Traveler"}
+                      </p>
+                      {userBadge && (
+                        <span className="text-[9px] font-black px-1.5 py-0.2 rounded-md bg-gradient-to-r from-amber-500/20 to-emerald-500/20 text-amber-700 dark:text-amber-300 border border-amber-400/40 shrink-0">
+                          #{userRank}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400 truncate">
+                      {userBadge ? `🎖️ ${userBadge.title}` : currentUser.email}
                     </p>
                   </div>
                 </div>
 
                 {/* Actions */}
                 <div className="py-1">
+                  <Link
+                    href="/launch"
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      handleItemClick();
+                    }}
+                    className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors"
+                  >
+                    <Award className="w-4 h-4 text-amber-500" />
+                    <span>Launch Pass &amp; Badges</span>
+                  </Link>
                   <Link
                     href="/profile"
                     onClick={() => {

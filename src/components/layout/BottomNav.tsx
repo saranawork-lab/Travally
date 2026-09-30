@@ -15,9 +15,12 @@ import {
   LayoutDashboard,
   ChevronRight,
   X,
+  Award,
 } from "lucide-react";
 import { useBadges } from "@/hooks/useBadges";
 import { useAuth } from "@/context/AuthContext";
+import { AvatarBadge } from "@/components/common/AvatarBadge";
+import { getBadgeForRank, parseRankFromMembership } from "@/lib/badges";
 
 interface BottomNavProps {
   initialUser?: any;
@@ -29,6 +32,9 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
   const { currentUser, logout } = useAuth();
   const { unreadChatsCount, pendingRequestsCount, totalUnreadMessages } = useBadges();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  const userRank = currentUser?.joinRank || parseRankFromMembership(currentUser?.membershipNumber);
+  const userBadge = getBadgeForRank(userRank);
 
   // Close profile popup whenever the route changes
   useEffect(() => {
@@ -147,30 +153,39 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
         >
           {/* User Details Header */}
           <div className="flex items-center gap-3 p-2 pb-3 border-b border-slate-100 dark:border-emerald-950/60">
-            <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-sm font-bold text-emerald-800 dark:text-emerald-300 shadow-sm shrink-0 overflow-hidden">
-              {currentUser.avatarUrl ? (
-                <img
-                  src={currentUser.avatarUrl}
-                  alt={currentUser.displayName || "User"}
-                  className="w-full h-full object-cover"
-                />
-              ) : currentUser.displayName ? (
-                currentUser.displayName.charAt(0).toUpperCase()
-              ) : (
-                <User className="w-5 h-5" />
-              )}
-            </div>
+            <AvatarBadge
+              src={currentUser.avatarUrl}
+              name={currentUser.displayName}
+              rank={userRank}
+              badge={userBadge}
+              size="md"
+              showCrown={true}
+            />
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm text-slate-900 dark:text-white truncate">
-                {currentUser.displayName || "Travally Traveler"}
-              </p>
+              <div className="flex items-center gap-1.5">
+                <p className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                  {currentUser.displayName || "Travally Traveler"}
+                </p>
+                {userBadge && (
+                  <span className="text-[9px] font-black px-1.5 py-0.2 rounded-md bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-400/40 shrink-0">
+                    #{userRank}
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                 {currentUser.email}
               </p>
               <div className="flex items-center gap-1.5 mt-1">
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-300/50 dark:border-emerald-800/50">
-                  ✨ {currentUser.mode === "companion" ? "Companion" : "Traveler"}
-                </span>
+                {userBadge ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/40">
+                    <span>{userBadge.badgeIcon}</span>
+                    <span>{userBadge.title}</span>
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-300/50 dark:border-emerald-800/50">
+                    ✨ {currentUser.mode === "companion" ? "Companion" : "Traveler"}
+                  </span>
+                )}
                 {currentUser.isVerified && (
                   <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                     Verified
@@ -190,6 +205,20 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
 
           {/* Action List */}
           <div className="mt-2 space-y-1">
+            <Link
+              href="/launch"
+              onClick={() => setIsProfileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 transition-colors border border-amber-500/20"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-amber-100/80 dark:bg-amber-950/80 flex items-center justify-center text-amber-600 dark:text-amber-400 border border-amber-300/60 dark:border-amber-700/60">
+                  <Award className="w-4 h-4" />
+                </div>
+                <span>Launch Pass &amp; Badges</span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-amber-400" />
+            </Link>
+
             <Link
               href="/profile"
               onClick={() => setIsProfileMenuOpen(false)}
@@ -296,11 +325,20 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
                     title="User Profile & Settings"
                   >
                     {currentUser?.avatarUrl ? (
-                      <img
-                        src={currentUser.avatarUrl}
-                        alt={currentUser.displayName || "Profile"}
-                        className="w-5 h-5 min-w-[20px] max-w-[20px] min-h-[20px] max-h-[20px] rounded-full object-cover shrink-0 ring-1.5 ring-emerald-500/60"
-                      />
+                      <div className="relative flex items-center justify-center">
+                        <img
+                          src={currentUser.avatarUrl}
+                          alt={currentUser.displayName || "Profile"}
+                          className={`w-5 h-5 min-w-[20px] max-w-[20px] min-h-[20px] max-h-[20px] rounded-full object-cover shrink-0 ring-1.5 ${
+                            userBadge ? "ring-amber-400" : "ring-emerald-500/60"
+                          }`}
+                        />
+                        {userBadge && (
+                          <span className="absolute -top-1.5 -right-1 text-[8px] leading-none">
+                            👑
+                          </span>
+                        )}
+                      </div>
                     ) : (
                       <Icon className="w-5 h-5 shrink-0 text-emerald-900 dark:text-emerald-100 stroke-[2.5]" />
                     )}
@@ -321,11 +359,20 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
                 >
                   <div className="relative flex items-center justify-center">
                     {currentUser?.avatarUrl ? (
-                      <img
-                        src={currentUser.avatarUrl}
-                        alt={currentUser.displayName || "Profile"}
-                        className="w-5 h-5 min-w-[20px] max-w-[20px] min-h-[20px] max-h-[20px] rounded-full object-cover shrink-0 ring-1.5 ring-slate-300 dark:ring-emerald-800/80 opacity-85 hover:opacity-100"
-                      />
+                      <div className="relative flex items-center justify-center">
+                        <img
+                          src={currentUser.avatarUrl}
+                          alt={currentUser.displayName || "Profile"}
+                          className={`w-5 h-5 min-w-[20px] max-w-[20px] min-h-[20px] max-h-[20px] rounded-full object-cover shrink-0 ring-1.5 ${
+                            userBadge ? "ring-amber-400/90 shadow-[0_0_6px_rgba(245,158,11,0.4)]" : "ring-slate-300 dark:ring-emerald-800/80"
+                          }`}
+                        />
+                        {userBadge && (
+                          <span className="absolute -top-1.5 -right-1 text-[7px] leading-none">
+                            👑
+                          </span>
+                        )}
+                      </div>
                     ) : (
                       <Icon className="w-5 h-5 shrink-0 transition-transform active:scale-90" />
                     )}

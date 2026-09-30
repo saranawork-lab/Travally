@@ -18,6 +18,8 @@ import {
   Fingerprint,
 } from "lucide-react";
 import { LogoMark } from "@/components/common/Logo";
+import { AvatarBadge } from "@/components/common/AvatarBadge";
+import { getBadgeForRank, parseRankFromMembership } from "@/lib/badges";
 
 interface VirtualMembershipCardProps {
   displayName: string;
@@ -94,6 +96,9 @@ export const VirtualMembershipCard: React.FC<VirtualMembershipCardProps> = ({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const userRank = parseRankFromMembership(membershipNumber);
+  const userBadge = getBadgeForRank(userRank);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -214,27 +219,30 @@ export const VirtualMembershipCard: React.FC<VirtualMembershipCardProps> = ({
                   </div>
                 </div>
 
-                {/* Middle Section: Avatar + Name + ID */}
-                <div className="flex items-center gap-2.5 sm:gap-3 -mt-0.5">
-                  {/* Avatar Circle */}
+                {/* Middle Section: Avatar with Badge Frame + Name + ID */}
+                <div className="flex items-center gap-2.5 sm:gap-3.5 -mt-0.5">
+                  {/* Avatar Circle with Exclusive Badge Frame */}
                   <div className="relative shrink-0">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-emerald-600 via-teal-600 to-orange-500 p-[2px] shadow-lg">
-                      <div className="w-full h-full rounded-full bg-[#0a1a12] flex items-center justify-center text-xs sm:text-sm font-black text-emerald-300 tracking-wide">
-                        {initials}
-                      </div>
-                    </div>
-                    {isVerified && (
-                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#0a1a12] flex items-center justify-center">
-                        <ShieldCheck className="w-2.5 h-2.5 text-white" />
-                      </div>
-                    )}
+                    <AvatarBadge
+                      avatarUrl={avatarUrl}
+                      displayName={displayName}
+                      rank={userRank}
+                      badge={userBadge}
+                      size="lg"
+                    />
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <h3 className="text-sm sm:text-lg md:text-xl font-black tracking-wide text-white drop-shadow-md truncate">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="text-sm sm:text-base md:text-lg font-black tracking-wide text-white drop-shadow-md truncate">
                         {displayName}
                       </h3>
+                      {userBadge.hasBadge && (
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-black uppercase tracking-wider ${userBadge.pillGradient} border border-white/20 shadow-xs shrink-0`}>
+                          <span>{userBadge.badgeIcon}</span>
+                          <span>{userBadge.badgeLabel}</span>
+                        </span>
+                      )}
                     </div>
                     {city && (
                       <div className="flex items-center gap-1 mt-0.5">
@@ -351,6 +359,17 @@ export const VirtualMembershipCard: React.FC<VirtualMembershipCardProps> = ({
                         •••
                       </span>
                     </div>
+                  </div>
+
+                  {/* Permanent Founding Badge Banner on back */}
+                  <div className="my-2 p-2 sm:p-2.5 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm">{userBadge.badgeIcon}</span>
+                      <span className="text-[10px] text-slate-400 font-bold uppercase">Permanent Rank</span>
+                    </div>
+                    <span className={`text-xs font-black ${userBadge.textColor}`}>
+                      {userBadge.title || `Rank #${userRank}`}
+                    </span>
                   </div>
 
                   {/* Interests Tags */}

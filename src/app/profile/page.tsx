@@ -19,9 +19,11 @@ import {
 import { VerificationBadge } from "@/components/common/VerificationBadge";
 import { safeJsonParse } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { AvatarBadge } from "@/components/common/AvatarBadge";
+import { getBadgeForRank, parseRankFromMembership } from "@/lib/badges";
 
 export default function MyProfilePage() {
-  const { logout } = useAuth();
+  const { currentUser, logout } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -154,6 +156,9 @@ export default function MyProfilePage() {
     "City Exploration",
   ];
 
+  const userRank = currentUser?.joinRank || parseRankFromMembership(profile?.membershipNumber);
+  const userBadge = getBadgeForRank(userRank);
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 pb-24">
       {/* Header */}
@@ -167,6 +172,12 @@ export default function MyProfilePage() {
           </p>
         </div>
         <div className="flex items-center gap-2 self-start sm:self-center flex-wrap">
+          <Link
+            href="/launch"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 font-bold text-xs border border-amber-300 dark:border-amber-800/60 transition shadow-xs"
+          >
+            <span>🚀 Launch Pass</span>
+          </Link>
           <Link
             href="/settings"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-bold text-xs border border-emerald-200 dark:border-emerald-800/60 transition shadow-xs"
@@ -192,14 +203,26 @@ export default function MyProfilePage() {
         <div className="bg-white dark:bg-dark-card rounded-3xl border border-slate-200 dark:border-dark-border p-6 sm:p-8 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-dark-border">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-black text-2xl flex items-center justify-center ring-4 ring-emerald-500/20 shadow-md shrink-0">
-                {(displayName || "U").charAt(0).toUpperCase()}
-              </div>
+              <AvatarBadge
+                src={avatarUrl || currentUser?.avatarUrl}
+                name={displayName || currentUser?.displayName}
+                rank={userRank}
+                badge={userBadge}
+                size="lg"
+                showCrown={true}
+                showRibbon={true}
+              />
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="font-bold text-lg text-slate-900 dark:text-white">
                     {displayName || "Your Name"}
                   </h2>
+                  {userBadge && (
+                    <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-emerald-500/20 text-amber-700 dark:text-amber-300 border border-amber-400/40 inline-flex items-center gap-1 shadow-2xs">
+                      <span>{userBadge.badgeIcon}</span>
+                      <span>{userBadge.title} #{userRank}</span>
+                    </span>
+                  )}
                   <VerificationBadge
                     status={profile?.verificationStatus || "UNVERIFIED"}
                     isVerified={profile?.isVerified}

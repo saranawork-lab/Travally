@@ -62,6 +62,10 @@ export async function POST(req: NextRequest) {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    const totalExistingUsers = await db.user.count();
+    const joinRank = totalExistingUsers + 1;
+    const membershipNumber = `TRV-${String(joinRank).padStart(4, "0")}`;
+
     const newUser = await db.user.create({
       data: {
         email: email.toLowerCase().trim(),
@@ -88,7 +92,7 @@ export async function POST(req: NextRequest) {
             discoveryVisible: true,
             membershipStatus: "ACTIVE",
             membershipTier: "FOUNDING_EXPLORER",
-            membershipNumber: `TRV-${Math.floor(100000 + Math.random() * 900000)}`,
+            membershipNumber: membershipNumber,
             memberSince: new Date(),
           },
         },
@@ -112,6 +116,8 @@ export async function POST(req: NextRequest) {
         avatarUrl: newUser.profile?.avatarUrl,
         isVerified: false,
         verificationStatus: "UNVERIFIED",
+        joinRank,
+        membershipNumber,
       },
     });
 

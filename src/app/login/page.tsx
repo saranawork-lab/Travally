@@ -76,7 +76,8 @@ export default function LoginPage() {
       }
 
       // Hard redirect to ensure browser reloads session cookies cleanly
-      const targetUrl = data?.redirectUrl || (data?.user?.role === "ADMIN" ? "/admin" : "/discover");
+      const isUnlocked = process.env.NEXT_PUBLIC_LAUNCH_UNLOCKED === "true";
+      const targetUrl = data?.redirectUrl || (data?.user?.role === "ADMIN" ? "/admin" : isUnlocked ? "/discover" : "/launch");
       window.location.href = targetUrl;
     } catch (err: any) {
       setError(err.message || "Failed to log in");

@@ -14,6 +14,8 @@ export interface SessionUser {
   isVerified: boolean;
   verificationStatus: string;
   city: string | null;
+  joinRank?: number;
+  membershipNumber?: string | null;
 }
 
 export function signToken(payload: { userId: string; email: string; role: string }): string {
@@ -72,7 +74,14 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       };
     }
 
-    if (!user) return null;
+    let joinRank = 1;
+    try {
+      joinRank = await db.user.count({
+        where: { createdAt: { lte: user.createdAt } },
+      });
+    } catch {
+      joinRank = 1;
+    }
 
     return {
       id: user.id,
@@ -83,6 +92,8 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       isVerified: user.profile?.isVerified || false,
       verificationStatus: user.profile?.verificationStatus || "UNVERIFIED",
       city: user.profile?.city || null,
+      joinRank,
+      membershipNumber: user.profile?.membershipNumber || `TRV-${String(joinRank).padStart(4, "0")}`,
     };
   } catch (error: any) {
     if (error?.message?.includes("Malformed ObjectID")) {
