@@ -87,11 +87,10 @@ function Card3DContainer({
     >
       {/* 3D Ambient Backdrop Glow */}
       <div
-        className={`absolute -inset-4 rounded-3xl blur-2xl opacity-40 group-hover/3d:opacity-70 transition-opacity duration-500 pointer-events-none ${
-          accentColor === "emerald"
+        className={`absolute -inset-4 rounded-3xl blur-2xl opacity-40 group-hover/3d:opacity-70 transition-opacity duration-500 pointer-events-none ${accentColor === "emerald"
             ? "bg-gradient-to-tr from-emerald-500/40 via-teal-500/30 to-emerald-400/20"
             : "bg-gradient-to-tr from-orange-500/40 via-amber-500/30 to-rose-500/20"
-        }`}
+          }`}
       />
 
       {/* Dynamic Lighting Glare Sheen */}
@@ -114,6 +113,55 @@ function useScrollReveal() {
 }
 
 export function LandingPageClient() {
+  const [activeHeroBg, setActiveHeroBg] = useState(0);
+
+  const heroDestinations = [
+    {
+      name: "Kasol & Parvati Valley",
+      state: "Himachal Pradesh",
+      image:
+        "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1920&auto=format&fit=crop&q=85",
+      tag: "Trekking & Hostels",
+      price: "₹8,500+ avg",
+      spots: "3 spots open",
+    },
+    {
+      name: "Living Root Bridges",
+      state: "Meghalaya",
+      image:
+        "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=1920&auto=format&fit=crop&q=85",
+      tag: "Eco Hikes & Waterfalls",
+      price: "₹18,000+ avg",
+      spots: "2 spots open",
+    },
+    {
+      name: "Hampi & Gokarna",
+      state: "Karnataka",
+      image:
+        "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1920&auto=format&fit=crop&q=85",
+      tag: "Heritage & Beaches",
+      price: "₹7,000+ avg",
+      spots: "4 spots open",
+    },
+    {
+      name: "Alleppey & Munnar",
+      state: "Kerala",
+      image:
+        "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1920&auto=format&fit=crop&q=85",
+      tag: "Tea Estates & Waterways",
+      price: "₹12,000+ avg",
+      spots: "2 spots open",
+    },
+  ];
+
+  // Auto-rotate hero background gently every 6 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveHeroBg((prev) => (prev + 1) % 4);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
   const companionReveal = useScrollReveal();
   const travelReveal = useScrollReveal();
   const howItWorksReveal = useScrollReveal();
@@ -158,27 +206,33 @@ export function LandingPageClient() {
       <div className="absolute top-1/3 right-4 w-80 sm:w-[34rem] h-80 sm:h-[34rem] bg-gradient-to-bl from-orange-500/20 via-amber-500/15 to-rose-500/10 rounded-full blur-[110px] pointer-events-none transform-gpu" />
       <div className="absolute top-2/3 left-4 w-80 sm:w-[36rem] h-80 sm:h-[36rem] bg-gradient-to-tr from-emerald-500/18 via-teal-500/14 to-emerald-400/10 rounded-full blur-[120px] pointer-events-none transform-gpu" />
 
-      {/* ── 1. HERO SECTION WITH CINEMATIC SUNRISE TRAVEL SCENERY ── */}
-      <section className="relative w-full overflow-hidden bg-slate-950 text-white py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl">
-        {/* Full-bleed Panoramic Mountain Sunrise Background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&auto=format&fit=crop&q=85"
-            alt="Scenic Mountain Valley Horizon"
-            className="w-full h-full object-cover object-center scale-105"
-          />
-        </div>
+      {/* ── 1. HERO SECTION WITH CINEMATIC DYNAMIC TRAVEL BACKGROUND ── */}
+      <section className="relative w-full overflow-hidden bg-slate-950 text-white pt-14 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl">
+        {/* Dynamic Background Image Layers with Smooth Crossfade */}
+        {heroDestinations.map((dest, idx) => (
+          <div
+            key={idx}
+            className={`absolute inset-0 transition-all duration-1000 ease-out pointer-events-none ${activeHeroBg === idx ? "opacity-100 scale-100" : "opacity-0 scale-105"
+              }`}
+          >
+            <img
+              src={dest.image}
+              alt={dest.name}
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
+        ))}
 
-        {/* Warm Cinematic Gradient Overlay Scrim */}
+        {/* Deep cinematic gradient overlay: from dark to medium to dark */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/65 to-slate-950/90 pointer-events-none" />
 
-        {/* Atmospheric Ambient Lighting */}
+        {/* Atmospheric ambient lighting glow */}
         <div className="absolute -top-24 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/18 rounded-full blur-[140px] pointer-events-none transform-gpu" />
         <div className="absolute -bottom-24 right-1/4 w-[32rem] h-[32rem] bg-amber-500/14 rounded-full blur-[140px] pointer-events-none transform-gpu" />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto space-y-6">
-          {/* Eyebrow Pill */}
-          <div className="animate-fade-in-up animation-delay-100 flex items-center justify-center">
+          {/* Eyebrow Pill + Active destination location indicator */}
+          <div className="animate-fade-in-up animation-delay-100 flex flex-wrap items-center justify-center gap-2">
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/50 backdrop-blur-xl text-emerald-300 text-xs font-semibold shadow-lg shadow-emerald-950/40">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
               <span className="font-extrabold uppercase tracking-widest text-[10px] text-emerald-400">
@@ -188,6 +242,12 @@ export function LandingPageClient() {
               <span className="text-slate-200 text-xs font-medium">
                 India&apos;s Solo Travel &amp; Activity Community
               </span>
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/20 bg-black/50 backdrop-blur-md text-emerald-300 text-xs font-semibold shadow-md transition-all duration-500">
+              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-slate-200">{heroDestinations[activeHeroBg].name},</span>
+              <span className="text-emerald-400 font-bold">{heroDestinations[activeHeroBg].state}</span>
             </div>
           </div>
 
@@ -285,15 +345,31 @@ export function LandingPageClient() {
               <span>100% Mutual Approval &amp; Zero Spam</span>
             </div>
           </div>
+
+          {/* Subtle scenery dots indicator */}
+          <div className="animate-fade-in-up animation-delay-500 pt-3 flex items-center justify-center gap-2">
+            {heroDestinations.map((dest, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveHeroBg(idx)}
+                className={`transition-all duration-300 rounded-full h-1.5 ${
+                  activeHeroBg === idx
+                    ? "w-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]"
+                    : "w-2 bg-white/30 hover:bg-white/60"
+                }`}
+                aria-label={`View ${dest.name} scenery`}
+                title={`${dest.name}, ${dest.state}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── 2. SECTION 1: COMPANION CARD SECTION (CARD ON LEFT, TEXT ON RIGHT) ── */}
       <section
         ref={companionReveal.ref}
-        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${
-          companionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${companionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* LEFT COLUMN: 3D Animated Duplicate Companion Card */}
@@ -480,9 +556,8 @@ export function LandingPageClient() {
       {/* ── 3. SECTION 2: TRAVEL CARD SECTION (VICE VERSA! TEXT ON LEFT, CARD ON RIGHT) ── */}
       <section
         ref={travelReveal.ref}
-        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${
-          travelReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${travelReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* LEFT COLUMN: Narrative & Details of "What All It Shows" (Alternating!) */}
@@ -669,9 +744,8 @@ export function LandingPageClient() {
       {/* ── 4. ROADMAP: 3 SAFE STEPS ── */}
       <section
         ref={howItWorksReveal.ref}
-        className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
-          howItWorksReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${howItWorksReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
       >
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-400/40">
@@ -749,9 +823,8 @@ export function LandingPageClient() {
       {/* ── 5. POPULAR DESTINATIONS ── */}
       <section
         ref={destinationsReveal.ref}
-        className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
-          destinationsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${destinationsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
       >
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-3">
           <div>
@@ -856,9 +929,8 @@ export function LandingPageClient() {
       {/* ── 6. VERIFIED COMMUNITY TESTIMONIALS ── */}
       <section
         ref={testimonialsReveal.ref}
-        className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
-          testimonialsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${testimonialsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
       >
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
@@ -916,9 +988,8 @@ export function LandingPageClient() {
       {/* ── 7. SAFETY BANNER ── */}
       <section
         ref={safetyReveal.ref}
-        className={`py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
-          safetyReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        className={`py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${safetyReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
       >
         <div className="rounded-3xl bg-gradient-to-r from-emerald-950/90 via-[#0d2218] to-emerald-950/80 border-2 border-emerald-500/40 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_12px_40px_rgba(16,185,129,0.20)] hover:shadow-[0_16px_50px_rgba(16,185,129,0.30)] transition-all duration-300">
           <div className="space-y-2 max-w-2xl">
@@ -945,9 +1016,8 @@ export function LandingPageClient() {
       {/* ── 8. BOTTOM CTA ── */}
       <section
         ref={ctaReveal.ref}
-        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${
-          ctaReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${ctaReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
       >
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-800 via-emerald-900 to-[#062015] border-2 border-emerald-400/50 p-8 sm:p-14 text-white text-center shadow-[0_20px_60px_rgba(16,185,129,0.32)]">
           <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-orange-500/30 to-amber-500/20 rounded-full blur-[100px] pointer-events-none transform-gpu" />

@@ -129,8 +129,8 @@ export function getTripImage(trip: {
   if (destLower.includes("rishikesh") || destLower.includes("uttarakhand") || destLower.includes("ganga")) {
     return "https://images.unsplash.com/photo-1506461883276-594a12b11cf3?w=900&auto=format&fit=crop&q=80";
   }
-  if (destLower.includes("hampi") || destLower.includes("coorg") || destLower.includes("karnataka")) {
-    return "https://images.unsplash.com/photo-1600100397608-f010f4439169?w=900&auto=format&fit=crop&q=80";
+  if (destLower.includes("hampi") || destLower.includes("coorg") || destLower.includes("karnataka") || destLower.includes("gokarna")) {
+    return "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=900&auto=format&fit=crop&q=80";
   }
 
   switch (trip.travelStyle) {
