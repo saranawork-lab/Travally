@@ -8,16 +8,7 @@ import { ModeToggle, AppMode } from "@/components/common/ModeToggle";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
-import {
-  User,
-  Settings,
-  Shield,
-  LogOut,
-  ChevronDown,
-  LayoutDashboard,
-  Search,
-  X,
-} from "lucide-react";
+import { Search, X } from "lucide-react";
 
 interface NavbarProps {
   initialMode?: AppMode;
@@ -34,26 +25,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   const router = useRouter();
   const [mode, setMode] = useState<AppMode>(initialMode);
   const { currentUser, logout: handleLogout } = useAuth();
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const userMenuRef = useRef<HTMLDivElement>(null);
-
-  // Click outside to close user profile dropdown
-  useEffect(() => {
-    if (!userMenuOpen) return;
-
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setUserMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [userMenuOpen]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -169,82 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {currentUser && pathname !== "/" && pathname !== "/login" && pathname !== "/register" && <ThemeToggle />}
 
           {currentUser && pathname !== "/" ? (
-            <>
-              <NotificationDropdown />
-
-              {/* Profile Dropdown (Desktop only - on mobile/tablet it lives in the bottom nav dock) */}
-              <div className="relative hidden md:block" ref={userMenuRef}>
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-1.5 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-[#131c18] transition border border-transparent hover:border-slate-200 dark:hover:border-emerald-900/50"
-                  aria-label="User navigation menu"
-                >
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-xs font-bold text-emerald-800 dark:text-emerald-300 shadow-sm shrink-0">
-                    {currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : <User className="w-4 h-4" />}
-                  </div>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-500 hidden sm:block" />
-                </button>
-
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-60 sm:w-64 rounded-2xl bg-white dark:bg-[#131c18] border border-slate-200 dark:border-emerald-900/50 shadow-2xl z-50 py-2 animate-slide-up">
-                    <div className="px-4 py-2 border-b border-slate-100 dark:border-emerald-950/60">
-                      <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">
-                        {currentUser.displayName}
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{currentUser.email}</p>
-                    </div>
-
-                    <Link
-                      href="/profile"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#18241f]"
-                    >
-                      <User className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                      <span>My Profile & Preferences</span>
-                    </Link>
-
-                    <Link
-                      href="/settings"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#18241f]"
-                    >
-                      <Settings className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                      <span>Account Settings &amp; Pass</span>
-                    </Link>
-
-                    {currentUser.role === "ADMIN" && (
-                      <Link
-                        href="/admin"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#18241f]"
-                      >
-                        <LayoutDashboard className="w-4 h-4 text-orange-500" />
-                        <span>Admin Moderation</span>
-                      </Link>
-                    )}
-
-                    <Link
-                      href="/safety"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#18241f]"
-                    >
-                      <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                      <span>Safety Center & Rules</span>
-                    </Link>
-
-                    <div className="border-t border-slate-100 dark:border-emerald-950/60 mt-1 pt-1">
-                      <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        <span>Sign Out</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
+            <NotificationDropdown />
           ) : (
             <div className="flex items-center gap-2.5 sm:gap-3">
               {currentUser && pathname === "/" ? (

@@ -273,11 +273,10 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
               </Link>
             );
           })}
+        </div>
 
-          {/* Divider between main navigation and Profile */}
-          <div className={`my-1 border-t border-slate-200/80 dark:border-emerald-950/80 transition-all ${isExpanded ? "w-full" : "w-8 mx-auto"}`} />
-
-          {/* Profile Button in Sidebar */}
+        {/* Down below at the bottom of the sidebar: Profile Button & Dropdown */}
+        <div className="p-2 pb-3 border-t border-slate-200/80 dark:border-emerald-950/80 mt-auto">
           <div className="relative">
             <button
               ref={profileButtonRef}
@@ -331,24 +330,13 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
               )}
             </button>
 
-            {/* Profile Dropdown Popup Card */}
+            {/* Profile Dropdown Popup Card - positioned right above/beside bottom profile button */}
             {isProfileOpen && (
               <div
                 ref={profileDropdownRef}
-                className={`fixed z-50 w-64 rounded-2xl bg-white/95 dark:bg-[#131c18]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-emerald-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.25)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] py-2 animate-slide-up select-none ${
+                className={`fixed bottom-3 z-50 w-64 rounded-2xl bg-white/95 dark:bg-[#131c18]/95 backdrop-blur-2xl border border-slate-200/90 dark:border-emerald-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.25)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] py-2 animate-slide-up select-none ${
                   isExpanded ? "left-[248px]" : "left-[76px]"
                 }`}
-                style={{
-                  top: profileButtonRef.current
-                    ? Math.max(
-                        20,
-                        Math.min(
-                          typeof window !== "undefined" ? window.innerHeight - 270 : 400,
-                          profileButtonRef.current.getBoundingClientRect().top - 80
-                        )
-                      )
-                    : 200,
-                }}
               >
                 {/* Header with avatar, name & email */}
                 <div className="px-4 py-2.5 border-b border-slate-100 dark:border-emerald-950/60 flex items-center gap-2.5">
@@ -441,22 +429,6 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
               </div>
             )}
           </div>
-        </div>
-
-        {/* Bottom subtle indicator */}
-        <div className="p-3 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-center">
-          {isExpanded ? (
-            <div className="flex items-center justify-between w-full px-1 animate-fade-in">
-              <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 truncate">
-                Travally
-              </span>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-0.5">
-                Quick Nav <ChevronRight className="w-3 h-3" />
-              </span>
-            </div>
-          ) : (
-            <div className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-emerald-900/80" />
-          )}
         </div>
       </aside>
     </div>
