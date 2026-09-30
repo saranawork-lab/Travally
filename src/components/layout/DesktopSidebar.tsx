@@ -122,6 +122,17 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
 
   const isExpanded = isHovered && !forceCollapsed;
 
+  // Broadcast sidebar expansion state so the logo in navbar animates when sidebar opens
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("travally-sidebar-state", {
+          detail: { expanded: isExpanded },
+        })
+      );
+    }
+  }, [isExpanded]);
+
   // Active item determination
   const isDiscover = pathname.startsWith("/discover");
   const isCreate = pathname.startsWith("/activities/create") || pathname.startsWith("/travel/create");

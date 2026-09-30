@@ -73,14 +73,39 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleSidebarState = (e: any) => {
+        setIsSidebarOpen(Boolean(e.detail?.expanded));
+      };
+      window.addEventListener("travally-sidebar-state", handleSidebarState);
+      return () => window.removeEventListener("travally-sidebar-state", handleSidebarState);
+    }
+  }, []);
+
+  const isAuthOrLandingPage = pathname === "/" || pathname === "/login" || pathname === "/register";
+  const shouldAnimateLogo = isAuthOrLandingPage ? true : (isSidebarOpen || isLogoHovered);
+
   return (
     <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#090d0b] border-b border-slate-100/90 dark:border-emerald-950/60 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors duration-200">
-      <div className="w-full px-3 sm:px-8 md:px-10 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="w-full px-3 sm:px-8 md:px-10 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4 relative">
         {/* Brand Area */}
         <div className="flex items-center gap-2 flex-1 sm:flex-initial min-w-0">
-          {/* Desktop/Tablet Logo with full Travally Gradient */}
-          <Link href={currentUser ? "/discover" : "/"} className="hidden sm:flex items-center gap-2.5 transition hover:opacity-90 shrink-0">
-            <Logo size={36} />
+          {/* Desktop/Tablet Logo: Animates when sidebar opens or on hover, and always on login/register */}
+          <Link
+            href={currentUser ? "/discover" : "/"}
+            onMouseEnter={() => setIsLogoHovered(true)}
+            onMouseLeave={() => setIsLogoHovered(false)}
+            className="hidden sm:flex items-center gap-2.5 transition hover:opacity-90 shrink-0 group"
+          >
+            <Logo
+              size={36}
+              animate={shouldAnimateLogo}
+              animateType={isSidebarOpen ? "smooth" : "stay"}
+            />
           </Link>
 
           {/* Mobile Responsive: Single Clean Logo when logged out/landing, or LogoMark + Search when logged in */}
@@ -92,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="flex items-center shrink-0 transition hover:opacity-90"
                   title="Travally"
                 >
-                  <LogoMark size={28} />
+                  <LogoMark size={28} animate={isAuthOrLandingPage} />
                 </Link>
 
                 <div className="relative flex-1 min-w-0 max-w-[210px] xs:max-w-[250px]">

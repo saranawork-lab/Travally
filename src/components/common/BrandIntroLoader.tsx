@@ -1,9 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export const BrandIntroLoader: React.FC = () => {
   const [phase, setPhase] = useState<"spinning" | "gliding" | "done">("spinning");
+  const pathname = usePathname();
+  const { currentUser } = useAuth();
+
+  const isAuthOrLanding = pathname === "/" || pathname === "/login" || pathname === "/register";
 
   useEffect(() => {
     // 1. Center spinning animation runs for 650ms
@@ -21,6 +27,9 @@ export const BrandIntroLoader: React.FC = () => {
       clearTimeout(t2);
     };
   }, []);
+
+  // Suppress full-screen loader after login on in-app pages like /requests, /discover
+  if (currentUser && !isAuthOrLanding) return null;
 
   if (phase === "done") return null;
 

@@ -73,8 +73,8 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col antialiased bg-[#f8fafc] dark:bg-[#090d0b] text-slate-900 dark:text-slate-100`}>
         <ThemeProvider>
-          <BrandIntroLoader />
           <AuthProvider initialUser={currentUser}>
+            <BrandIntroLoader />
             <Navbar initialUser={currentUser} />
             <div className="flex-1 flex min-w-0">
               <DesktopSidebar initialUser={currentUser} />
