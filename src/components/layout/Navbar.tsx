@@ -158,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* ── LOGGED-IN NAV: Central Mode Toggle (In-App Pages Only) ── */}
         {currentUser && pathname !== "/" && (
-          <div className="hidden sm:flex items-center justify-center">
+          <div className="hidden sm:flex items-center justify-center absolute left-1/2 -translate-x-1/2 pointer-events-auto">
             <ModeToggle currentMode={mode} onModeChange={handleModeSwitch} size="sm" />
           </div>
         )}
