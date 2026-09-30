@@ -57,7 +57,16 @@ export default function EarlyAccessLaunchPage() {
 
   const userRank = currentUser?.joinRank || parseRankFromMembership(currentUser?.membershipNumber) || 10;
   const userBadge = getBadgeForRank(userRank);
-  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/register?ref=${currentUser?.membershipNumber || "FOUNDER"}` : "https://travally.app/register";
+
+  const [shareUrl, setShareUrl] = useState("https://travally.app/register?ref=FOUNDER");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const origin = window.location.origin;
+      const ref = currentUser?.membershipNumber || "FOUNDER";
+      setShareUrl(`${origin}/register?ref=${ref}`);
+    }
+  }, [currentUser?.membershipNumber]);
 
   const handleCopyLink = () => {
     if (typeof navigator !== "undefined") {
@@ -306,7 +315,10 @@ export default function EarlyAccessLaunchPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <div className="flex-1 flex items-center px-4 py-2.5 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono truncate select-all">
+            <div
+              suppressHydrationWarning
+              className="flex-1 flex items-center px-4 py-2.5 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono truncate select-all"
+            >
               {shareUrl}
             </div>
 
