@@ -114,55 +114,6 @@ function useScrollReveal() {
 }
 
 export function LandingPageClient() {
-  const [activeHeroBg, setActiveHeroBg] = useState(0);
-
-  const heroDestinations = [
-    {
-      name: "Kasol & Parvati Valley",
-      state: "Himachal Pradesh",
-      image:
-        "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1920&auto=format&fit=crop&q=85",
-      tag: "Trekking & Hostels",
-      price: "₹8,500+ avg",
-      spots: "3 spots open",
-    },
-    {
-      name: "Living Root Bridges",
-      state: "Meghalaya",
-      image:
-        "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=1920&auto=format&fit=crop&q=85",
-      tag: "Eco Hikes & Waterfalls",
-      price: "₹18,000+ avg",
-      spots: "2 spots open",
-    },
-    {
-      name: "Hampi & Gokarna",
-      state: "Karnataka",
-      image:
-        "https://images.unsplash.com/photo-1600100397608-f010f4439169?w=1920&auto=format&fit=crop&q=85",
-      tag: "Heritage & Beaches",
-      price: "₹7,000+ avg",
-      spots: "4 spots open",
-    },
-    {
-      name: "Alleppey & Munnar",
-      state: "Kerala",
-      image:
-        "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1920&auto=format&fit=crop&q=85",
-      tag: "Tea Estates & Waterways",
-      price: "₹12,000+ avg",
-      spots: "2 spots open",
-    },
-  ];
-
-  // Auto-rotate hero background gently every 6 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveHeroBg((prev) => (prev + 1) % 4);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, []);
-
   const companionReveal = useScrollReveal();
   const travelReveal = useScrollReveal();
   const howItWorksReveal = useScrollReveal();
@@ -207,64 +158,76 @@ export function LandingPageClient() {
       <div className="absolute top-1/3 right-4 w-80 sm:w-[34rem] h-80 sm:h-[34rem] bg-gradient-to-bl from-orange-500/20 via-amber-500/15 to-rose-500/10 rounded-full blur-[110px] pointer-events-none transform-gpu" />
       <div className="absolute top-2/3 left-4 w-80 sm:w-[36rem] h-80 sm:h-[36rem] bg-gradient-to-tr from-emerald-500/18 via-teal-500/14 to-emerald-400/10 rounded-full blur-[120px] pointer-events-none transform-gpu" />
 
-      {/* ── 1. HERO SECTION WITH CINEMATIC DYNAMIC TRAVEL BACKGROUND ── */}
-      <section className="relative w-full overflow-hidden bg-slate-950 text-white pt-14 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl">
-        {/* Dynamic Background Image Layers with Smooth Crossfade */}
-        {heroDestinations.map((dest, idx) => (
-          <div
-            key={idx}
-            className={`absolute inset-0 transition-all duration-1000 ease-out pointer-events-none ${
-              activeHeroBg === idx ? "opacity-100 scale-100" : "opacity-0 scale-105"
-            }`}
-          >
-            <img
-              src={dest.image}
-              alt={dest.name}
-              className="w-full h-full object-cover object-center"
-            />
-          </div>
-        ))}
+      {/* ── 1. HERO SECTION WITH CINEMATIC SUNRISE TRAVEL SCENERY ── */}
+      <section className="relative w-full overflow-hidden bg-slate-950 text-white py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl">
+        {/* Full-bleed Panoramic Mountain Sunrise Background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1920&auto=format&fit=crop&q=85"
+            alt="Scenic Mountain Valley Horizon"
+            className="w-full h-full object-cover object-center scale-105"
+          />
+        </div>
 
-        {/* Deep cinematic gradient overlay: from dark to medium to dark */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 to-black/90 pointer-events-none" />
+        {/* Warm Cinematic Gradient Overlay Scrim */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/65 to-slate-950/90 pointer-events-none" />
 
-        {/* Soft atmospheric ambient glow */}
-        <div className="absolute -top-32 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/20 rounded-full blur-[140px] pointer-events-none transform-gpu" />
-        <div className="absolute -bottom-32 right-1/4 w-[32rem] h-[32rem] bg-orange-500/15 rounded-full blur-[140px] pointer-events-none transform-gpu" />
+        {/* Atmospheric Ambient Lighting */}
+        <div className="absolute -top-24 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/18 rounded-full blur-[140px] pointer-events-none transform-gpu" />
+        <div className="absolute -bottom-24 right-1/4 w-[32rem] h-[32rem] bg-amber-500/14 rounded-full blur-[140px] pointer-events-none transform-gpu" />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto space-y-6">
-          {/* Eyebrow Pill + Active destination location indicator */}
-          <div className="animate-fade-in-up animation-delay-100 flex flex-wrap items-center justify-center gap-2">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-black/45 backdrop-blur-md text-white text-xs font-bold shadow-lg">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              <span className="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent font-black tracking-wider">
+          {/* Eyebrow Pill */}
+          <div className="animate-fade-in-up animation-delay-100 flex items-center justify-center">
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/50 backdrop-blur-xl text-emerald-300 text-xs font-semibold shadow-lg shadow-emerald-950/40">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <span className="font-extrabold uppercase tracking-widest text-[10px] text-emerald-400">
                 TRAVALLY
               </span>
-              <span className="text-white/40">·</span>
-              <span>Solo Travel Companion &amp; Activity Community</span>
-            </div>
-
-            <div className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-emerald-500/40 bg-emerald-950/60 backdrop-blur-md text-emerald-300 text-xs font-semibold shadow-sm">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{heroDestinations[activeHeroBg].name}, {heroDestinations[activeHeroBg].state}</span>
+              <span className="text-emerald-500/40">|</span>
+              <span className="text-slate-200 text-xs font-medium">
+                India&apos;s Solo Travel &amp; Activity Community
+              </span>
             </div>
           </div>
 
-          {/* Main Headline */}
-          <h1 className="animate-fade-in-up animation-delay-200 text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
-            Meet good people. Share real experiences.{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 drop-shadow-sm">
+          {/* Main Headline with Premium Editorial Hierarchy */}
+          <h1 className="animate-fade-in-up animation-delay-200 text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
+            Meet good people. <br />
+            <span className="font-light italic text-emerald-200">Share real journeys.</span> <br />
+            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
               Never miss an outing again.
             </span>
           </h1>
 
           {/* Natural, Human-Centric Subtitle */}
-          <p className="animate-fade-in-up animation-delay-300 text-sm sm:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed font-normal drop-shadow-md">
+          <p className="animate-fade-in-up animation-delay-300 text-base sm:text-lg text-slate-200/90 max-w-2xl mx-auto leading-relaxed font-normal pt-1 drop-shadow-md">
             Whether you want to try an artisanal café in Indiranagar, catch an indie film screening, or team up for a Himalayan trek, Travally connects verified people who share your vibe, timing, and travel budget.
           </p>
 
+          {/* Quick Category Badges */}
+          <div className="animate-fade-in-up animation-delay-350 pt-1 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-2xl mx-auto">
+            {[
+              { icon: Mountain, label: "Himalayan Ridge Treks" },
+              { icon: Film, label: "City Meetups & Cafés" },
+              { icon: Compass, label: "Coastal & Heritage Trails" },
+              { icon: ShieldCheck, label: "Govt ID & Mutual Approval" },
+            ].map((pill, i) => {
+              const Icon = pill.icon;
+              return (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/10 text-slate-200 border border-white/15 backdrop-blur-md shadow-xs"
+                >
+                  <Icon className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{pill.label}</span>
+                </span>
+              );
+            })}
+          </div>
+
           {/* High-Converting CTA Buttons */}
-          <div className="animate-fade-in-up animation-delay-400 flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <div className="animate-fade-in-up animation-delay-400 flex flex-col sm:flex-row items-center justify-center gap-4 pt-3">
             <Link
               href="/register"
               className="group w-full sm:w-auto min-h-[52px] px-8 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-[0_12px_32px_rgba(16,185,129,0.5)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.7)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
@@ -285,8 +248,8 @@ export function LandingPageClient() {
           </div>
 
           {/* Social Proof Metric Bar */}
-          <div className="animate-fade-in-up animation-delay-500 pt-3 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-slate-200">
-            <div className="flex items-center gap-2">
+          <div className="animate-fade-in-up animation-delay-500 pt-3 flex flex-wrap items-center justify-center gap-5 sm:gap-8 text-xs text-slate-200">
+            <div className="flex items-center gap-2.5">
               <div className="flex -space-x-2">
                 {[
                   { letter: "R", bg: "bg-emerald-600" },
@@ -296,7 +259,7 @@ export function LandingPageClient() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className={`w-7 h-7 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] font-black text-white ${item.bg} shadow-sm`}
+                    className={`w-7 h-7 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] font-black text-white ${item.bg} shadow-md`}
                   >
                     {item.letter}
                   </div>
@@ -306,108 +269,21 @@ export function LandingPageClient() {
                 15,000+ Verified Members
               </span>
             </div>
-            <div className="flex items-center gap-1 text-amber-300 drop-shadow-sm">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-3.5 h-3.5 fill-current" />
-              ))}
-              <span className="font-semibold text-slate-100 ml-1">
-                4.9/5 Meetup Rating
-              </span>
-            </div>
-            <div className="flex items-center gap-1 text-emerald-300 font-semibold drop-shadow-sm">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Mutual Approval &amp; Zero Spam</span>
-            </div>
-          </div>
-        </div>
 
-        {/* ── HERO DESTINATION SHOWCASE: 4 Iconic Expeditions Cards (with hover backdrop change) ── */}
-        <div className="relative z-10 animate-fade-in-up animation-delay-500 pt-12 sm:pt-16 max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-4 sm:mb-5">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-orange-400 animate-pulse" />
-              <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-200 flex items-center gap-2">
-                <span>Trending Expeditions</span>
-                <span className="hidden sm:inline text-xs font-normal text-slate-400">• Hover card to preview scenery</span>
-              </h2>
-            </div>
-            <Link
-              href="/register"
-              className="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-1 group"
-            >
-              <span>View all getaways</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-200" />
-            </Link>
-          </div>
-
-          {/* 4 Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {heroDestinations.map((dest, idx) => (
-              <div
-                key={idx}
-                onMouseEnter={() => setActiveHeroBg(idx)}
-                className={`group relative rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-end min-h-[300px] sm:min-h-[320px] bg-slate-900 cursor-pointer ${
-                  activeHeroBg === idx
-                    ? "ring-2 ring-emerald-400 shadow-[0_20px_45px_rgba(16,185,129,0.35)] -translate-y-2 border-emerald-400"
-                    : "border border-white/20 hover:border-emerald-500/60 hover:-translate-y-1.5"
-                }`}
-              >
-                {/* Photo with zoom effect */}
-                <img
-                  src={dest.image}
-                  alt={dest.name}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                />
-
-                {/* Gradient Scrim - Dark at bottom so all text is 100% crystal clear */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 group-hover:via-black/35 transition-colors duration-300" />
-
-                {/* Top Tag & Active Badge */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
-                  <span className="px-3 py-1 rounded-full text-[10px] font-black tracking-wide uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30">
-                    {dest.tag}
-                  </span>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold backdrop-blur-md border ${
-                    activeHeroBg === idx
-                      ? "bg-emerald-500 text-white border-emerald-400 shadow-md shadow-emerald-500/40"
-                      : "bg-black/60 text-emerald-300 border-emerald-500/40"
-                  }`}>
-                    {activeHeroBg === idx ? "Active View" : dest.spots}
-                  </span>
-                </div>
-
-                {/* Bottom Content Area */}
-                <div className="relative z-10 p-4 pt-10 text-white">
-                  {/* Location State with icon */}
-                  <div className="flex items-center gap-1 text-emerald-300 text-xs font-bold mb-1">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span>{dest.state}</span>
-                  </div>
-
-                  {/* Destination Title: Crisp Pure White */}
-                  <h3 className="text-base sm:text-lg font-black text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-emerald-200 transition-colors">
-                    {dest.name}
-                  </h3>
-
-                  {/* Budget row */}
-                  <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between text-xs">
-                    <div>
-                      <span className="text-white/70 text-[10px] uppercase font-semibold block">Est. Budget</span>
-                      <span className="font-black text-amber-400 text-sm tracking-tight drop-shadow-xs">{dest.price}</span>
-                    </div>
-
-                    {/* Card Button */}
-                    <Link
-                      href="/register"
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/20 group-hover:bg-emerald-600 text-white text-xs font-bold backdrop-blur-md border border-white/25 group-hover:border-emerald-500 transition-all duration-200 shadow-sm"
-                    >
-                      <span>Join</span>
-                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-                  </div>
-                </div>
+            <div className="flex items-center gap-1.5 text-amber-300 drop-shadow-sm font-semibold">
+              <div className="flex text-amber-400">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star key={s} className="w-3.5 h-3.5 fill-current" />
+                ))}
               </div>
-            ))}
+              <span className="text-white font-bold ml-0.5">4.9/5</span>
+              <span className="text-slate-300 text-[11px] font-normal">Meetup Rating</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-emerald-300 font-semibold drop-shadow-sm">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>100% Mutual Approval &amp; Zero Spam</span>
+            </div>
           </div>
         </div>
       </section>
@@ -919,7 +795,7 @@ export function LandingPageClient() {
               name: "Hampi & Gokarna",
               state: "Karnataka",
               image:
-                "https://images.unsplash.com/photo-1600100397608-f010f4439169?w=800&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&auto=format&fit=crop&q=80",
               tag: "Heritage & Beaches",
               price: "₹7,000+ avg",
               spots: "4 spots open",
