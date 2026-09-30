@@ -160,8 +160,8 @@ export function LandingPageClient() {
       <div className="absolute top-2/3 left-4 w-80 sm:w-[36rem] h-80 sm:h-[36rem] bg-gradient-to-tr from-emerald-500/18 via-teal-500/14 to-emerald-400/10 rounded-full blur-[120px] pointer-events-none transform-gpu" />
 
       {/* ── 1. HERO SECTION ── */}
-      <section className="relative pt-12 pb-16 md:pt-24 md:pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center max-w-3xl mx-auto space-y-6">
+      <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center max-w-4xl mx-auto space-y-6">
           {/* Eyebrow Pill */}
           <div className="animate-fade-in-up animation-delay-100">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-400/50 dark:border-emerald-600/60 bg-gradient-to-r from-emerald-500/15 via-teal-500/12 to-orange-500/15 text-emerald-950 dark:text-emerald-200 text-xs font-bold backdrop-blur-md shadow-md shadow-emerald-500/10">
@@ -188,27 +188,28 @@ export function LandingPageClient() {
           </p>
 
           {/* High-Converting CTA Buttons */}
-          <div className="animate-fade-in-up animation-delay-400 flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <div className="animate-fade-in-up animation-delay-400 flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Link
               href="/register"
-              className="group w-full sm:w-auto min-h-[50px] px-8 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-600/35 hover:shadow-emerald-600/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              className="group w-full sm:w-auto min-h-[52px] px-8 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm flex items-center justify-center gap-2.5 shadow-xl shadow-emerald-600/35 hover:shadow-emerald-600/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
-              <Users className="w-4 h-4" />
-              <span>Join Travally Free</span>
+              <Compass className="w-4 h-4 text-emerald-200 group-hover:rotate-45 transition-transform duration-300" />
+              <span>Explore Trending Expeditions</span>
               <ArrowRight className="w-4 h-4 ml-0.5 group-hover:translate-x-1.5 transition-transform duration-300" />
             </Link>
 
             <Link
               href="/login"
-              className="group w-full sm:w-auto min-h-[50px] px-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-[#16201b] dark:hover:bg-[#1f2e27] text-slate-800 dark:text-slate-200 font-extrabold text-sm flex items-center justify-center gap-2 border border-slate-200 dark:border-emerald-900/60 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              className="group w-full sm:w-auto min-h-[52px] px-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-[#16201b] dark:hover:bg-[#1f2e27] text-slate-800 dark:text-slate-200 font-extrabold text-sm flex items-center justify-center gap-2 border border-slate-200 dark:border-emerald-900/60 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
-              <span>Log In to Account</span>
+              <Users className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Find Companions</span>
               <ArrowRight className="w-4 h-4 ml-0.5 group-hover:translate-x-1.5 transition-transform duration-300" />
             </Link>
           </div>
 
           {/* Social Proof Metric Bar */}
-          <div className="animate-fade-in-up animation-delay-500 pt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-slate-500 dark:text-slate-400">
+          <div className="animate-fade-in-up animation-delay-500 pt-3 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
                 {[
@@ -241,6 +242,121 @@ export function LandingPageClient() {
               <ShieldCheck className="w-4 h-4" />
               <span>Mutual Approval &amp; Zero Spam</span>
             </div>
+          </div>
+        </div>
+
+        {/* ── HERO DESTINATION SHOWCASE: 4 Iconic Expeditions Cards ── */}
+        <div className="animate-fade-in-up animation-delay-500 pt-10 sm:pt-14 max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-4 sm:mb-5">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+              <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                Trending Expeditions for Solo Travelers
+              </h2>
+            </div>
+            <Link
+              href="/register"
+              className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline inline-flex items-center gap-1 group"
+            >
+              <span>View all getaways</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-200" />
+            </Link>
+          </div>
+
+          {/* 4 Cards Grid with high-contrast text and crisp buttons */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {[
+              {
+                name: "Kasol & Parvati Valley",
+                state: "Himachal Pradesh",
+                image:
+                  "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80",
+                tag: "Trekking & Hostels",
+                price: "₹8,500+ avg",
+                spots: "3 spots open",
+              },
+              {
+                name: "Living Root Bridges",
+                state: "Meghalaya",
+                image:
+                  "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&auto=format&fit=crop&q=80",
+                tag: "Eco Hikes & Waterfalls",
+                price: "₹18,000+ avg",
+                spots: "2 spots open",
+              },
+              {
+                name: "Hampi & Gokarna",
+                state: "Karnataka",
+                image:
+                  "https://images.unsplash.com/photo-1600100397608-f010f4439169?w=800&auto=format&fit=crop&q=80",
+                tag: "Heritage & Beaches",
+                price: "₹7,000+ avg",
+                spots: "4 spots open",
+              },
+              {
+                name: "Alleppey & Munnar",
+                state: "Kerala",
+                image:
+                  "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&auto=format&fit=crop&q=80",
+                tag: "Tea Estates & Waterways",
+                price: "₹12,000+ avg",
+                spots: "2 spots open",
+              },
+            ].map((dest, idx) => (
+              <Link
+                key={idx}
+                href="/register"
+                className="group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-200/90 dark:border-emerald-950/80 hover:border-emerald-500/60 hover:-translate-y-2 flex flex-col justify-end min-h-[300px] sm:min-h-[320px] bg-slate-900"
+              >
+                {/* Photo with zoom effect */}
+                <img
+                  src={dest.image}
+                  alt={dest.name}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                />
+
+                {/* Gradient Scrim - Dark at bottom so all text is 100% crystal clear */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 group-hover:via-black/40 transition-colors duration-300" />
+
+                {/* Top Tag & Spots Badge */}
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+                  <span className="px-3 py-1 rounded-full text-[10px] font-black tracking-wide uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30">
+                    {dest.tag}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/60 backdrop-blur-md text-emerald-300 border border-emerald-500/40">
+                    {dest.spots}
+                  </span>
+                </div>
+
+                {/* Bottom Content Area */}
+                <div className="relative z-10 p-4 pt-10 text-white">
+                  {/* Location State with icon */}
+                  <div className="flex items-center gap-1 text-emerald-300 text-xs font-bold mb-1">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span>{dest.state}</span>
+                  </div>
+
+                  {/* Destination Title: Crisp Pure White */}
+                  <h3 className="text-base sm:text-lg font-black text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-emerald-200 transition-colors">
+                    {dest.name}
+                  </h3>
+
+                  {/* Budget row */}
+                  <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="text-white/70 text-[10px] uppercase font-semibold block">Est. Budget</span>
+                      <span className="font-black text-amber-400 text-sm tracking-tight drop-shadow-xs">{dest.price}</span>
+                    </div>
+
+                    {/* Card Button */}
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/15 group-hover:bg-emerald-600 text-white text-xs font-bold backdrop-blur-md border border-white/20 group-hover:border-emerald-500 transition-all duration-200 shadow-sm">
+                      <span>Join</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -734,59 +850,75 @@ export function LandingPageClient() {
               name: "Kasol & Parvati Valley",
               state: "Himachal Pradesh",
               image:
-                "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=500&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80",
               tag: "Trekking & Hostels",
               price: "₹8,500+ avg",
+              spots: "3 spots open",
             },
             {
               name: "Living Root Bridges",
               state: "Meghalaya",
               image:
-                "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=500&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&auto=format&fit=crop&q=80",
               tag: "Eco Hikes & Waterfalls",
               price: "₹18,000+ avg",
+              spots: "2 spots open",
             },
             {
               name: "Hampi & Gokarna",
               state: "Karnataka",
               image:
-                "https://images.unsplash.com/photo-1600100397608-f010e423b971?w=500&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1600100397608-f010f4439169?w=800&auto=format&fit=crop&q=80",
               tag: "Heritage & Beaches",
               price: "₹7,000+ avg",
+              spots: "4 spots open",
             },
             {
               name: "Alleppey & Munnar",
               state: "Kerala",
               image:
-                "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=500&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&auto=format&fit=crop&q=80",
               tag: "Tea Estates & Waterways",
               price: "₹12,000+ avg",
+              spots: "2 spots open",
             },
           ].map((dest, idx) => (
             <Link
               key={idx}
               href="/register"
-              className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-emerald-950/70 hover:-translate-y-1.5"
+              className="group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-200/90 dark:border-emerald-950/80 hover:border-emerald-500/60 hover:-translate-y-2 flex flex-col justify-end min-h-[300px] sm:min-h-[320px] bg-slate-900"
             >
-              <div className="h-52 w-full overflow-hidden bg-slate-200 dark:bg-[#16201b]">
-                <img
-                  src={dest.image}
-                  alt={dest.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-              <div className="absolute top-3 left-3">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-sm">
+              <img
+                src={dest.image}
+                alt={dest.name}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 group-hover:via-black/40 transition-colors duration-300" />
+              <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+                <span className="px-3 py-1 rounded-full text-[10px] font-black tracking-wide uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30">
                   {dest.tag}
                 </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/60 backdrop-blur-md text-emerald-300 border border-emerald-500/40">
+                  {dest.spots}
+                </span>
               </div>
-              <div className="absolute bottom-3 left-3 right-3 text-white">
-                <p className="text-[11px] text-emerald-300 font-medium">{dest.state}</p>
-                <h4 className="text-sm font-bold drop-shadow-md">{dest.name}</h4>
-                <div className="mt-1 flex items-center justify-between text-xs">
-                  <span className="text-white/80 text-[11px]">Est. Budget</span>
-                  <span className="font-extrabold text-orange-400">{dest.price}</span>
+              <div className="relative z-10 p-4 pt-10 text-white">
+                <div className="flex items-center gap-1 text-emerald-300 text-xs font-bold mb-1">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>{dest.state}</span>
+                </div>
+                <h4 className="text-base sm:text-lg font-black text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-emerald-200 transition-colors">
+                  {dest.name}
+                </h4>
+                <div className="mt-2.5 pt-2 border-t border-white/15 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-white/70 text-[10px] uppercase font-semibold block">Est. Budget</span>
+                    <span className="font-black text-amber-400 text-sm tracking-tight drop-shadow-xs">{dest.price}</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/15 group-hover:bg-emerald-600 text-white text-xs font-bold backdrop-blur-md border border-white/20 group-hover:border-emerald-500 transition-all duration-200 shadow-sm">
+                    <span>View</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </span>
                 </div>
               </div>
             </Link>
