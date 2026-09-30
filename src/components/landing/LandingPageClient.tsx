@@ -234,12 +234,15 @@ export function LandingPageClient() {
       <div className="absolute top-2/3 left-4 w-80 sm:w-[36rem] h-80 sm:h-[36rem] bg-gradient-to-tr from-emerald-500/18 via-teal-500/14 to-emerald-400/10 rounded-full blur-[120px] pointer-events-none transform-gpu" />
 
       {/* ── 1. HERO SECTION WITH CINEMATIC DYNAMIC TRAVEL BACKGROUND ── */}
-      <section className="relative w-full overflow-hidden bg-slate-950 text-white pt-14 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl">
+      <section className="relative w-full overflow-hidden bg-slate-950 text-white pt-20 pb-20 sm:pt-24 sm:pb-28 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl">
         {/* Dynamic Background Image Layers with Smooth Crossfade */}
         {heroDestinations.map((dest, idx) => (
           <div
             key={idx}
-            className={`absolute inset-0 transition-all duration-1000 ease-out pointer-events-none ${activeHeroBg === idx ? "opacity-100 scale-100" : "opacity-0 scale-105"
+            className={`absolute inset-0 transition-all duration-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none ${
+              activeHeroBg === idx 
+                ? "[clip-path:circle(150%_at_50%_50%)] opacity-100 z-10 scale-100" 
+                : "[clip-path:circle(0%_at_50%_50%)] opacity-0 z-0 scale-105"
               }`}
           >
             <img
@@ -251,32 +254,13 @@ export function LandingPageClient() {
         ))}
 
         {/* Deep cinematic gradient overlay: from dark to medium to dark */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/65 to-slate-950/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/65 to-slate-950/90 pointer-events-none z-20" />
 
         {/* Atmospheric ambient lighting glow */}
-        <div className="absolute -top-24 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/18 rounded-full blur-[140px] pointer-events-none transform-gpu" />
-        <div className="absolute -bottom-24 right-1/4 w-[32rem] h-[32rem] bg-amber-500/14 rounded-full blur-[140px] pointer-events-none transform-gpu" />
+        <div className="absolute -top-24 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/18 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
+        <div className="absolute -bottom-24 right-1/4 w-[32rem] h-[32rem] bg-amber-500/14 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
 
-        <div className="relative z-10 text-center max-w-4xl mx-auto space-y-6">
-          {/* Eyebrow Pill + Active destination location indicator */}
-          <div className="animate-fade-in-up animation-delay-100 flex flex-wrap items-center justify-center gap-2">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/50 backdrop-blur-xl text-emerald-300 text-xs font-semibold shadow-lg shadow-emerald-950/40">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              <span className="font-extrabold uppercase tracking-widest text-[10px] text-emerald-400">
-                TRAVALLY
-              </span>
-              <span className="text-emerald-500/40">|</span>
-              <span className="text-slate-200 text-xs font-medium">
-                India&apos;s Solo Travel &amp; Activity Community
-              </span>
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-white/20 bg-black/50 backdrop-blur-md text-emerald-300 text-xs font-semibold shadow-md transition-all duration-500">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-slate-200">{heroDestinations[activeHeroBg].name},</span>
-              <span className="text-emerald-400 font-bold">{heroDestinations[activeHeroBg].state}</span>
-            </div>
-          </div>
+        <div className="relative z-30 text-center max-w-4xl mx-auto space-y-4">
 
           {/* Main Headline with Premium Editorial Hierarchy */}
           <h1 className="animate-fade-in-up animation-delay-200 text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
@@ -288,106 +272,65 @@ export function LandingPageClient() {
           </h1>
 
           {/* Natural, Human-Centric Subtitle */}
-          <p className="animate-fade-in-up animation-delay-300 text-base sm:text-lg text-slate-200/90 max-w-2xl mx-auto leading-relaxed font-normal pt-1 drop-shadow-md">
-            Whether you want to try an artisanal café in Indiranagar, catch an indie film screening, or team up for a Himalayan trek, Travally connects verified people who share your vibe, timing, and travel budget.
+          <p className="animate-fade-in-up animation-delay-300 text-sm sm:text-base text-emerald-50/90 w-[95%] sm:max-w-2xl mx-auto leading-snug sm:leading-relaxed font-normal pt-1 drop-shadow-md">
+            Connect with a trusted network of verified travelers and local explorers. We match people who share your vibe and budget, ensuring every journey is safe and authentic.
           </p>
 
-          {/* Quick Category Badges */}
-          <div className="animate-fade-in-up animation-delay-350 pt-1 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-2xl mx-auto">
-            {[
-              { icon: Mountain, label: "Himalayan Ridge Treks" },
-              { icon: Film, label: "City Meetups & Cafés" },
-              { icon: Compass, label: "Coastal & Heritage Trails" },
-              { icon: ShieldCheck, label: "Govt ID & Mutual Approval" },
-            ].map((pill, i) => {
-              const Icon = pill.icon;
-              return (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/10 text-slate-200 border border-white/15 backdrop-blur-md shadow-xs"
-                >
-                  <Icon className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>{pill.label}</span>
-                </span>
-              );
-            })}
-          </div>
-
-          {/* High-Converting CTA Buttons */}
-          <div className="animate-fade-in-up animation-delay-400 flex flex-col sm:flex-row items-center justify-center gap-4 pt-3">
+          {/* High-Converting Primary CTA */}
+          <div className="animate-fade-in-up animation-delay-400 flex items-center justify-center mt-6 sm:mt-8 mb-2">
             <Link
               href="/register"
-              className="group w-full sm:w-auto min-h-[52px] px-8 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-[0_12px_32px_rgba(16,185,129,0.5)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.7)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+              className="group w-[85%] sm:w-auto max-w-sm mx-auto min-h-[56px] px-10 rounded-full bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 hover:from-orange-300 hover:to-amber-300 text-white font-extrabold text-base sm:text-lg flex items-center justify-center gap-3 shadow-[0_12px_40px_rgba(251,146,60,0.4)] hover:shadow-[0_16px_48px_rgba(251,146,60,0.6)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
             >
-              <Users className="w-4 h-4" />
+              <Users className="w-5 h-5" />
               <span>Join Travally Free</span>
-              <ArrowRight className="w-4 h-4 ml-0.5 group-hover:translate-x-1.5 transition-transform duration-300" />
-            </Link>
-
-            <Link
-              href="/login"
-              className="group w-full sm:w-auto min-h-[52px] px-8 rounded-full bg-white/15 hover:bg-white/25 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 border border-white/30 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
-            >
-              <Compass className="w-4 h-4 text-emerald-300 group-hover:rotate-45 transition-transform duration-300" />
-              <span>Log In to Account</span>
-              <ArrowRight className="w-4 h-4 ml-0.5 group-hover:translate-x-1.5 transition-transform duration-300" />
+              <ArrowRight className="w-5 h-5 ml-0.5 group-hover:translate-x-1.5 transition-transform duration-300" />
             </Link>
           </div>
 
-          {/* Social Proof Metric Bar */}
-          <div className="animate-fade-in-up animation-delay-500 pt-3 flex flex-wrap items-center justify-center gap-5 sm:gap-8 text-xs text-slate-200">
-            <div className="flex items-center gap-2.5">
-              <div className="flex -space-x-2">
-                {[
-                  { letter: "R", bg: "bg-emerald-600" },
-                  { letter: "A", bg: "bg-orange-500" },
-                  { letter: "P", bg: "bg-teal-600" },
-                  { letter: "S", bg: "bg-emerald-700" },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className={`w-7 h-7 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] font-black text-white ${item.bg} shadow-md`}
-                  >
-                    {item.letter}
+          {/* Social Proof & Trust Glass Panel */}
+          <div className="animate-fade-in-up animation-delay-500 pt-6 sm:pt-8 flex flex-col items-center justify-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8 px-8 py-5 sm:py-3.5 rounded-3xl sm:rounded-full bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] w-[85%] sm:w-auto mx-auto max-w-sm sm:max-w-none">
+              {/* Verified Members */}
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
+                <div className="flex -space-x-2">
+                  {[
+                    { letter: "R", bg: "bg-emerald-600" },
+                    { letter: "A", bg: "bg-orange-500" },
+                    { letter: "P", bg: "bg-teal-600" },
+                  ].map((item, i) => (
+                    <div
+                      key={i}
+                      className={`w-7 h-7 rounded-full border border-white/20 flex items-center justify-center text-[10px] font-black text-white ${item.bg} shadow-md`}
+                    >
+                      {item.letter}
+                    </div>
+                  ))}
+                  <div className="w-7 h-7 rounded-full border border-white/20 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-white shadow-md">
+                    +15k
                   </div>
-                ))}
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="font-extrabold text-white text-xs tracking-wide">Active Members</span>
+                  <span className="text-emerald-400 text-[10px] font-medium tracking-wide uppercase">ID Verified</span>
+                </div>
               </div>
-              <span className="font-bold text-white drop-shadow-sm">
-                15,000+ Verified Members
-              </span>
-            </div>
 
-            <div className="flex items-center gap-1.5 text-amber-300 drop-shadow-sm font-semibold">
-              <div className="flex text-amber-400">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} className="w-3.5 h-3.5 fill-current" />
-                ))}
+              {/* Divider */}
+              <div className="w-full sm:w-px h-px sm:h-8 bg-white/20" />
+
+              {/* Trust & Safety Metric */}
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                  <HeartHandshake className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="font-extrabold text-white text-xs tracking-wide">99.8% Safe Meets</span>
+                  <span className="text-amber-400 text-[10px] font-medium tracking-wide uppercase">Zero Spam Promise</span>
+                </div>
               </div>
-              <span className="text-white font-bold ml-0.5">4.9/5</span>
-              <span className="text-slate-300 text-[11px] font-normal">Meetup Rating</span>
             </div>
-
-            <div className="flex items-center gap-1.5 text-emerald-300 font-semibold drop-shadow-sm">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>100% Mutual Approval &amp; Zero Spam</span>
-            </div>
-          </div>
-
-          {/* Subtle scenery dots indicator */}
-          <div className="animate-fade-in-up animation-delay-500 pt-3 flex items-center justify-center gap-2">
-            {heroDestinations.map((dest, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveHeroBg(idx)}
-                className={`transition-all duration-300 rounded-full h-1.5 ${
-                  activeHeroBg === idx
-                    ? "w-8 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]"
-                    : "w-2 bg-white/30 hover:bg-white/60"
-                }`}
-                aria-label={`View ${dest.name} scenery`}
-                title={`${dest.name}, ${dest.state}`}
-              />
-            ))}
+            
           </div>
         </div>
       </section>
@@ -399,103 +342,96 @@ export function LandingPageClient() {
           }`}
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          {/* LEFT COLUMN: 3D Animated Duplicate Companion Card */}
+          {/* LEFT COLUMN: Discover-style Companion Card Preview */}
           <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none">
-            <Card3DContainer accentColor="emerald">
-              <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#f2faf8] to-[#e4f3f0] dark:from-[#0d1713] dark:to-[#08100d] border-2 border-emerald-500/50 shadow-[0_20px_50px_rgba(16,185,129,0.25)] p-5">
-                {/* 3D Floating Pill Badges */}
-                <div
-                  className="flex items-center justify-between mb-4"
-                  style={{ transform: "translateZ(30px)" }}
-                >
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md">
-                    <Film className="w-3 h-3" />
-                    <span>COMPANION ACTIVITY</span>
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-bold shadow-md shadow-emerald-500/40 animate-pulse">
-                    1 spot left
-                  </span>
-                </div>
+            <div className="group relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-[#f2faf8] to-[#e4f3f0] shadow-lg hover:shadow-xl transition-all duration-500 border border-white/60">
+              {/* Background Image with Fades */}
+              <div className="absolute top-0 right-0 w-full h-[55%] z-0" style={{ backgroundImage: `url(https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#f2faf8] via-[#f2faf8]/80 to-transparent w-[80%]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#e4f3f0]" />
+              </div>
 
-                {/* Cover Image Banner */}
-                <div
-                  className="relative h-48 rounded-2xl overflow-hidden mb-4 shadow-md group"
-                  style={{ transform: "translateZ(20px)" }}
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80"
-                    alt="Suchitra Film Society Screening & Filter Coffee"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300">
-                      Movies &amp; Cinema
-                    </span>
-                    <h3 className="text-base font-black leading-tight drop-shadow-sm">
-                      Suchitra Film Society Screening &amp; Filter Coffee
-                    </h3>
-                  </div>
+              {/* Top Floating Badges */}
+              <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-20">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e0f5f0]/90 backdrop-blur-md border border-[#c4eee4]">
+                  <Film className="w-3.5 h-3.5 text-[#0a524a]" />
+                  <span className="text-xs font-bold tracking-wide text-[#0a524a]">Movies &amp; Cinema</span>
                 </div>
+                <div className="px-3 py-1 rounded-full bg-[#0eb9a2] shadow-[0_0_15px_rgba(14,185,162,0.5)] font-bold text-xs text-white">
+                  1 spot left
+                </div>
+              </div>
 
-                {/* Host Info Box */}
-                <div
-                  className="p-3 rounded-2xl bg-white/90 dark:bg-[#121c17]/90 border border-emerald-200/80 dark:border-emerald-900/60 shadow-xs mb-3 flex items-center justify-between"
-                  style={{ transform: "translateZ(25px)" }}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 border border-emerald-300 text-emerald-800 dark:text-emerald-300 font-black text-xs flex items-center justify-center shadow-xs">
-                      A
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white">
-                          Ananya Sharma
-                        </span>
-                        <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                      </div>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                        Indiranagar, Bengaluru • Govt ID &amp; LinkedIn Verified
-                      </p>
+              {/* Content */}
+              <div className="relative z-10 px-5 pt-20 pb-5 flex flex-col justify-end min-h-[480px]">
+                <div className="mb-3">
+                  <h3 className="text-xl font-extrabold leading-tight text-slate-900 mb-3 max-w-[85%]">
+                    Suchitra Film Society Screening &amp; Filter Coffee
+                  </h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">HOST</span>
+                    <div className="flex items-center gap-1.5 ml-1">
+                      <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 border border-white shadow-sm flex items-center justify-center text-[9px] font-bold shrink-0">A</div>
+                      <span className="text-xs font-bold text-slate-900">Ananya Sharma</span>
+                      <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" />
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                    Host
-                  </span>
+                  <p className="text-xs text-slate-500 italic leading-relaxed max-w-[90%] line-clamp-2">
+                    &quot;Catching the new indie film at Suchitra, followed by filter coffee and a conversation about cinema.&quot;
+                  </p>
                 </div>
 
-                {/* Meetup Details Grid */}
-                <div
-                  className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-white/80 dark:bg-[#121c17]/80 border border-emerald-100 dark:border-emerald-900/40 text-center mb-4 text-[11px]"
-                  style={{ transform: "translateZ(25px)" }}
-                >
-                  <div className="p-1">
-                    <p className="text-[10px] text-slate-400 font-medium">Date &amp; Time</p>
-                    <p className="font-bold text-slate-800 dark:text-slate-200">Oct 1 • 17:00</p>
-                    <p className="text-[9px] text-emerald-600 font-semibold">3h duration</p>
+                {/* Stats Glass Panel */}
+                <div className="w-full bg-white/70 backdrop-blur-xl border border-white rounded-[1.5rem] shadow-[0_4px_20px_rgb(0,0,0,0.05)] p-4 mb-4 grid grid-cols-3 divide-x divide-slate-200/60">
+                  <div className="flex flex-col px-1">
+                    <div className="w-8 h-8 rounded-full bg-[#eefaf7] border border-[#d5f0e9] text-[#0eb9a2] flex items-center justify-center mb-2">
+                      <Calendar className="w-3.5 h-3.5" />
+                    </div>
+                    <p className="text-[10px] text-slate-500 mb-0.5">Date &amp; Time</p>
+                    <p className="text-xs font-bold text-slate-900 leading-tight mb-0.5">Oct 1, 2025</p>
+                    <p className="text-[10px] text-slate-500">17:00 (3h)</p>
                   </div>
-                  <div className="p-1 border-x border-slate-200 dark:border-slate-800">
-                    <p className="text-[10px] text-slate-400 font-medium">Meeting Point</p>
-                    <p className="font-bold text-slate-800 dark:text-slate-200 truncate">Indiranagar</p>
-                    <p className="text-[9px] text-slate-500">Public Society</p>
+                  <div className="flex flex-col px-3">
+                    <div className="w-8 h-8 rounded-full bg-[#eefaf7] border border-[#d5f0e9] text-[#0eb9a2] flex items-center justify-center mb-2">
+                      <MapPin className="w-3.5 h-3.5" />
+                    </div>
+                    <p className="text-[10px] text-slate-500 mb-0.5">Location</p>
+                    <p className="text-xs font-bold text-slate-900 leading-tight">Indiranagar, Bengaluru</p>
                   </div>
-                  <div className="p-1">
-                    <p className="text-[10px] text-slate-400 font-medium">Attendees</p>
-                    <p className="font-bold text-slate-800 dark:text-slate-200">1 of 2 joined</p>
-                    <p className="text-[9px] text-emerald-600 font-semibold">1 spot left</p>
+                  <div className="flex flex-col pl-3 pr-1">
+                    <div className="w-8 h-8 rounded-full bg-[#eefaf7] border border-[#d5f0e9] text-[#0eb9a2] flex items-center justify-center mb-2">
+                      <Users className="w-3.5 h-3.5" />
+                    </div>
+                    <p className="text-[10px] text-slate-500 mb-0.5">Joined</p>
+                    <p className="text-xs font-bold text-slate-900 leading-tight mb-1.5">1 of 2 joined</p>
+                    <div className="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden relative">
+                      <div className="h-full bg-[#cbd5e1] rounded-full absolute left-0" style={{ width: '50%' }} />
+                      <span className="absolute right-0 -top-3.5 text-[9px] font-bold text-[#0eb9a2]">1 left</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Action Preview Button */}
-                <div style={{ transform: "translateZ(30px)" }}>
-                  <div className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30">
-                    <span>Request to Join Activity</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2.5">
+                  <div className="flex flex-col items-center justify-center w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-[0_2px_8px_rgb(0,0,0,0.04)]">
+                    <Menu className="w-4 h-4 mb-0.5 text-slate-700" />
+                    <span className="text-[9px] font-semibold text-slate-600">Details</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-[0_2px_8px_rgb(0,0,0,0.04)]">
+                    <Bookmark className="w-4 h-4 mb-0.5 text-slate-700" />
+                    <span className="text-[9px] font-semibold text-slate-600">Save</span>
+                  </div>
+                  <div className="flex-1 h-12 rounded-[1.25rem] bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 text-emerald-950 border border-emerald-300/90 font-bold text-sm flex items-center justify-between px-4 shadow-xs">
+                    <span>Join Activity</span>
+                    <div className="w-6 h-6 rounded-full bg-emerald-200/80 text-emerald-800 flex items-center justify-center">
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </div>
                   </div>
                 </div>
               </div>
-            </Card3DContainer>
+            </div>
           </div>
+
 
           {/* RIGHT COLUMN: Narrative & Details of "What All It Shows" */}
           <div className="lg:col-span-6 space-y-6">
@@ -668,102 +604,146 @@ export function LandingPageClient() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: 3D Animated Duplicate Travel Card (Alternating!) */}
+          {/* RIGHT COLUMN: Discover-style Travel Card Preview */}
           <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none order-1 lg:order-2">
-            <Card3DContainer accentColor="orange">
-              <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#fcf7f2] to-[#faeee3] dark:from-[#1b140f] dark:to-[#120a06] border-2 border-orange-500/50 shadow-[0_20px_50px_rgba(249,115,22,0.25)] p-5">
-                {/* 3D Floating Pill Badges */}
-                <div
-                  className="flex items-center justify-between mb-4"
-                  style={{ transform: "translateZ(30px)" }}
-                >
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md">
-                    <Mountain className="w-3 h-3" />
-                    <span>TRAVEL EXPEDITION</span>
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-orange-500 text-white text-[11px] font-bold shadow-md shadow-orange-500/40">
-                    ⚡ 94% Compatibility
-                  </span>
-                </div>
+            <div className="group relative w-full bg-white dark:bg-[#111815] rounded-3xl border border-slate-200/90 dark:border-emerald-950/70 shadow-sm hover:shadow-2xl hover:border-orange-400/50 dark:hover:border-orange-500/40 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+              {/* TOP THUMBNAIL BANNER */}
+              <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100 dark:bg-[#16201b]">
+                <img
+                  src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80"
+                  alt="Kasol & Tosh: Parvati Valley Trek"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
 
-                {/* Cover Image Banner */}
-                <div
-                  className="relative h-48 rounded-2xl overflow-hidden mb-4 shadow-md group"
-                  style={{ transform: "translateZ(20px)" }}
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80"
-                    alt="Kasol & Tosh: Parvati Valley Trek"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-orange-300">
-                      Himalayan Trekking • 6 Days
+                {/* Floating Badges on Top */}
+                <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 text-orange-950 border border-orange-300/80 shadow-xs tracking-wide uppercase">
+                    <Compass className="w-3.5 h-3.5 text-orange-700" />
+                    <span>HIMALAYAN TREKKING</span>
+                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 rounded-full text-[11px] font-bold backdrop-blur-md shadow-xs bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 text-emerald-950 border border-emerald-300/80">
+                      1 spot left
                     </span>
-                    <h3 className="text-base font-black leading-tight drop-shadow-sm">
-                      Kasol &amp; Tosh: Parvati Valley Trek
-                    </h3>
                   </div>
                 </div>
 
-                {/* Host Info Box */}
-                <div
-                  className="p-3 rounded-2xl bg-white/90 dark:bg-[#18110a]/90 border border-orange-200/80 dark:border-orange-900/60 shadow-xs mb-3 flex items-center justify-between"
-                  style={{ transform: "translateZ(25px)" }}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-orange-100 dark:bg-orange-950 border border-orange-300 text-orange-800 dark:text-orange-300 font-black text-xs flex items-center justify-center shadow-xs">
-                      P
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white">
-                          Priya Iyer
+                {/* Quick Departure Pill */}
+                <div className="absolute bottom-2.5 left-3.5 z-10 flex items-center gap-1.5 text-[11px] font-medium text-white drop-shadow-md">
+                  <MapPin className="w-3.5 h-3.5 text-orange-400" />
+                  <span>From: Bengaluru / Delhi</span>
+                </div>
+              </div>
+
+              {/* CARD CONTENT BODY */}
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-3">
+                  {/* Header: Destination & Score */}
+                  <div>
+                    <div className="flex items-start justify-between gap-2">
+                      <h2 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-1 tracking-tight">
+                        Kasol &amp; Tosh: Parvati Valley Trek
+                      </h2>
+                      <div className="shrink-0">
+                        <span className="px-2 py-1 rounded-full bg-orange-100 text-orange-800 text-[10px] font-black border border-orange-200">
+                          ⚡ 94% MATCH
                         </span>
-                        <BadgeCheck className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
                       </div>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                        Bengaluru / Delhi • Frequent Backpacker &amp; ID Verified
-                      </p>
+                    </div>
+
+                    {/* Host row */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 ring-1 ring-emerald-500/40 flex items-center justify-center text-[10px] font-bold shrink-0">
+                        P
+                      </div>
+                      <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+                        Priya Iyer
+                      </span>
+                      <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300">
-                    Leader
-                  </span>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+                    A 6-day immersive Himalayan trek covering the beautiful Parvati Valley, Chalal trail, and hot springs of Manikaran. Staying at cozy boutique hostels.
+                  </p>
+
+                  {/* Key Trip Info Grid */}
+                  <div className="grid grid-cols-2 gap-2 pt-1 text-xs">
+                    {/* Dates & Duration */}
+                    <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-[#16201b] border border-slate-200/80 dark:border-emerald-950/60">
+                      <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-1">
+                        <Calendar className="w-3 h-3 text-orange-500" />
+                        <span>Dates</span>
+                      </div>
+                      <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs">
+                        Oct 12 - Oct 18
+                      </div>
+                      <div className="text-[11px] text-orange-600 dark:text-orange-400 font-medium">
+                        6 Days Duration
+                      </div>
+                    </div>
+
+                    {/* Budget Range */}
+                    <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-[#16201b] border border-slate-200/80 dark:border-emerald-950/60">
+                      <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-1">
+                        <Wallet className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                        <span>Budget</span>
+                      </div>
+                      <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs truncate">
+                        ₹8,500 - ₹14,500
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Est. per traveler
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Group Capacity Progress Bar */}
+                  <div className="space-y-1 pt-1">
+                    <div className="flex items-center justify-between text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                      <span>
+                        Group Capacity: <strong className="text-slate-900 dark:text-white">2</strong> of <strong>3</strong> joined
+                      </span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                        1 open
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-slate-100 dark:bg-[#1c2822] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-orange-500 to-orange-600 transition-all duration-300"
+                        style={{ width: '66%' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Planned Attractions Chips */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
+                      Parvati Valley
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
+                      Chalal Trail
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
+                      Manikaran
+                    </span>
+                  </div>
                 </div>
 
-                {/* Trip Details Grid */}
-                <div
-                  className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-white/80 dark:bg-[#18110a]/80 border border-orange-100 dark:border-orange-900/40 text-center mb-4 text-[11px]"
-                  style={{ transform: "translateZ(25px)" }}
-                >
-                  <div className="p-1">
-                    <p className="text-[10px] text-slate-400 font-medium">Est. Budget</p>
-                    <p className="font-bold text-slate-800 dark:text-slate-200">₹8.5k – ₹14.5k</p>
-                    <p className="text-[9px] text-orange-600 font-semibold">Cabs &amp; Stays</p>
+                {/* CARD FOOTER / ACTION BAR */}
+                <div className="pt-3 border-t border-slate-100 dark:border-emerald-950/60 flex items-center gap-2">
+                  <div className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-emerald-900/60 hover:bg-slate-100 dark:hover:bg-[#18241f] text-slate-700 dark:text-slate-200 font-semibold text-xs transition">
+                    Details
                   </div>
-                  <div className="p-1 border-x border-slate-200 dark:border-slate-800">
-                    <p className="text-[10px] text-slate-400 font-medium">Dates</p>
-                    <p className="font-bold text-slate-800 dark:text-slate-200">Oct 12 – 18</p>
-                    <p className="text-[9px] text-slate-500">6 Days Total</p>
-                  </div>
-                  <div className="p-1">
-                    <p className="text-[10px] text-slate-400 font-medium">Group Size</p>
-                    <p className="font-bold text-slate-800 dark:text-slate-200">Max 3 Travelers</p>
-                    <p className="text-[9px] text-orange-600 font-semibold">1 Spot Open</p>
-                  </div>
-                </div>
-
-                {/* Action Preview Button */}
-                <div style={{ transform: "translateZ(30px)" }}>
-                  <div className="w-full py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30">
-                    <span>Request to Join Expedition</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                  <div className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 dark:from-orange-950/80 dark:to-amber-950/70 text-orange-950 dark:text-orange-200 border border-orange-300/90 dark:border-orange-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all hover:scale-[1.01]">
+                    <span>Join Expedition</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-orange-700 dark:text-orange-300" />
                   </div>
                 </div>
               </div>
-            </Card3DContainer>
+            </div>
           </div>
         </div>
       </section>
@@ -852,7 +832,7 @@ export function LandingPageClient() {
       {/* ── 6. VERIFIED COMMUNITY TESTIMONIALS ── */}
       <section
         ref={testimonialsReveal.ref}
-        className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/60 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${testimonialsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${testimonialsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
       >
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">

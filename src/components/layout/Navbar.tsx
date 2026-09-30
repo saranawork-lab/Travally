@@ -74,6 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -82,6 +83,20 @@ export const Navbar: React.FC<NavbarProps> = ({
       };
       window.addEventListener("travally-sidebar-state", handleSidebarState);
       return () => window.removeEventListener("travally-sidebar-state", handleSidebarState);
+    }
+  }, []);
+
+  // Track scroll position to transition the navbar on the landing page
+  useEffect(() => {
+    const handleScroll = () => {
+      // Transition when scrolled past 80% of the viewport (near the end of the hero section)
+      setIsScrolled(window.scrollY > (window.innerHeight * 0.8));
+    };
+    
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      handleScroll();
+      return () => window.removeEventListener("scroll", handleScroll);
     }
   }, []);
 
@@ -95,8 +110,18 @@ export const Navbar: React.FC<NavbarProps> = ({
   // On in-app pages (logged-in): animate ONLY when sidebar is open! When sidebar is closed: STRICTLY NO ANIMATION!
   const shouldAnimateLogo = isAuthOrLandingPage ? true : isSidebarOpen;
 
+  // Determine navbar styles based on route and scroll
+  const isLandingPage = pathname === "/";
+  const isTransparent = isLandingPage && !isScrolled;
+
   return (
-    <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#090d0b] border-b border-slate-100/90 dark:border-emerald-950/60 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors duration-200">
+    <header className={`z-40 w-full transition-all duration-500 ${
+      isLandingPage ? "fixed top-0" : "sticky top-0"
+    } ${
+      isTransparent
+        ? "bg-black/10 backdrop-blur-md border-transparent shadow-none"
+        : "bg-white dark:bg-[#090d0b] border-b border-slate-100/90 dark:border-emerald-950/60 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.04)] dark:shadow-none"
+    }`}>
       <div className="w-full px-3 sm:px-8 md:px-10 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4 relative">
         {/* Brand Area */}
         <div className="flex items-center gap-2 flex-1 sm:flex-initial min-w-0">
@@ -176,13 +201,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <>
                   <Link
                     href="/discover"
-                    className="px-5 py-2 rounded-full text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 shadow-xs transition-all"
+                    className={`px-5 py-2 rounded-full text-xs font-bold transition-all shadow-xs border ${
+                      isTransparent 
+                        ? "text-emerald-900 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 border-emerald-300 hover:from-emerald-200 hover:to-teal-100"
+                        : "text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border-emerald-300/80 dark:border-emerald-800/60"
+                    }`}
                   >
                     Go to App
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="px-3.5 py-2 rounded-full text-xs font-semibold text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 transition-colors"
+                    className={`px-3.5 py-2 rounded-full text-xs font-semibold transition-colors ${
+                      isTransparent
+                        ? "text-white/80 hover:text-white"
+                        : "text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400"
+                    }`}
                   >
                     Sign Out
                   </button>
@@ -191,13 +224,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <>
                   <Link
                     href="/login"
-                    className="px-4 py-2 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#131c18] transition-colors"
+                    className={`px-4 py-2 rounded-full text-xs font-bold transition-colors ${
+                      isTransparent
+                        ? "text-white/90 hover:text-white hover:bg-white/10"
+                        : "text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#131c18]"
+                    }`}
                   >
                     Log In
                   </Link>
                   <Link
                     href="/register"
-                    className="px-5 py-2 rounded-full text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className={`px-5 py-2 rounded-full text-xs font-bold transition-all shadow-xs border hover:scale-[1.02] active:scale-[0.98] ${
+                      isTransparent
+                        ? "text-emerald-900 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 border-emerald-300 hover:from-emerald-200 hover:to-teal-100"
+                        : "text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border-emerald-300/80 dark:border-emerald-800/60"
+                    }`}
                   >
                     Join Free
                   </Link>

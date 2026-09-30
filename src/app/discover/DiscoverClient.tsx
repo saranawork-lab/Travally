@@ -199,7 +199,7 @@ function DiscoverContent({ initialUser }: DiscoverClientProps) {
 
   const handleModeChange = (newMode: AppMode) => {
     setMode(newMode);
-    router.replace(`/discover?mode=${newMode}`);
+    window.history.replaceState(null, '', `/discover?mode=${newMode}`);
   };
 
   return (

@@ -51,8 +51,12 @@ export const Footer: React.FC<FooterProps> = () => {
     return () => clearInterval(interval);
   }, [isHovered]);
 
-  // 1. Hide inside chat rooms
-  if (pathname?.startsWith("/chats/") && pathname !== "/chats") {
+  // 1. Hide inside chat rooms and auth pages
+  if (
+    (pathname?.startsWith("/chats/") && pathname !== "/chats") ||
+    pathname === '/login' ||
+    pathname === '/register'
+  ) {
     return null;
   }
 
