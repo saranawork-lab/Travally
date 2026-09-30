@@ -56,6 +56,10 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
         where: { id: decoded.userId },
         include: { profile: true },
       });
+
+      if (!user) {
+        return null;
+      }
     } catch (dbError: any) {
       if (dbError?.message?.includes("Malformed ObjectID")) {
         return null;

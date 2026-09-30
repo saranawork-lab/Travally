@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 export default async function DiscoverPage() {
   const user = await getCurrentUser();
 
-  // If user is not authenticated, never render Discover page — redirect to landing page
+  // If user is not authenticated, never render Discover page — redirect to login
   if (!user) {
-    redirect("/");
+    redirect("/login");
   }
 
   return <DiscoverClient initialUser={user} />;

@@ -71,15 +71,8 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 1. If user is already authenticated and visits landing or auth pages:
-  // Redirect them to the Pre-Launch Early Access Hub (/launch) or /discover if unlocked
-  if (isAuthenticated && (pathname === "/" || pathname === "/login" || pathname === "/register")) {
-    const targetUrl = new URL(isLaunchUnlocked ? "/discover" : "/launch", request.url);
-    return NextResponse.redirect(targetUrl);
-  }
-
-  // 2. Pre-launch gate:
-  // When launch is not unlocked, non-admin members are held at /launch
+  // 1. Pre-launch gate:
+  // When launch is not unlocked, non-admin authenticated members are held at /launch
   // (Full platform features /discover, /activities, /travel, /chats, /requests are guarded)
   if (isAuthenticated && !isLaunchUnlocked && !isAdmin) {
     const restrictedPrefixes = [
@@ -97,8 +90,8 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // 3. If user is NOT authenticated:
-  // ONLY landing page (/), login (/login), register (/register), and safety (/safety) are public.
+  // 2. If user is NOT authenticated:
+  // Public pages: landing (/), login (/login), register (/register), and safety (/safety)
   const isPublicPage =
     pathname === "/" ||
     pathname === "/login" ||
@@ -106,8 +99,8 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/safety");
 
   if (!isAuthenticated && !isPublicPage) {
-    const landingUrl = new URL("/", request.url);
-    return NextResponse.redirect(landingUrl);
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
