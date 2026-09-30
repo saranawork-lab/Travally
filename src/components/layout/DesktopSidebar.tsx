@@ -53,11 +53,23 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
     }
   }, [pathname, currentUser]);
 
+  // Helper to notify navbar of sidebar open/close state immediately
+  const dispatchSidebarState = (expanded: boolean) => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("travally-sidebar-state", {
+          detail: { expanded },
+        })
+      );
+    }
+  };
+
   // When route changes, shrink sidebar to collapsed state and close profile menu
   useEffect(() => {
     setForceCollapsed(true);
     setIsHovered(false);
     setIsProfileOpen(false);
+    dispatchSidebarState(false);
   }, [pathname]);
 
   // Click outside to close profile dropdown
@@ -98,11 +110,13 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
   const handleMouseEnter = () => {
     setForceCollapsed(false);
     setIsHovered(true);
+    dispatchSidebarState(true);
   };
 
   const handleMouseLeave = () => {
     setForceCollapsed(false);
     setIsHovered(false);
+    dispatchSidebarState(false);
   };
 
   // Click handler: immediately shrink sidebar back to icons-only mode
@@ -110,27 +124,23 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
     setForceCollapsed(true);
     setIsHovered(false);
     setIsProfileOpen(false);
+    dispatchSidebarState(false);
   };
 
   const handleLogout = async () => {
     setIsProfileOpen(false);
     setForceCollapsed(true);
     setIsHovered(false);
+    dispatchSidebarState(false);
     await logout();
     router.push("/");
   };
 
   const isExpanded = isHovered && !forceCollapsed;
 
-  // Broadcast sidebar expansion state so the logo in navbar animates when sidebar opens
+  // Broadcast sidebar expansion state
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(
-        new CustomEvent("travally-sidebar-state", {
-          detail: { expanded: isExpanded },
-        })
-      );
-    }
+    dispatchSidebarState(isExpanded);
   }, [isExpanded]);
 
   // Active item determination
@@ -209,7 +219,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
         aria-label="Desktop and Tablet Sidebar Navigation"
       >
         {/* Navigation items list - Centered vertically in sidebar */}
-        <div className="flex-1 flex flex-col justify-center px-2.5 py-4 space-y-2 overflow-y-auto overflow-x-hidden no-scrollbar">
+        <div className="flex-1 flex flex-col justify-center px-2 py-4 space-y-2 overflow-y-auto overflow-x-hidden no-scrollbar">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -220,18 +230,14 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
                 prefetch={true}
                 scroll={false}
                 title={!isExpanded ? item.label : undefined}
-                className={`group relative flex items-center rounded-2xl transition-all duration-200 ${
-                  isExpanded
-                    ? "w-full px-3 py-2.5 gap-3"
-                    : "w-11 h-11 mx-auto justify-center"
-                } ${
+                className={`group relative flex items-center h-11 w-full rounded-2xl overflow-hidden transition-colors duration-200 ${
                   item.isActive
                     ? "bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/5 dark:from-emerald-950/80 dark:to-teal-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-400/40 dark:border-emerald-600/50 shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/90 dark:hover:bg-[#16221c] border border-transparent"
                 }`}
               >
-                {/* Icon with relative badge container */}
-                <div className="relative flex items-center justify-center shrink-0">
+                {/* Fixed-width stationary icon slot: NEVER moves between collapsed & expanded (exact 34px center anchor) */}
+                <div className="w-[52px] h-11 shrink-0 flex items-center justify-center relative">
                   <Icon
                     className={`w-5 h-5 transition-transform duration-200 group-hover:scale-110 ${
                       item.isActive
@@ -240,10 +246,10 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
                     }`}
                   />
 
-                  {/* Badge in collapsed mode: Compact pill docked at top-right of icon */}
+                  {/* Badge in collapsed mode: Compact pill docked on top-right of the 52px icon slot */}
                   {!isExpanded && item.badge && item.badge !== 0 ? (
                     <span
-                      className={`absolute -top-1.5 -right-2 min-w-[15px] h-3.5 px-1 rounded-full text-[8px] font-bold inline-flex items-center justify-center ${
+                      className={`absolute top-1.5 right-2 min-w-[15px] h-3.5 px-1 rounded-full text-[8px] font-bold inline-flex items-center justify-center ${
                         item.badgeColor
                       } ${item.id === "requests" ? "animate-pulse" : ""}`}
                     >
@@ -252,60 +258,61 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
                   ) : null}
                 </div>
 
-                {/* Text Label & Badge in expanded mode */}
-                {isExpanded && (
-                  <div className="flex-1 flex items-center justify-between min-w-0 animate-fade-in">
-                    <span
-                      className={`text-xs font-semibold truncate ${
-                        item.isActive
-                          ? "text-emerald-900 dark:text-emerald-200 font-bold"
-                          : "text-slate-700 dark:text-slate-200"
-                      }`}
-                    >
-                      {item.label}
-                    </span>
+                {/* Text Label & Badge in expanded mode: Smoothly fades/slides to the right with 0px movement on icon */}
+                <div
+                  className={`flex-1 flex items-center justify-between min-w-0 pr-3 transition-opacity duration-200 ${
+                    isExpanded
+                      ? "opacity-100"
+                      : "opacity-0 pointer-events-none"
+                  }`}
+                >
+                  <span
+                    className={`text-xs font-semibold truncate ${
+                      item.isActive
+                        ? "text-emerald-900 dark:text-emerald-200 font-bold"
+                        : "text-slate-700 dark:text-slate-200"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
 
+                  <div className="flex items-center gap-1.5 shrink-0 ml-1.5">
                     {item.badge && item.badge !== 0 ? (
                       <span
-                        className={`min-w-[18px] h-4.5 px-1.5 rounded-full text-[10px] font-bold inline-flex items-center justify-center shrink-0 ${
+                        className={`min-w-[18px] h-4.5 px-1.5 rounded-full text-[10px] font-bold inline-flex items-center justify-center ${
                           item.badgeColor
                         } ${item.id === "requests" ? "animate-pulse" : ""}`}
                       >
                         {item.badge}
                       </span>
                     ) : null}
-                  </div>
-                )}
 
-                {/* Subtle active pulse dot when expanded */}
-                {isExpanded && item.isActive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-glow shrink-0 animate-pulse ml-1" />
-                )}
+                    {item.isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-glow animate-pulse" />
+                    )}
+                  </div>
+                </div>
               </Link>
             );
           })}
         </div>
 
         {/* Down below at the bottom of the sidebar: Profile Button & Dropdown */}
-        <div className="p-2 pb-3 border-t border-slate-200/80 dark:border-emerald-950/80 mt-auto">
+        <div className="px-2 pb-3 pt-2 border-t border-slate-200/80 dark:border-emerald-950/80 mt-auto">
           <div className="relative">
             <button
               ref={profileButtonRef}
               type="button"
               onClick={() => setIsProfileOpen((prev) => !prev)}
               title={!isExpanded ? (currentUser.displayName || "My Profile") : undefined}
-              className={`group relative flex items-center rounded-2xl transition-all duration-200 ${
-                isExpanded
-                  ? "w-full px-3 py-2.5 gap-3"
-                  : "w-11 h-11 mx-auto justify-center"
-              } ${
+              className={`group relative flex items-center h-12 w-full rounded-2xl overflow-hidden transition-colors duration-200 ${
                 isProfileActive || isProfileOpen
                   ? "bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-emerald-500/5 dark:from-emerald-950/80 dark:to-teal-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-400/40 dark:border-emerald-600/50 shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/90 dark:hover:bg-[#16221c] border border-transparent"
               }`}
             >
-              {/* Profile Avatar circle */}
-              <div className="relative flex items-center justify-center shrink-0">
+              {/* Profile Avatar circle in fixed stationary slot (exact 34px center anchor) */}
+              <div className="w-[52px] h-12 shrink-0 flex items-center justify-center relative">
                 <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-xs font-bold text-emerald-800 dark:text-emerald-300 shadow-sm shrink-0 overflow-hidden ring-1.5 ring-emerald-500/40 transition-transform duration-200 group-hover:scale-105">
                   {currentUser.avatarUrl ? (
                     <img
@@ -321,24 +328,28 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
                 </div>
               </div>
 
-              {/* Text Label & Subtitle in expanded mode */}
-              {isExpanded && (
-                <div className="flex-1 flex items-center justify-between min-w-0 animate-fade-in text-left">
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                      {currentUser.displayName || "My Profile"}
-                    </p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                      Profile &amp; Settings
-                    </p>
-                  </div>
-                  <ChevronRight
-                    className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${
-                      isProfileOpen ? "rotate-90 text-emerald-600 dark:text-emerald-400" : ""
-                    }`}
-                  />
+              {/* Text Label & Subtitle in expanded mode: Smoothly fades with 0px movement on avatar */}
+              <div
+                className={`flex-1 flex items-center justify-between min-w-0 pr-3 transition-opacity duration-200 text-left ${
+                  isExpanded
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none"
+                }`}
+              >
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                    {currentUser.displayName || "My Profile"}
+                  </p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                    Profile &amp; Settings
+                  </p>
                 </div>
-              )}
+                <ChevronRight
+                  className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${
+                    isProfileOpen ? "rotate-90 text-emerald-600 dark:text-emerald-400" : ""
+                  }`}
+                />
+              </div>
             </button>
 
             {/* Profile Dropdown Popup Card - positioned right above/beside bottom profile button */}

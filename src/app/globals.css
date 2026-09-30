@@ -405,6 +405,14 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   will-change: transform;
 }
 
+.\!animate-none {
+  animation: none !important;
+}
+
+.\!transform-none {
+  transform: none !important;
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
 

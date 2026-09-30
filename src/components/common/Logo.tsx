@@ -30,7 +30,7 @@ export const LogoMark: React.FC<{
     ? animateType === "smooth"
       ? "animate-spin-smooth"
       : "animate-spin-stay"
-    : "";
+    : "!animate-none !transform-none";
 
   return (
     <div
@@ -43,7 +43,9 @@ export const LogoMark: React.FC<{
         alt="Travally Compass Rose Logo"
         width={size}
         height={size}
-        className={`w-full h-full object-contain block transition-transform duration-300 group-hover:scale-105 ${animClass}`}
+        className={`w-full h-full object-contain block transition-transform duration-300 ${
+          animate ? "group-hover:scale-105" : ""
+        } ${animClass}`}
         style={{
           transformOrigin: "center center",
         }}

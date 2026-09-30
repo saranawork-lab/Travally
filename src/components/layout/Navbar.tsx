@@ -74,7 +74,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -86,19 +85,24 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   }, []);
 
+  // When route changes, ensure sidebar state is immediately reset to closed
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
+
   const isAuthOrLandingPage = pathname === "/" || pathname === "/login" || pathname === "/register";
-  const shouldAnimateLogo = isAuthOrLandingPage ? true : (isSidebarOpen || isLogoHovered);
+  // On landing, login, register: keep the original brand intro/stay animation.
+  // On in-app pages (logged-in): animate ONLY when sidebar is open! When sidebar is closed: STRICTLY NO ANIMATION!
+  const shouldAnimateLogo = isAuthOrLandingPage ? true : isSidebarOpen;
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#090d0b] border-b border-slate-100/90 dark:border-emerald-950/60 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors duration-200">
       <div className="w-full px-3 sm:px-8 md:px-10 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4 relative">
         {/* Brand Area */}
         <div className="flex items-center gap-2 flex-1 sm:flex-initial min-w-0">
-          {/* Desktop/Tablet Logo: Animates when sidebar opens or on hover, and always on login/register */}
+          {/* Desktop/Tablet Logo: Animates ONLY when sidebar opens (or on login/register/landing) */}
           <Link
             href={currentUser ? "/discover" : "/"}
-            onMouseEnter={() => setIsLogoHovered(true)}
-            onMouseLeave={() => setIsLogoHovered(false)}
             className="hidden sm:flex items-center gap-2.5 transition hover:opacity-90 shrink-0 group"
           >
             <Logo
