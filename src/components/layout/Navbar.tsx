@@ -263,8 +263,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             <>
               <NotificationDropdown />
 
-              {/* Profile Dropdown (Both Mobile & Desktop) */}
-              <div className="relative" ref={userMenuRef}>
+              {/* Profile Dropdown (Desktop only - on mobile/tablet it lives in the bottom nav dock) */}
+              <div className="relative hidden md:block" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-1.5 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-[#131c18] transition border border-transparent hover:border-slate-200 dark:hover:border-emerald-900/50"
