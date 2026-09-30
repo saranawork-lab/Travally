@@ -102,7 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center gap-2 flex-1 sm:flex-initial min-w-0">
           {/* Desktop/Tablet Logo: Animates ONLY when sidebar opens (or on login/register/landing) */}
           <Link
-            href={currentUser ? "/discover" : "/"}
+            href="/"
             className="hidden sm:flex items-center gap-2.5 transition hover:opacity-90 shrink-0 group"
           >
             <Logo
@@ -117,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {currentUser && pathname !== "/" ? (
               <>
                 <Link
-                  href="/discover"
+                  href="/launch"
                   className="flex items-center shrink-0 transition hover:opacity-90"
                   title="Travally"
                 >
@@ -175,10 +175,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               {currentUser && pathname === "/" ? (
                 <>
                   <Link
-                    href="/discover"
+                    href="/launch"
                     className="px-5 py-2 rounded-full text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 shadow-xs transition-all"
                   >
-                    Go to App
+                    Launch Pass
                   </Link>
                   <button
                     onClick={handleLogout}
