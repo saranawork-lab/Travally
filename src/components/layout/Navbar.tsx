@@ -117,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {currentUser && pathname !== "/" ? (
               <>
                 <Link
-                  href="/launch"
+                  href="/discover"
                   className="flex items-center shrink-0 transition hover:opacity-90"
                   title="Travally"
                 >
@@ -175,10 +175,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               {currentUser && pathname === "/" ? (
                 <>
                   <Link
-                    href="/launch"
+                    href="/discover"
                     className="px-5 py-2 rounded-full text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 shadow-xs transition-all"
                   >
-                    Launch Pass
+                    Go to App
                   </Link>
                   <button
                     onClick={handleLogout}

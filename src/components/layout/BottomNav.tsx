@@ -206,7 +206,7 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
           {/* Action List */}
           <div className="mt-2 space-y-1">
             <Link
-              href="/launch"
+              href="/settings"
               onClick={() => setIsProfileMenuOpen(false)}
               className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 transition-colors border border-amber-500/20"
             >
@@ -214,7 +214,7 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
                 <div className="w-7 h-7 rounded-lg bg-amber-100/80 dark:bg-amber-950/80 flex items-center justify-center text-amber-600 dark:text-amber-400 border border-amber-300/60 dark:border-amber-700/60">
                   <Award className="w-4 h-4" />
                 </div>
-                <span>Launch Pass &amp; Badges</span>
+                <span>Founding Pass &amp; Badges</span>
               </div>
               <ChevronRight className="w-4 h-4 text-amber-400" />
             </Link>

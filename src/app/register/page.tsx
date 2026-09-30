@@ -49,8 +49,7 @@ export default function RegisterPage() {
         throw new Error(data.error || "Registration failed");
       }
 
-      const isUnlocked = process.env.NEXT_PUBLIC_LAUNCH_UNLOCKED === "true";
-      window.location.href = isUnlocked ? "/discover" : "/launch";
+      window.location.href = "/discover";
     } catch (err: any) {
       setError(err.message || "An error occurred during account creation");
     } finally {

@@ -173,12 +173,6 @@ export default function MyProfilePage() {
         </div>
         <div className="flex items-center gap-2 self-start sm:self-center flex-wrap">
           <Link
-            href="/launch"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 font-bold text-xs border border-amber-300 dark:border-amber-800/60 transition shadow-xs"
-          >
-            <span>🚀 Launch Pass</span>
-          </Link>
-          <Link
             href="/settings"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-bold text-xs border border-emerald-200 dark:border-emerald-800/60 transition shadow-xs"
           >

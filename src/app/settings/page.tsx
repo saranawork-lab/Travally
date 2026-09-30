@@ -172,11 +172,11 @@ export default function SettingsPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Link
-              href="/launch"
+              href="/discover"
               className="text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 transition"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Early Access Gate</span>
+              <span>Back to Discover Feed</span>
             </Link>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -321,11 +321,11 @@ export default function SettingsPage() {
                 </button>
 
                 <Link
-                  href="/launch"
+                  href="/profile"
                   className="flex flex-col items-center justify-center w-20 h-16 rounded-2xl bg-white dark:bg-[#1a2620] border border-slate-200 dark:border-emerald-900/60 shadow-xs hover:border-emerald-500 transition-all text-slate-700 dark:text-slate-200"
                 >
-                  <Sparkles className="w-4 h-4 text-cyan-500 mb-1" />
-                  <span className="text-[10px] font-bold">Milestone</span>
+                  <Edit3 className="w-4 h-4 text-emerald-500 mb-1" />
+                  <span className="text-[10px] font-bold">Edit Info</span>
                 </Link>
               </div>
             </div>

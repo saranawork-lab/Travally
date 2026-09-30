@@ -399,7 +399,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
                 {/* Actions */}
                 <div className="py-1">
                   <Link
-                    href="/launch"
+                    href="/settings"
                     onClick={() => {
                       setIsProfileOpen(false);
                       handleItemClick();
@@ -407,7 +407,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
                     className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors"
                   >
                     <Award className="w-4 h-4 text-amber-500" />
-                    <span>Launch Pass &amp; Badges</span>
+                    <span>Founding Pass &amp; Badges</span>
                   </Link>
                   <Link
                     href="/profile"

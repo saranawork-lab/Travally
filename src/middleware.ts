@@ -27,29 +27,10 @@ function isTokenActive(token: string | undefined): boolean {
   }
 }
 
-function getUserRoleFromToken(token: string | undefined): string | null {
-  if (!token) return null;
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    while (base64.length % 4 !== 0) {
-      base64 += "=";
-    }
-    const payload = JSON.parse(atob(base64));
-    return payload.role || "USER";
-  } catch {
-    return null;
-  }
-}
-
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(COOKIE_NAME)?.value;
   const isAuthenticated = isTokenActive(token);
-  const userRole = getUserRoleFromToken(token);
-  const isAdmin = userRole === "ADMIN";
-  const isLaunchUnlocked = process.env.NEXT_PUBLIC_LAUNCH_UNLOCKED === "true";
 
   // Allow all static public assets (images, files with extensions like .png, .jpg, .svg, .ico)
   if (pathname.includes(".")) {
@@ -71,26 +52,7 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 1. Pre-launch gate:
-  // When launch is not unlocked, non-admin authenticated members are held at /launch
-  // (Full platform features /discover, /activities, /travel, /chats, /requests are guarded)
-  if (isAuthenticated && !isLaunchUnlocked && !isAdmin) {
-    const restrictedPrefixes = [
-      "/discover",
-      "/activities",
-      "/travel",
-      "/chats",
-      "/requests",
-      "/categories",
-      "/destinations",
-    ];
-    const isRestricted = restrictedPrefixes.some((prefix) => pathname.startsWith(prefix));
-    if (isRestricted) {
-      return NextResponse.redirect(new URL("/launch", request.url));
-    }
-  }
-
-  // 2. If user is NOT authenticated:
+  // If user is NOT authenticated:
   // Public pages: landing (/), login (/login), register (/register), and safety (/safety)
   const isPublicPage =
     pathname === "/" ||
