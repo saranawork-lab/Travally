@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { SemiCircleTestimonials } from "./SemiCircleTestimonials";
 import {
   Users,
   Compass,
@@ -194,6 +195,33 @@ export function LandingPageClient() {
       role: "Heritage Photographer",
       quote:
         "As a woman who loves early morning street photography, safety is everything. Travally's mutual acceptance rule means nobody can message you without your permission. I’ve done 4 photo walks in Delhi and felt completely secure.",
+      badge: "Verified Host",
+      type: "City Companion",
+    },
+    {
+      name: "Tanmay Joshi",
+      city: "Pune",
+      role: "Western Ghats Trekker",
+      quote:
+        "Found 3 fellow trekkers for Harishchandragad cliff camping on Travally. Split the jeep fare from Kasara, shared gear, and woke up to an unforgettable sea of clouds. Doing Rajmachi next!",
+      badge: "Govt ID Verified",
+      type: "Travel Expedition",
+    },
+    {
+      name: "Ananya Iyer",
+      city: "Chennai",
+      role: "Coastal Trail Pilgrim",
+      quote:
+        "Traveling to Rameshwaram and Dhanushkodi as a solo female traveler felt daunting until I connected with Meera on Travally. We shared a temple homestay, sunrise walks, and felt 100% comfortable.",
+      badge: "Verified Member",
+      type: "City Companion",
+    },
+    {
+      name: "Vikramaditya Roy",
+      city: "Kolkata",
+      role: "Culture & Café Explorer",
+      quote:
+        "Tried the weekend heritage café trail in North Kolkata through a companion meetup. Met architects, photographers, and fellow solo souls. The mutual vetting makes sure only good people join.",
       badge: "Verified Host",
       type: "City Companion",
     },
@@ -839,45 +867,8 @@ export function LandingPageClient() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((t, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-orange-400">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-3.5 h-3.5 fill-current" />
-                    ))}
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300">
-                    {t.type}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed italic">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 pt-3 border-t border-slate-200/70 dark:border-emerald-950/60">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-black text-sm flex items-center justify-center ring-2 ring-emerald-500/30 shadow-sm shrink-0">
-                  {t.name.charAt(0)}
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">
-                    <span>{t.name}</span>
-                    <BadgeCheck className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/20" />
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    {t.city} • <span className="text-emerald-600 dark:text-emerald-400 font-medium">{t.badge}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Semi-Circle Scrolling Carousel from Right to Left */}
+        <SemiCircleTestimonials testimonials={TESTIMONIALS} />
       </section>
 
       {/* ── 7. SAFETY BANNER ── */}
