@@ -44,6 +44,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { AuthProvider } from "@/context/AuthContext";
 
 import BrandIntroLoader from "@/components/common/BrandIntroLoader";
+import DesktopSidebar from "@/components/layout/DesktopSidebar";
 
 export default async function RootLayout({
   children,
@@ -75,7 +76,10 @@ export default async function RootLayout({
           <BrandIntroLoader />
           <AuthProvider initialUser={currentUser}>
             <Navbar initialUser={currentUser} />
-            <main className="flex-1">{children}</main>
+            <div className="flex-1 flex min-w-0">
+              <DesktopSidebar initialUser={currentUser} />
+              <main className="flex-1 min-w-0">{children}</main>
+            </div>
             <Footer initialUser={currentUser} />
             <BottomNav initialUser={currentUser} />
           </AuthProvider>

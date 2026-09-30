@@ -7,17 +7,11 @@ import { Logo, LogoMark } from "@/components/common/Logo";
 import { ModeToggle, AppMode } from "@/components/common/ModeToggle";
 import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { useBadges } from "@/hooks/useBadges";
 import { useAuth } from "@/context/AuthContext";
 import {
-  Compass,
-  Users,
-  PlusCircle,
-  Inbox,
-  MessageSquare,
-  Shield,
   User,
   Settings,
+  Shield,
   LogOut,
   ChevronDown,
   LayoutDashboard,
@@ -42,7 +36,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { currentUser, logout: handleLogout } = useAuth();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const { unreadChatsCount, pendingRequestsCount, totalUnreadMessages } = useBadges();
 
   // Click outside to close user profile dropdown
   useEffect(() => {
@@ -109,12 +102,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
-  const isDiscover = pathname.startsWith("/discover");
-  const isCreate = pathname.startsWith("/activities/create") || pathname.startsWith("/travel/create");
-  const isRequests = pathname.startsWith("/requests");
-  const isChats = pathname.startsWith("/chats");
-  const isSafety = pathname.startsWith("/safety");
-
   return (
     <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#090d0b] border-b border-slate-100/90 dark:border-emerald-950/60 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.04)] dark:shadow-none transition-colors duration-200">
       <div className="w-full px-3 sm:px-8 md:px-10 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4">
@@ -169,89 +156,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* ── LOGGED-IN NAV: Mode Toggle + Links (In-App Pages Only) ── */}
+        {/* ── LOGGED-IN NAV: Central Mode Toggle (In-App Pages Only) ── */}
         {currentUser && pathname !== "/" && (
-          <>
-            {/* Central Mode Toggle (desktop & tablet) */}
-            <div className="hidden sm:flex items-center justify-center">
-              <ModeToggle currentMode={mode} onModeChange={handleModeSwitch} size="sm" />
-            </div>
-
-            {/* Main Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-1 lg:gap-1.5">
-              <Link
-                href={`/discover?mode=${mode}`}
-                prefetch={true}
-                scroll={false}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${isDiscover
-                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#131c18]"
-                  }`}
-              >
-                Discover
-              </Link>
-
-              <Link
-                href={mode === "companion" ? "/activities/create" : "/travel/create"}
-                prefetch={true}
-                scroll={false}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 ${isCreate
-                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#131c18]"
-                  }`}
-              >
-                <PlusCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>Create</span>
-              </Link>
-
-              <Link
-                href="/requests"
-                prefetch={true}
-                scroll={false}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 ${isRequests
-                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#131c18]"
-                  }`}
-              >
-                <span>Requests</span>
-                {pendingRequestsCount > 0 && (
-                  <span className="min-w-[18px] h-4 px-1 rounded-full bg-gradient-to-r from-orange-100 to-amber-100 text-orange-900 border border-orange-300/80 text-[10px] font-black inline-flex items-center justify-center animate-pulse shadow-2xs">
-                    {pendingRequestsCount > 9 ? "9+" : pendingRequestsCount}
-                  </span>
-                )}
-              </Link>
-
-              <Link
-                href="/chats"
-                prefetch={true}
-                scroll={false}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 ${isChats
-                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#131c18]"
-                  }`}
-              >
-                <span>Chats</span>
-                {(unreadChatsCount > 0 || totalUnreadMessages > 0) && (
-                  <span className="min-w-[18px] h-4 px-1 rounded-full bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-900 border border-emerald-300/80 text-[10px] font-black inline-flex items-center justify-center shadow-2xs">
-                    {totalUnreadMessages > 0 ? (totalUnreadMessages > 9 ? "9+" : totalUnreadMessages) : unreadChatsCount}
-                  </span>
-                )}
-              </Link>
-
-              <Link
-                href="/safety"
-                prefetch={true}
-                scroll={false}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1 ${isSafety
-                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#131c18]"
-                  }`}
-              >
-                <Shield className="w-3.5 h-3.5" />
-                <span>Safety</span>
-              </Link>
-            </nav>
-          </>
+          <div className="hidden sm:flex items-center justify-center">
+            <ModeToggle currentMode={mode} onModeChange={handleModeSwitch} size="sm" />
+          </div>
         )}
 
         {/* Right Actions: Theme Toggle, Notifications & Profile / Auth */}
