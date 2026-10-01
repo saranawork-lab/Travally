@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ModeToggle } from "@/components/common/ModeToggle";
 import {
   Compass,
   Calendar,
@@ -168,7 +169,9 @@ export default function CreateTravelPlanPage() {
         throw new Error(data.error || "Failed to create travel plan");
       }
 
-      router.push(`/travel/${data.travelPlan.id}`);
+      // Use window.location.href for immediate perceived performance (browser loading spinner)
+      // instead of silent Next.js router.push which waits for server rendering.
+      window.location.href = `/travel/${data.travelPlan.id}`;
     } catch (err: any) {
       setError(err.message || "Failed to create travel plan");
     } finally {
@@ -192,9 +195,14 @@ export default function CreateTravelPlanPage() {
         {/* Step Progress Header */}
         <div className="mb-6 pb-4 border-b border-slate-100 dark:border-emerald-950/60 flex items-center justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-950/80 text-orange-800 dark:text-orange-200 mb-2">
-              <Compass className="w-3.5 h-3.5" />
-              <span>Travel Mode</span>
+            <div className="mb-3">
+              <ModeToggle 
+                currentMode="travel" 
+                onModeChange={(mode) => {
+                  if (mode === "companion") window.location.href = "/activities/create";
+                }} 
+                size="sm" 
+              />
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Publish a Travel Plan

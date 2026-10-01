@@ -54,7 +54,7 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     defaultImage: CATEGORY_IMAGES.MOVIES,
   },
   FOOD_CAFES: {
-    label: "Food & Cafes",
+    label: "Street Food & Cafes",
     icon: Coffee,
     badgeBg: "bg-orange-500 text-white",
     tagText: "text-orange-500 dark:text-orange-400",
@@ -62,7 +62,7 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     defaultImage: CATEGORY_IMAGES.FOOD_CAFES,
   },
   WALKING: {
-    label: "Walking & Trails",
+    label: "Turf Sports & Fitness",
     icon: Footprints,
     badgeBg: "bg-emerald-600 text-white",
     tagText: "text-emerald-500 dark:text-emerald-400",
@@ -70,7 +70,7 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     defaultImage: CATEGORY_IMAGES.WALKING,
   },
   STUDYING: {
-    label: "Studying & Co-work",
+    label: "Tech & Networking",
     icon: BookOpen,
     badgeBg: "bg-emerald-700 text-white",
     tagText: "text-emerald-600 dark:text-emerald-400",
@@ -78,7 +78,7 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     defaultImage: CATEGORY_IMAGES.STUDYING,
   },
   EVENTS: {
-    label: "Events & Shows",
+    label: "Standup & Concerts",
     icon: Music,
     badgeBg: "bg-orange-600 text-white",
     tagText: "text-orange-500 dark:text-orange-400",
@@ -86,7 +86,7 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     defaultImage: CATEGORY_IMAGES.EVENTS,
   },
   SHOPPING: {
-    label: "Shopping & Markets",
+    label: "Shopping & Bazaars",
     icon: ShoppingBag,
     badgeBg: "bg-orange-500 text-white",
     tagText: "text-orange-500 dark:text-orange-400",
@@ -94,7 +94,7 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     defaultImage: CATEGORY_IMAGES.SHOPPING,
   },
   CITY_EXPLORATION: {
-    label: "City Exploration",
+    label: "Long Drives & Getaways",
     icon: Building2,
     badgeBg: "bg-emerald-600 text-white",
     tagText: "text-emerald-500 dark:text-emerald-400",
@@ -102,7 +102,7 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     defaultImage: CATEGORY_IMAGES.CITY_EXPLORATION,
   },
   OTHER: {
-    label: "Community Activity",
+    label: "Other Hangouts",
     icon: Sparkles,
     badgeBg: "bg-emerald-800 text-white",
     tagText: "text-emerald-500 dark:text-emerald-400",

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ModeToggle } from "@/components/common/ModeToggle";
 import {
   Users,
   Calendar,
@@ -35,61 +36,61 @@ interface CategoryOption {
 const CATEGORIES: CategoryOption[] = [
   {
     id: "FOOD_CAFES",
-    label: "Food & Cafes",
-    tag: "Food Crawls & Coffee",
+    label: "Street Food & Cafes",
+    tag: "Food Walks & Breweries",
     icon: <Coffee className="w-5 h-5 text-orange-500" />,
-    hint: "Specialty coffee roasters, bakery walks, tasting new restaurants",
+    hint: "Midnight biryani runs, Irani chai, brewery hopping, street food tasting",
     popular: true,
   },
   {
     id: "MOVIES",
     label: "Movies & Cinema",
-    tag: "Screenings & Film",
+    tag: "Screenings & FDFS",
     icon: <Film className="w-5 h-5 text-emerald-500" />,
-    hint: "Screenings, indie cinema discussions, film festivals",
+    hint: "First day first show (FDFS), IMAX screenings, regional cinema, indie film discussions",
     popular: true,
   },
   {
     id: "WALKING",
-    label: "Walking & Trails",
-    tag: "Urban & Nature Trails",
+    label: "Turf Sports & Fitness",
+    tag: "Cricket & Badminton",
     icon: <Footprints className="w-5 h-5 text-green-600" />,
-    hint: "Casual neighborhood strolls, scenic coastal walks, urban flâneur",
+    hint: "Box cricket, weekend badminton, morning runs at KBR park, turf football",
   },
   {
     id: "STUDYING",
-    label: "Studying & Co-Working",
-    tag: "Study & Work Sessions",
+    label: "Tech & Networking",
+    tag: "Startups & Meetups",
     icon: <BookOpen className="w-5 h-5 text-emerald-600" />,
-    hint: "Library focus sessions, writing blocks, quiet reading afternoons",
+    hint: "Startup mixers, coding meetups, co-working sessions, founder discussions",
   },
   {
     id: "EVENTS",
-    label: "Events & Concerts",
-    tag: "Live Shows & Gigs",
+    label: "Standup & Concerts",
+    tag: "Comedy & Live Shows",
     icon: <Music className="w-5 h-5 text-orange-500" />,
-    hint: "Live indie gigs, theater performances, gallery openings",
+    hint: "Local standup comedy, live bands, open mics, weekend gigs",
   },
   {
     id: "SHOPPING",
-    label: "Shopping & Markets",
-    tag: "Vintage & Flea Markets",
+    label: "Shopping & Bazaars",
+    tag: "Street Shopping & Malls",
     icon: <ShoppingBag className="w-5 h-5 text-amber-500" />,
-    hint: "Flea markets, vintage shopping, artisanal farmers markets",
+    hint: "Night markets, Laad Bazaar, weekend mall hopping, flea markets",
   },
   {
     id: "CITY_EXPLORATION",
-    label: "City Exploration",
-    tag: "Architecture & Photo Walks",
+    label: "Long Drives & Getaways",
+    tag: "Dhabas & Outskirts",
     icon: <Compass className="w-5 h-5 text-emerald-500" />,
-    hint: "Architecture walks, discovering hidden streets, photography",
+    hint: "Late night drives to outskirts, dhaba dinners, weekend morning rides",
   },
   {
     id: "OTHER",
-    label: "Other Activity",
-    tag: "Mutual Passions",
+    label: "Other Hangouts",
+    tag: "Board Games & Hobbies",
     icon: <Sparkles className="w-5 h-5 text-orange-500" />,
-    hint: "Any other shared mutual interest or casual adventure",
+    hint: "Board game cafes, casual meetups, or any other shared interest",
   },
 ];
 
@@ -175,7 +176,9 @@ export default function CreateActivityPage() {
         throw new Error(data.error || "Failed to create activity");
       }
 
-      router.push(`/activities/${data.activity.id}`);
+      // Use window.location.href for immediate perceived performance (browser loading spinner)
+      // instead of silent Next.js router.push which waits for server rendering.
+      window.location.href = `/activities/${data.activity.id}`;
     } catch (err: any) {
       setError(err.message || "Failed to create activity");
     } finally {
@@ -200,9 +203,14 @@ export default function CreateActivityPage() {
         {/* Step Progress Header */}
         <div className="mb-6 pb-4 border-b border-slate-200 dark:border-dark-border flex items-center justify-between">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/80 text-brand-800 dark:text-brand-300 mb-2 border border-brand-200 dark:border-brand-800/60">
-              <Users className="w-3.5 h-3.5" />
-              <span>Companion Mode</span>
+            <div className="mb-3">
+              <ModeToggle 
+                currentMode="companion" 
+                onModeChange={(mode) => {
+                  if (mode === "travel") window.location.href = "/travel/create";
+                }} 
+                size="sm" 
+              />
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Post an Activity

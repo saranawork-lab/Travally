@@ -23,12 +23,12 @@ import {
 export const CATEGORIES = [
   { id: "ALL", label: "All Activities", icon: Sparkles },
   { id: "MOVIES", label: "Movies & Cinema", icon: Film },
-  { id: "FOOD_CAFES", label: "Food & Cafes", icon: Coffee },
-  { id: "WALKING", label: "Walking & Trails", icon: Footprints },
-  { id: "STUDYING", label: "Studying & Work", icon: BookOpen },
-  { id: "EVENTS", label: "Events & Shows", icon: Ticket },
-  { id: "CITY_EXPLORATION", label: "City Exploration", icon: Compass },
-  { id: "SHOPPING", label: "Shopping", icon: ShoppingBag },
+  { id: "FOOD_CAFES", label: "Street Food & Cafes", icon: Coffee },
+  { id: "WALKING", label: "Turf Sports & Fitness", icon: Footprints },
+  { id: "STUDYING", label: "Tech & Networking", icon: BookOpen },
+  { id: "EVENTS", label: "Standup & Concerts", icon: Ticket },
+  { id: "CITY_EXPLORATION", label: "Long Drives & Getaways", icon: Compass },
+  { id: "SHOPPING", label: "Shopping & Bazaars", icon: ShoppingBag },
 ];
 
 export const SORT_OPTIONS = [

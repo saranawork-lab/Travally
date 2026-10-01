@@ -25,6 +25,9 @@ import {
   Tag,
   Bookmark,
   Menu,
+  ChevronDown,
+  HelpCircle,
+  Coffee,
 } from "lucide-react";
 
 /**
@@ -89,8 +92,8 @@ function Card3DContainer({
       {/* 3D Ambient Backdrop Glow */}
       <div
         className={`absolute -inset-4 rounded-3xl blur-2xl opacity-40 group-hover/3d:opacity-70 transition-opacity duration-500 pointer-events-none ${accentColor === "emerald"
-            ? "bg-gradient-to-tr from-emerald-500/40 via-teal-500/30 to-emerald-400/20"
-            : "bg-gradient-to-tr from-orange-500/40 via-amber-500/30 to-rose-500/20"
+          ? "bg-gradient-to-tr from-emerald-500/40 via-teal-500/30 to-emerald-400/20"
+          : "bg-gradient-to-tr from-orange-500/40 via-amber-500/30 to-rose-500/20"
           }`}
       />
 
@@ -168,62 +171,124 @@ export function LandingPageClient() {
   const howItWorksReveal = useScrollReveal();
   const testimonialsReveal = useScrollReveal();
   const safetyReveal = useScrollReveal();
-  const ctaReveal = useScrollReveal();
+  const faqReveal = useScrollReveal();
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const FAQS = [
+    {
+      q: "Is Travally safe for solo female travelers?",
+      a: "Yes, 100%. Safety is foundational to Travally: all members complete Government ID and mobile phone verification. Our Mutual Consent Gatekeeper means no one can ever direct-message you without your explicit approval. Plus, all first companion meetups are required to take place at verified, busy public venues (like indie film theaters, cultural centers, or cafes), and we feature dedicated women-only expedition filters.",
+    },
+    {
+      q: "How does the Government ID verification process work?",
+      a: "During onboarding, members submit an official government document (such as Aadhaar, Passport, or Voter ID). Our automated identity service checks authenticity and assigns the verified shield badge. Your private identification numbers and personal documents are never stored publicly or shared with other members.",
+    },
+    {
+      q: "Can anyone on the platform message me out of the blue?",
+      a: "Strictly no. Travally operates with a Mutual Approval Gatekeeper. Chat rooms unlock only when both the organizer and the applicant approve each other. You will never receive cold DMs, marketing messages, or unsolicited contact.",
+    },
+    {
+      q: "How do travel expenses and budget splitting work?",
+      a: "Every expedition card states a clear estimated rupee budget range (e.g. ₹8,500 – ₹14,500) covering shared transit, boutique stays, and permits. Travelers split real costs directly between themselves with zero platform markups, hidden cuts, or booking commissions.",
+    },
+    {
+      q: "What happens if someone cancels or doesn't show up?",
+      a: "Travally tracks reliability through attendance badges. Hosts can instantly invite waiting list members. Members who fail to show up without prior communication forfeit their verified standing and may be removed from the platform.",
+    },
+    {
+      q: "Is Travally completely free to use?",
+      a: "Yes! Travally is 100% free to join, explore city companions, and organize trips. We believe genuine human connection and safe travel should be open to all verified explorers.",
+    },
+  ];
 
   const TESTIMONIALS = [
     {
-      name: "Rhea Deshmukh",
-      city: "Bengaluru",
-      role: "Cinema & Coffee Explorer",
+      name: "Simran Kaur",
+      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&auto=format&fit=crop&q=80",
+      city: "New Delhi",
+      role: "Heritage Photowalker",
+      activityTitle: "Old Delhi Morning Photowalk",
       quote:
-        "None of my colleagues wanted to catch an indie screening on a Sunday evening. I posted a 2-person plan on Travally, and had filter coffee with two wonderful women who love film just as much as I do. Zero awkwardness, purely good conversation.",
-      badge: "Verified Member",
+        "As a woman doing early sunrise photography in Chandni Chowk, safety was my biggest concern. Travally's mandatory ID check and mutual approval gate meant zero unsolicited messages—just 3 genuine photographers sharing chai and history.",
+      badge: "Govt ID Verified",
       type: "City Companion",
     },
     {
       name: "Arjun Nair",
+      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80",
       city: "Mumbai",
       role: "Himalayan Backpacker",
+      activityTitle: "6-Day Parvati Valley & Tosh Trek",
       quote:
-        "Planning a 6-day Kasol and Tosh trip solo felt overwhelming. Finding Priya and Kabir on Travally saved us money on shared cabs and boutique stays, but more importantly, we became real friends who still hike together.",
+        "Solo trekking seemed daunting and expensive until I matched with Priya and Kabir. We split the ₹14,000 cab fare from Chandigarh, shared boutique homestays, and bonded for life. We still hike together every winter.",
       badge: "Govt ID Verified",
       type: "Travel Expedition",
     },
     {
-      name: "Simran Kaur",
-      city: "New Delhi",
-      role: "Heritage Photographer",
+      name: "Rhea Deshmukh",
+      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80",
+      city: "Bengaluru",
+      role: "Cinema & Coffee Explorer",
+      activityTitle: "Suchitra Film Society & Filter Coffee",
       quote:
-        "As a woman who loves early morning street photography, safety is everything. Travally's mutual acceptance rule means nobody can message you without your permission. I’ve done 4 photo walks in Delhi and felt completely secure.",
-      badge: "Verified Host",
+        "None of my colleagues wanted to catch an indie film on a Sunday. Posted a 2-person plan on Travally and had filter coffee with two wonderful women who love cinema. Pure, effortless connection with zero awkwardness.",
+      badge: "Superhost",
       type: "City Companion",
     },
     {
       name: "Tanmay Joshi",
+      avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=160&auto=format&fit=crop&q=80",
       city: "Pune",
       role: "Western Ghats Trekker",
+      activityTitle: "Harishchandragad Cliff Camping",
       quote:
-        "Found 3 fellow trekkers for Harishchandragad cliff camping on Travally. Split the jeep fare from Kasara, shared gear, and woke up to an unforgettable sea of clouds. Doing Rajmachi next!",
+        "Found 3 reliable co-trekkers for cliff camping. The transparent budget breakdown avoided all awkward money moments. Travally's safety escrow and ephemeral chat made coordinating logistics seamless.",
       badge: "Govt ID Verified",
       type: "Travel Expedition",
     },
     {
       name: "Ananya Iyer",
+      avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&auto=format&fit=crop&q=80",
       city: "Chennai",
       role: "Coastal Trail Pilgrim",
+      activityTitle: "Rameshwaram & Dhanushkodi Trail",
       quote:
-        "Traveling to Rameshwaram and Dhanushkodi as a solo female traveler felt daunting until I connected with Meera on Travally. We shared a temple homestay, sunrise walks, and felt 100% comfortable.",
-      badge: "Verified Member",
-      type: "City Companion",
+        "Traveling to Dhanushkodi as a solo female traveler felt daunting until I connected with Meera on Travally. Travally's strict ID verification gave my parents total peace of mind. We shared a temple homestay and sunrise walks.",
+      badge: "Govt ID Verified",
+      type: "Travel Expedition",
     },
     {
       name: "Vikramaditya Roy",
+      avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=160&auto=format&fit=crop&q=80",
       city: "Kolkata",
-      role: "Culture & Café Explorer",
+      role: "Heritage & Café Enthusiast",
+      activityTitle: "North Kolkata Heritage Walk",
       quote:
-        "Tried the weekend heritage café trail in North Kolkata through a companion meetup. Met architects, photographers, and fellow solo souls. The mutual vetting makes sure only good people join.",
-      badge: "Verified Host",
+        "The community standard here is unmatched. Because both parties review profiles before accepting, you only get people genuinely excited about the experience. It feels like a private club for curious, verified travelers.",
+      badge: "Superhost",
       type: "City Companion",
+    },
+    {
+      name: "Divya Menon",
+      avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=160&auto=format&fit=crop&q=80",
+      city: "Hyderabad",
+      role: "Board Games & Cafe Host",
+      activityTitle: "Jubilee Hills Weekend Board Games",
+      quote:
+        "Just moved to Hyderabad for my tech job and knew nobody. Travally helped me find an intimate 3-person board game group at a local cafe. No overwhelming party crowds—just warm, verified, welcoming friends.",
+      badge: "Govt ID Verified",
+      type: "City Companion",
+    },
+    {
+      name: "Kabir Mehta",
+      avatarUrl: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=160&auto=format&fit=crop&q=80",
+      city: "Bengaluru",
+      role: "Remote Nomad Trekker",
+      activityTitle: "South Goa Workation & Surf Camp",
+      quote:
+        "Shared a seaside villa in Palolem with 3 other remote workers for 10 days. Having verified LinkedIn and ID credentials made trusting housemates instant. Fast Wi-Fi, morning surf, and productive evenings.",
+      badge: "Nomad Leader",
+      type: "Travel Expedition",
     },
   ];
 
@@ -239,10 +304,9 @@ export function LandingPageClient() {
         {heroDestinations.map((dest, idx) => (
           <div
             key={idx}
-            className={`absolute inset-0 transition-all duration-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none ${
-              activeHeroBg === idx 
-                ? "[clip-path:circle(150%_at_50%_50%)] opacity-100 z-10 scale-100" 
-                : "[clip-path:circle(0%_at_50%_50%)] opacity-0 z-0 scale-105"
+            className={`absolute inset-0 transition-all duration-[1500ms] ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none ${activeHeroBg === idx
+              ? "[clip-path:circle(150%_at_50%_50%)] opacity-100 z-10 scale-100"
+              : "[clip-path:circle(0%_at_50%_50%)] opacity-0 z-0 scale-105"
               }`}
           >
             <img
@@ -330,106 +394,216 @@ export function LandingPageClient() {
                 </div>
               </div>
             </div>
-            
+
           </div>
         </div>
       </section>
 
       {/* ── 2. SECTION 1: COMPANION CARD SECTION (CARD ON LEFT, TEXT ON RIGHT) ── */}
       <section
+        id="companion"
         ref={companionReveal.ref}
-        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${companionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        className={`scroll-mt-28 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${companionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* LEFT COLUMN: Discover-style Companion Card Preview */}
           <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none">
-            <div className="group relative w-full rounded-3xl overflow-hidden bg-gradient-to-br from-[#f2faf8] to-[#e4f3f0] shadow-lg hover:shadow-xl transition-all duration-500 border border-white/60">
-              {/* Background Image with Fades */}
-              <div className="absolute top-0 right-0 w-full h-[55%] z-0" style={{ backgroundImage: `url(https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#f2faf8] via-[#f2faf8]/80 to-transparent w-[80%]" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#e4f3f0]" />
+            <Card3DContainer accentColor="emerald">
+              <div className="group relative w-full bg-white dark:bg-[#101915] rounded-3xl border border-emerald-100 dark:border-emerald-950/70 shadow-[0_20px_50px_rgba(16,185,129,0.12)] hover:shadow-[0_25px_60px_rgba(16,185,129,0.22)] transition-all duration-500 flex flex-col overflow-hidden">
+                {/* ── TOP THUMBNAIL BANNER (High clarity, zero muddy fog!) ── */}
+                <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=900&auto=format&fit=crop&q=80"
+                    alt="Suchitra Film Society Screening & Filter Coffee"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.92]"
+                  />
+                  {/* Clean gradient overlays for legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/30 pointer-events-none" />
+
+                  {/* Top Floating Badges */}
+                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-black/60 backdrop-blur-md text-emerald-300 border border-white/15 shadow-sm tracking-wide">
+                      <Film className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Movies &amp; Cinema</span>
+                    </span>
+
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 border border-emerald-400/40 animate-pulse">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                        <span>1 spot left</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bottom Image Overlay Badges: Quick Location & Time */}
+                  <div className="absolute bottom-3 left-3.5 right-3.5 z-10 flex items-center justify-between text-xs text-white/95">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 shadow-sm">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="font-semibold truncate max-w-[190px] sm:max-w-none">Indiranagar, Bengaluru</span>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 shadow-sm">
+                      <Calendar className="w-3.5 h-3.5 text-teal-300 shrink-0" />
+                      <span className="font-semibold">Sat, Oct 1 • 5 PM</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── CARD CONTENT BODY ── */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-3.5">
+                    {/* Activity Title */}
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug tracking-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                        Suchitra Film Society Screening &amp; Filter Coffee
+                      </h3>
+                    </div>
+
+                    {/* Host Profile & Trust Bar (High-Trust Design) */}
+                    <div className="flex items-center justify-between gap-3 p-2.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-900/60">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="relative shrink-0">
+                          <img
+                            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80"
+                            alt="Ananya Sharma"
+                            className="w-10 h-10 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-sm"
+                          />
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-white dark:ring-[#101915]">
+                            <BadgeCheck className="w-3 h-3" />
+                          </div>
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                              Ananya Sharma
+                            </span>
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/80 text-emerald-800 dark:text-emerald-300 text-[9px] font-black tracking-wide uppercase">
+                              <ShieldCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
+                              Govt ID Verified
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                            <span className="flex items-center gap-0.5 font-bold text-amber-500">
+                              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                              4.9
+                            </span>
+                            <span>•</span>
+                            <span>14 Hosted</span>
+                            <span>•</span>
+                            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Superhost</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="hidden sm:flex flex-col items-end shrink-0 text-right">
+                        <span className="text-[10px] uppercase font-bold text-slate-400">Response</span>
+                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">&lt; 15 mins</span>
+                      </div>
+                    </div>
+
+                    {/* Host's Warm Invitation Note */}
+                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#16221c] border border-slate-200/60 dark:border-emerald-950/60">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed">
+                        &ldquo;Catching the new indie film at Suchitra, followed by traditional filter coffee and a passionate conversation about cinema.&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Key Details Bento: 2 Column Specs */}
+                    <div className="grid grid-cols-2 gap-2.5 pt-0.5">
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#16221c] border border-slate-200/70 dark:border-emerald-950/60 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                          <MapPin className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Venue</p>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white truncate">Suchitra Cinema</p>
+                          <p className="text-[10px] text-slate-500 truncate">Indiranagar, BLR</p>
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#16221c] border border-slate-200/70 dark:border-emerald-950/60 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 mt-0.5">
+                          <Clock3 className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Duration</p>
+                          <p className="text-xs font-bold text-slate-900 dark:text-white">3 Hours Total</p>
+                          <p className="text-[10px] text-slate-500">Film + Coffee</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Live Attendee Social Proof & Progress */}
+                    <div className="space-y-1.5 pt-1">
+                      <div className="flex items-center justify-between text-xs font-semibold">
+                        <div className="flex items-center gap-2">
+                          <div className="flex -space-x-2 overflow-hidden">
+                            <img
+                              className="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-[#101915] object-cover"
+                              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                              alt="Ananya"
+                            />
+                            <div className="inline-flex h-6 w-6 rounded-full ring-2 ring-white dark:ring-[#101915] bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold items-center justify-center border border-dashed border-emerald-500">
+                              +1
+                            </div>
+                          </div>
+                          <span className="text-slate-700 dark:text-slate-300 text-xs">
+                            <strong className="text-slate-900 dark:text-white">1 of 2</strong> spots filled
+                          </span>
+                        </div>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-xs">
+                          1 Open Spot
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-100 dark:bg-emerald-950/60 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-400 transition-all duration-500 shadow-xs"
+                          style={{ width: "50%" }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Trust & Safety Reassurance Micro-Ribbon */}
+                    <div className="flex items-center justify-between py-1 px-1 text-[10px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-emerald-950/60">
+                      <span className="inline-flex items-center gap-1 font-medium">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-500" /> Public Cafe &amp; Cinema
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-medium">
+                        <ShieldCheck className="w-3 h-3 text-emerald-500" /> Escrow Safe Meetup
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-medium">
+                        <Lock className="w-3 h-3 text-emerald-500" /> Host-Approved Only
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* ── CARD FOOTER / ACTION BAR ── */}
+                  <div className="pt-2 border-t border-slate-100 dark:border-emerald-950/60 flex items-center gap-2.5">
+                    <button
+                      type="button"
+                      className="flex flex-col items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 dark:bg-[#16221c] border border-slate-200/80 dark:border-emerald-950 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-emerald-950/80 transition-colors shadow-xs"
+                      title="Bookmark Activity"
+                    >
+                      <Bookmark className="w-4 h-4 mb-0.5" />
+                      <span className="text-[9px] font-bold">Save</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm flex items-center justify-between px-5 shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/45 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-emerald-200" />
+                        <span>Join Activity</span>
+                      </div>
+                      <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs text-white flex items-center justify-center">
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              {/* Top Floating Badges */}
-              <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-20">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e0f5f0]/90 backdrop-blur-md border border-[#c4eee4]">
-                  <Film className="w-3.5 h-3.5 text-[#0a524a]" />
-                  <span className="text-xs font-bold tracking-wide text-[#0a524a]">Movies &amp; Cinema</span>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-[#0eb9a2] shadow-[0_0_15px_rgba(14,185,162,0.5)] font-bold text-xs text-white">
-                  1 spot left
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="relative z-10 px-5 pt-20 pb-5 flex flex-col justify-end min-h-[480px]">
-                <div className="mb-3">
-                  <h3 className="text-xl font-extrabold leading-tight text-slate-900 mb-3 max-w-[85%]">
-                    Suchitra Film Society Screening &amp; Filter Coffee
-                  </h3>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">HOST</span>
-                    <div className="flex items-center gap-1.5 ml-1">
-                      <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 border border-white shadow-sm flex items-center justify-center text-[9px] font-bold shrink-0">A</div>
-                      <span className="text-xs font-bold text-slate-900">Ananya Sharma</span>
-                      <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-500 italic leading-relaxed max-w-[90%] line-clamp-2">
-                    &quot;Catching the new indie film at Suchitra, followed by filter coffee and a conversation about cinema.&quot;
-                  </p>
-                </div>
-
-                {/* Stats Glass Panel */}
-                <div className="w-full bg-white/70 backdrop-blur-xl border border-white rounded-[1.5rem] shadow-[0_4px_20px_rgb(0,0,0,0.05)] p-4 mb-4 grid grid-cols-3 divide-x divide-slate-200/60">
-                  <div className="flex flex-col px-1">
-                    <div className="w-8 h-8 rounded-full bg-[#eefaf7] border border-[#d5f0e9] text-[#0eb9a2] flex items-center justify-center mb-2">
-                      <Calendar className="w-3.5 h-3.5" />
-                    </div>
-                    <p className="text-[10px] text-slate-500 mb-0.5">Date &amp; Time</p>
-                    <p className="text-xs font-bold text-slate-900 leading-tight mb-0.5">Oct 1, 2025</p>
-                    <p className="text-[10px] text-slate-500">17:00 (3h)</p>
-                  </div>
-                  <div className="flex flex-col px-3">
-                    <div className="w-8 h-8 rounded-full bg-[#eefaf7] border border-[#d5f0e9] text-[#0eb9a2] flex items-center justify-center mb-2">
-                      <MapPin className="w-3.5 h-3.5" />
-                    </div>
-                    <p className="text-[10px] text-slate-500 mb-0.5">Location</p>
-                    <p className="text-xs font-bold text-slate-900 leading-tight">Indiranagar, Bengaluru</p>
-                  </div>
-                  <div className="flex flex-col pl-3 pr-1">
-                    <div className="w-8 h-8 rounded-full bg-[#eefaf7] border border-[#d5f0e9] text-[#0eb9a2] flex items-center justify-center mb-2">
-                      <Users className="w-3.5 h-3.5" />
-                    </div>
-                    <p className="text-[10px] text-slate-500 mb-0.5">Joined</p>
-                    <p className="text-xs font-bold text-slate-900 leading-tight mb-1.5">1 of 2 joined</p>
-                    <div className="w-full h-1.5 bg-slate-200/80 rounded-full overflow-hidden relative">
-                      <div className="h-full bg-[#cbd5e1] rounded-full absolute left-0" style={{ width: '50%' }} />
-                      <span className="absolute right-0 -top-3.5 text-[9px] font-bold text-[#0eb9a2]">1 left</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex items-center gap-2.5">
-                  <div className="flex flex-col items-center justify-center w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-[0_2px_8px_rgb(0,0,0,0.04)]">
-                    <Menu className="w-4 h-4 mb-0.5 text-slate-700" />
-                    <span className="text-[9px] font-semibold text-slate-600">Details</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-[0_2px_8px_rgb(0,0,0,0.04)]">
-                    <Bookmark className="w-4 h-4 mb-0.5 text-slate-700" />
-                    <span className="text-[9px] font-semibold text-slate-600">Save</span>
-                  </div>
-                  <div className="flex-1 h-12 rounded-[1.25rem] bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 text-emerald-950 border border-emerald-300/90 font-bold text-sm flex items-center justify-between px-4 shadow-xs">
-                    <span>Join Activity</span>
-                    <div className="w-6 h-6 rounded-full bg-emerald-200/80 text-emerald-800 flex items-center justify-center">
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            </Card3DContainer>
           </div>
 
 
@@ -518,8 +692,9 @@ export function LandingPageClient() {
 
       {/* ── 3. SECTION 2: TRAVEL CARD SECTION (VICE VERSA! TEXT ON LEFT, CARD ON RIGHT) ── */}
       <section
+        id="travel"
         ref={travelReveal.ref}
-        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${travelReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        className={`scroll-mt-28 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${travelReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
@@ -606,144 +781,203 @@ export function LandingPageClient() {
 
           {/* RIGHT COLUMN: Discover-style Travel Card Preview */}
           <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none order-1 lg:order-2">
-            <div className="group relative w-full bg-white dark:bg-[#111815] rounded-3xl border border-slate-200/90 dark:border-emerald-950/70 shadow-sm hover:shadow-2xl hover:border-orange-400/50 dark:hover:border-orange-500/40 transition-all duration-300 flex flex-col justify-between overflow-hidden">
-              {/* TOP THUMBNAIL BANNER */}
-              <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100 dark:bg-[#16201b]">
-                <img
-                  src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80"
-                  alt="Kasol & Tosh: Parvati Valley Trek"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
+            <Card3DContainer accentColor="orange">
+              <div className="group relative w-full bg-white dark:bg-[#121815] rounded-3xl border border-orange-100 dark:border-orange-950/70 shadow-[0_20px_50px_rgba(249,115,22,0.12)] hover:shadow-[0_25px_60px_rgba(249,115,22,0.22)] transition-all duration-500 flex flex-col justify-between overflow-hidden">
+                {/* ── TOP THUMBNAIL BANNER ── */}
+                <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80"
+                    alt="Kasol &amp; Tosh: Parvati Valley Trek"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.92]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/30 pointer-events-none" />
 
-                {/* Floating Badges on Top */}
-                <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 text-orange-950 border border-orange-300/80 shadow-xs tracking-wide uppercase">
-                    <Compass className="w-3.5 h-3.5 text-orange-700" />
-                    <span>HIMALAYAN TREKKING</span>
-                  </span>
-
-                  <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full text-[11px] font-bold backdrop-blur-md shadow-xs bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 text-emerald-950 border border-emerald-300/80">
-                      1 spot left
+                  {/* Floating Badges on Top */}
+                  <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-black/60 backdrop-blur-md text-orange-300 border border-white/15 shadow-sm tracking-wide uppercase">
+                      <Compass className="w-3.5 h-3.5 text-orange-400" />
+                      <span>Himalayan Trekking</span>
                     </span>
+
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40 border border-orange-400/40 animate-pulse">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                        <span>1 spot left</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bottom Image Overlay: Departure & Match */}
+                  <div className="absolute bottom-3 left-3.5 right-3.5 z-10 flex items-center justify-between text-xs text-white/95">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 shadow-sm">
+                      <MapPin className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                      <span className="font-semibold">From: Bengaluru / Delhi</span>
+                    </div>
+                    <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-500/90 text-white text-[11px] font-black shadow-sm">
+                      <span>⚡ 94% MATCH</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Quick Departure Pill */}
-                <div className="absolute bottom-2.5 left-3.5 z-10 flex items-center gap-1.5 text-[11px] font-medium text-white drop-shadow-md">
-                  <MapPin className="w-3.5 h-3.5 text-orange-400" />
-                  <span>From: Bengaluru / Delhi</span>
-                </div>
-              </div>
-
-              {/* CARD CONTENT BODY */}
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-3">
-                  {/* Header: Destination & Score */}
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h2 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-1 tracking-tight">
+                {/* ── CARD CONTENT BODY ── */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-3.5">
+                    {/* Destination Title */}
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug tracking-tight group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
                         Kasol &amp; Tosh: Parvati Valley Trek
-                      </h2>
-                      <div className="shrink-0">
-                        <span className="px-2 py-1 rounded-full bg-orange-100 text-orange-800 text-[10px] font-black border border-orange-200">
-                          ⚡ 94% MATCH
+                      </h3>
+                    </div>
+
+                    {/* Host row with real photo & trust info */}
+                    <div className="flex items-center justify-between gap-3 p-2.5 rounded-2xl bg-orange-50/70 dark:bg-orange-950/40 border border-orange-200/60 dark:border-orange-900/60">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="relative shrink-0">
+                          <img
+                            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&auto=format&fit=crop&q=80"
+                            alt="Priya Iyer"
+                            className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-500/40 shadow-sm"
+                          />
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-white dark:ring-[#121815]">
+                            <BadgeCheck className="w-3 h-3" />
+                          </div>
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                              Priya Iyer
+                            </span>
+                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-900/80 text-orange-900 dark:text-orange-200 text-[9px] font-black tracking-wide uppercase">
+                              <ShieldCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
+                              Govt ID Verified
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                            <span className="flex items-center gap-0.5 font-bold text-amber-500">
+                              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                              4.95
+                            </span>
+                            <span>•</span>
+                            <span>8 Trips Led</span>
+                            <span>•</span>
+                            <span className="text-orange-600 dark:text-orange-400 font-semibold">Trek Leader</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="hidden sm:flex flex-col items-end shrink-0 text-right">
+                        <span className="text-[10px] uppercase font-bold text-slate-400">Pace</span>
+                        <span className="text-xs font-bold text-orange-600 dark:text-orange-400">Moderate</span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed italic">
+                      &ldquo;A 6-day immersive Himalayan trek covering Parvati Valley, Chalal trail, and hot springs of Manikaran. Staying at cozy boutique hostels.&rdquo;
+                    </p>
+
+                    {/* Key Trip Info Grid */}
+                    <div className="grid grid-cols-2 gap-2.5 pt-0.5">
+                      {/* Dates & Duration */}
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#18221c] border border-slate-200/70 dark:border-emerald-950/60 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0 mt-0.5">
+                          <Calendar className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Dates</p>
+                          <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">Oct 12 - Oct 18</p>
+                          <p className="text-[10px] text-orange-600 dark:text-orange-400 font-semibold">6 Days Duration</p>
+                        </div>
+                      </div>
+
+                      {/* Budget Range */}
+                      <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#18221c] border border-slate-200/70 dark:border-emerald-950/60 flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                          <Wallet className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Budget Est.</p>
+                          <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">₹8,500 - ₹14,500</p>
+                          <p className="text-[10px] text-slate-500">Per traveler</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Group Capacity Progress Bar */}
+                    <div className="space-y-1.5 pt-1">
+                      <div className="flex items-center justify-between text-xs font-semibold">
+                        <div className="flex items-center gap-2">
+                          <div className="flex -space-x-2 overflow-hidden">
+                            <img
+                              className="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-[#121815] object-cover"
+                              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80"
+                              alt="Priya"
+                            />
+                            <img
+                              className="inline-block h-6 w-6 rounded-full ring-2 ring-white dark:ring-[#121815] object-cover"
+                              src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80"
+                              alt="Rohan"
+                            />
+                            <div className="inline-flex h-6 w-6 rounded-full ring-2 ring-white dark:ring-[#121815] bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 text-[10px] font-bold items-center justify-center border border-dashed border-orange-500">
+                              +1
+                            </div>
+                          </div>
+                          <span className="text-slate-700 dark:text-slate-300 text-xs">
+                            <strong className="text-slate-900 dark:text-white">2 of 3</strong> joined
+                          </span>
+                        </div>
+                        <span className="text-orange-600 dark:text-orange-400 font-extrabold text-xs">
+                          1 Spot Open
                         </span>
                       </div>
+                      <div className="w-full h-2 bg-slate-100 dark:bg-emerald-950/60 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 transition-all duration-300 shadow-xs"
+                          style={{ width: "66%" }}
+                        />
+                      </div>
                     </div>
 
-                    {/* Host row */}
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 ring-1 ring-emerald-500/40 flex items-center justify-center text-[10px] font-bold shrink-0">
-                        P
-                      </div>
-                      <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-                        Priya Iyer
+                    {/* Planned Attractions Chips */}
+                    <div className="flex flex-wrap gap-1.5 pt-0.5">
+                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
+                        📍 Parvati Valley
                       </span>
-                      <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
-                    A 6-day immersive Himalayan trek covering the beautiful Parvati Valley, Chalal trail, and hot springs of Manikaran. Staying at cozy boutique hostels.
-                  </p>
-
-                  {/* Key Trip Info Grid */}
-                  <div className="grid grid-cols-2 gap-2 pt-1 text-xs">
-                    {/* Dates & Duration */}
-                    <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-[#16201b] border border-slate-200/80 dark:border-emerald-950/60">
-                      <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-1">
-                        <Calendar className="w-3 h-3 text-orange-500" />
-                        <span>Dates</span>
-                      </div>
-                      <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs">
-                        Oct 12 - Oct 18
-                      </div>
-                      <div className="text-[11px] text-orange-600 dark:text-orange-400 font-medium">
-                        6 Days Duration
-                      </div>
-                    </div>
-
-                    {/* Budget Range */}
-                    <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-[#16201b] border border-slate-200/80 dark:border-emerald-950/60">
-                      <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-1">
-                        <Wallet className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                        <span>Budget</span>
-                      </div>
-                      <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs truncate">
-                        ₹8,500 - ₹14,500
-                      </div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                        Est. per traveler
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Group Capacity Progress Bar */}
-                  <div className="space-y-1 pt-1">
-                    <div className="flex items-center justify-between text-[11px] font-medium text-slate-600 dark:text-slate-300">
-                      <span>
-                        Group Capacity: <strong className="text-slate-900 dark:text-white">2</strong> of <strong>3</strong> joined
+                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
+                        🌲 Chalal Trail
                       </span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-                        1 open
+                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
+                        ♨️ Manikaran Springs
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-slate-100 dark:bg-[#1c2822] rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 via-orange-500 to-orange-600 transition-all duration-300"
-                        style={{ width: '66%' }}
-                      />
-                    </div>
                   </div>
 
-                  {/* Planned Attractions Chips */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
-                      Parvati Valley
-                    </span>
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
-                      Chalal Trail
-                    </span>
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
-                      Manikaran
-                    </span>
-                  </div>
-                </div>
+                  {/* CARD FOOTER / ACTION BAR */}
+                  <div className="pt-2 border-t border-slate-100 dark:border-emerald-950/60 flex items-center gap-2.5">
+                    <button
+                      type="button"
+                      className="flex flex-col items-center justify-center w-12 h-12 rounded-2xl bg-slate-50 dark:bg-[#18221c] border border-slate-200/80 dark:border-emerald-950 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-emerald-950/80 transition-colors shadow-xs"
+                      title="Bookmark Expedition"
+                    >
+                      <Bookmark className="w-4 h-4 mb-0.5" />
+                      <span className="text-[9px] font-bold">Save</span>
+                    </button>
 
-                {/* CARD FOOTER / ACTION BAR */}
-                <div className="pt-3 border-t border-slate-100 dark:border-emerald-950/60 flex items-center gap-2">
-                  <div className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-emerald-900/60 hover:bg-slate-100 dark:hover:bg-[#18241f] text-slate-700 dark:text-slate-200 font-semibold text-xs transition">
-                    Details
-                  </div>
-                  <div className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 dark:from-orange-950/80 dark:to-amber-950/70 text-orange-950 dark:text-orange-200 border border-orange-300/90 dark:border-orange-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all hover:scale-[1.01]">
-                    <span>Join Expedition</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-orange-700 dark:text-orange-300" />
+                    <button
+                      type="button"
+                      className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-extrabold text-sm flex items-center justify-between px-5 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/45 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-orange-200" />
+                        <span>Join Expedition</span>
+                      </div>
+                      <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs text-white flex items-center justify-center">
+                        <ArrowRight className="w-4 h-4" />
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
+            </Card3DContainer>
           </div>
         </div>
       </section>
@@ -835,7 +1069,7 @@ export function LandingPageClient() {
         className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${testimonialsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
       >
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+        <div className="text-center max-w-2xl mx-auto mb-6 space-y-2">
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
             COMMUNITY STORIES
           </span>
@@ -843,79 +1077,226 @@ export function LandingPageClient() {
             Real Encounters, Genuine Connections
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-            Stories from people who turned solo weekends into shared adventures.
+            Stories from verified travelers who turned solo weekends into trusted, lifelong friendships.
           </p>
         </div>
 
-        {/* Semi-Circle Scrolling Carousel from Right to Left */}
+        {/* Aggregate Trust Badges Strip */}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-8 text-xs font-semibold">
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-emerald-950/40 border border-slate-200/80 dark:border-emerald-900/60 shadow-xs">
+            <div className="flex text-amber-400">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star key={s} className="w-3.5 h-3.5 fill-current" />
+              ))}
+            </div>
+            <span className="font-extrabold text-slate-900 dark:text-white">4.96/5</span>
+            <span className="text-slate-400 dark:text-slate-500">• 2,400+ Verified Reviews</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300 shadow-xs">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span className="font-bold">100% Govt ID Vetted Members</span>
+          </div>
+
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-emerald-950/40 border border-slate-200/80 dark:border-emerald-900/60 text-slate-700 dark:text-slate-300 shadow-xs">
+            <Users className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            <span>Over 12,000 Verified Explorers</span>
+          </div>
+        </div>
+
+        {/* Single-Line Smooth Conveyor */}
         <SemiCircleTestimonials testimonials={TESTIMONIALS} />
       </section>
 
-      {/* ── 7. SAFETY BANNER ── */}
+      {/* ── 7. THE TRAVALLY TRUST & SAFETY ARCHITECTURE (4-PILLAR BENTO) ── */}
       <section
+        id="safety"
         ref={safetyReveal.ref}
-        className={`py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${safetyReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        className={`scroll-mt-28 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${safetyReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
       >
-        <div className="rounded-3xl bg-gradient-to-r from-emerald-950/90 via-[#0d2218] to-emerald-950/80 border-2 border-emerald-500/40 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_12px_40px_rgba(16,185,129,0.20)] hover:shadow-[0_16px_50px_rgba(16,185,129,0.30)] transition-all duration-300">
-          <div className="space-y-2 max-w-2xl">
-            <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>SAFETY IS NON-NEGOTIABLE</span>
+        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 text-xs font-black border border-emerald-300/80 dark:border-emerald-800/80 uppercase tracking-wider">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>THE TRAVALLY SAFETY GUARANTEE</span>
+          </div>
+          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+            Built on Radical Trust, Vetted Identities &amp;{" "}
+            <span className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
+              Zero Unsolicited Contact
+            </span>
+          </h2>
+          <p className="text-xs sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+            Safety isn&apos;t an afterthought or a marketing badge—it&apos;s engineered into every click, connection request, and meetup protocol on Travally.
+          </p>
+        </div>
+
+        {/* 4 Trust Pillars Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Pillar 1 */}
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/60 transition-all duration-300 flex flex-col justify-between group">
+            <div className="space-y-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                1. 100% ID-Vetted Community
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Every host and companion must verify government ID (Aadhaar, Passport, or DL) and mobile number before posting or joining. Anonymous accounts are strictly prohibited.
+              </p>
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-white">
-              Built with Safety-First Principles for Every Traveler
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Mandatory public-venue guidelines for first meetings, verified identity credentials, end-to-end encrypted messaging, and rapid 1-click reporting directly monitored by human administrators.
-            </p>
+            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+              <span>Zero Fake Accounts</span>
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+          </div>
+
+          {/* Pillar 2 */}
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/60 transition-all duration-300 flex flex-col justify-between group">
+            <div className="space-y-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
+                <Lock className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                2. Protected Inbox Gatekeeper
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Nobody can message you out of the blue. Chat rooms unlock ONLY after both members review profiles, mutual compatibility, and explicitly accept the request.
+              </p>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-teal-600 dark:text-teal-400">
+              <span>Zero Unwanted DMs</span>
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+          </div>
+
+          {/* Pillar 3 */}
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(249,115,22,0.15)] hover:border-orange-500/60 transition-all duration-300 flex flex-col justify-between group">
+            <div className="space-y-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
+                <MapPin className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                3. Mandatory Public Meetups
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                All companion first meetups are mandated to take place in bustling, well-lit public spots—indie film societies, specialty cafes, cultural galleries, or verified trailheads.
+              </p>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-orange-600 dark:text-orange-400">
+              <span>Safe Public Spaces</span>
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+          </div>
+
+          {/* Pillar 4 */}
+          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/60 transition-all duration-300 flex flex-col justify-between group">
+            <div className="space-y-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
+                <HeartHandshake className="w-6 h-6" />
+              </div>
+              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                4. 24/7 Human Moderation &amp; SOS
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Group chats self-delete 7 days post-trip for permanent privacy. Real administrators review safety flags in under 15 minutes with instant 1-click block &amp; ban tools.
+              </p>
+            </div>
+            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-rose-600 dark:text-rose-400">
+              <span>&lt; 15 Min Admin Response</span>
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+          </div>
+        </div>
+
+        {/* Safety Center Callout Bar */}
+        <div className="mt-10 p-6 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50/50 to-emerald-50 dark:from-emerald-950/40 dark:via-teal-950/30 dark:to-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
+                Read our in-depth community safety guidelines and emergency escalation protocols.
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Covers solo female travel safeguards, transit advice, and mutual vetting standards.
+              </p>
+            </div>
           </div>
           <Link
             href="/safety"
-            className="shrink-0 min-h-[44px] px-6 py-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/35 transition-all duration-200 flex items-center justify-center hover:scale-105 active:scale-95"
+            className="shrink-0 px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition-all hover:scale-105 active:scale-95"
           >
             Review Safety Standards
           </Link>
         </div>
       </section>
 
-      {/* ── 8. BOTTOM CTA ── */}
+      {/* ── 8. FREQUENTLY ASKED QUESTIONS (ACCORDION) ── */}
       <section
-        ref={ctaReveal.ref}
-        className={`py-14 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${ctaReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        id="faq"
+        ref={faqReveal.ref}
+        className={`scroll-mt-28 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${faqReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
       >
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-800 via-emerald-900 to-[#062015] border-2 border-emerald-400/50 p-8 sm:p-14 text-white text-center shadow-[0_20px_60px_rgba(16,185,129,0.32)]">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-orange-500/30 to-amber-500/20 rounded-full blur-[100px] pointer-events-none transform-gpu" />
-          <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md shadow-inner mb-1 border border-white/20">
-              <Compass className="w-7 h-7 text-white" />
-            </div>
-            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
-              Ready to find your next companion?
-            </h2>
-            <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed font-normal">
-              Join thousands of members across Bengaluru, Mumbai, Delhi, Himachal, and beyond. Free, verified, and always respectful.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3">
-              <Link
-                href="/register"
-                className="group w-full sm:w-auto min-h-[48px] px-8 rounded-full bg-white hover:bg-slate-100 text-slate-900 font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl shadow-black/20 transition-all duration-200 hover:scale-105 active:scale-95"
-              >
-                <span>Get Started for Free</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-              </Link>
-              <Link
-                href="/login"
-                className="w-full sm:w-auto min-h-[48px] px-8 rounded-full bg-emerald-950/80 hover:bg-emerald-900 text-white border border-emerald-400/50 font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 hover:scale-105 active:scale-95 shadow-md"
-              >
-                <span>1-Click Demo Login</span>
-              </Link>
-            </div>
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-emerald-950/60 text-slate-700 dark:text-emerald-300 text-xs font-black border border-slate-200 dark:border-emerald-800/60 uppercase tracking-wider">
+            <HelpCircle className="w-3.5 h-3.5 text-emerald-500" />
+            <span>TRANSPARENCY FIRST</span>
           </div>
+          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+            Everything you need to know about safety, verification, cost splitting, and companionship.
+          </p>
+        </div>
+
+        <div className="space-y-3.5">
+          {FAQS.map((faq, idx) => {
+            const isOpen = openFaq === idx;
+            return (
+              <div
+                key={idx}
+                className={`rounded-2xl transition-all duration-200 border ${
+                  isOpen
+                    ? "bg-white dark:bg-[#111915] border-emerald-500/60 dark:border-emerald-600/60 shadow-md shadow-emerald-500/5"
+                    : "bg-slate-50/80 dark:bg-[#111915]/60 border-slate-200/80 dark:border-emerald-950/70 hover:border-slate-300 dark:hover:border-emerald-900"
+                }`}
+              >
+                <button
+                  onClick={() => setOpenFaq(isOpen ? null : idx)}
+                  type="button"
+                  className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer"
+                >
+                  <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                    {faq.q}
+                  </span>
+                  <div
+                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
+                      isOpen
+                        ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rotate-180"
+                        : "bg-slate-200/70 dark:bg-emerald-950/60 text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </button>
+
+                {isOpen && (
+                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-emerald-950/60 mt-1">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
+
+
     </div>
   );
 }
