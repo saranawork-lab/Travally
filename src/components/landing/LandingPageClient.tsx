@@ -172,7 +172,6 @@ export function LandingPageClient() {
   const travelReveal = useScrollReveal();
   const howItWorksReveal = useScrollReveal();
   const testimonialsReveal = useScrollReveal();
-  const safetyReveal = useScrollReveal();
   const faqReveal = useScrollReveal();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -1098,131 +1097,7 @@ export function LandingPageClient() {
         <SemiCircleTestimonials testimonials={TESTIMONIALS} />
       </section>
 
-      {/* ── 7. THE TRAVALLY TRUST & SAFETY ARCHITECTURE (4-PILLAR BENTO) ── */}
-      <section
-        id="safety"
-        ref={safetyReveal.ref}
-        className={`scroll-mt-28 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${safetyReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-      >
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 text-xs font-black border border-emerald-300/80 dark:border-emerald-800/80 uppercase tracking-wider">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>THE TRAVALLY SAFETY GUARANTEE</span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-            Built on Radical Trust, Vetted Identities &amp;{" "}
-            <span className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
-              Zero Unsolicited Contact
-            </span>
-          </h2>
-          <p className="text-xs sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-            Safety isn&apos;t an afterthought or a marketing badge—it&apos;s engineered into every click, connection request, and meetup protocol on Travally.
-          </p>
-        </div>
 
-        {/* 4 Trust Pillars Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Pillar 1 */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/60 transition-all duration-300 flex flex-col justify-between group">
-            <div className="space-y-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                1. 100% ID-Vetted Community
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Every host and companion must verify government ID (Aadhaar, Passport, or DL) and mobile number before posting or joining. Anonymous accounts are strictly prohibited.
-              </p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
-              <span>Zero Fake Accounts</span>
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* Pillar 2 */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/60 transition-all duration-300 flex flex-col justify-between group">
-            <div className="space-y-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
-                <Lock className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                2. Protected Inbox Gatekeeper
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Nobody can message you out of the blue. Chat rooms unlock ONLY after both members review profiles, mutual compatibility, and explicitly accept the request.
-              </p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-teal-600 dark:text-teal-400">
-              <span>Zero Unwanted DMs</span>
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* Pillar 3 */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(249,115,22,0.15)] hover:border-orange-500/60 transition-all duration-300 flex flex-col justify-between group">
-            <div className="space-y-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                3. Mandatory Public Meetups
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                All companion first meetups are mandated to take place in bustling, well-lit public spots—indie film societies, specialty cafes, cultural galleries, or verified trailheads.
-              </p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-orange-600 dark:text-orange-400">
-              <span>Safe Public Spaces</span>
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* Pillar 4 */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-[#111915] border border-slate-200/90 dark:border-emerald-950/80 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/60 transition-all duration-300 flex flex-col justify-between group">
-            <div className="space-y-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 flex items-center justify-center font-bold shadow-xs group-hover:scale-110 transition-transform">
-                <HeartHandshake className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                4. 24/7 Human Moderation &amp; SOS
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Group chats self-delete 7 days post-trip for permanent privacy. Real administrators review safety flags in under 15 minutes with instant 1-click block &amp; ban tools.
-              </p>
-            </div>
-            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-emerald-950/60 flex items-center justify-between text-[11px] font-bold text-rose-600 dark:text-rose-400">
-              <span>&lt; 15 Min Admin Response</span>
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-        </div>
-
-        {/* Safety Center Callout Bar */}
-        <div className="mt-10 p-6 rounded-3xl bg-gradient-to-r from-emerald-50 via-teal-50/50 to-emerald-50 dark:from-emerald-950/40 dark:via-teal-950/30 dark:to-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
-                Read our in-depth community safety guidelines and emergency escalation protocols.
-              </p>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                Covers solo female travel safeguards, transit advice, and mutual vetting standards.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/safety"
-            className="shrink-0 px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition-all hover:scale-105 active:scale-95"
-          >
-            Review Safety Standards
-          </Link>
-        </div>
-      </section>
 
       {/* ── 8. CONNECT WITH US (EMAILJS) ── */}
       <ConnectSection />
