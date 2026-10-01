@@ -218,90 +218,98 @@ export function LandingPageClient() {
 
   const TESTIMONIALS = [
     {
-      name: "Simran Kaur",
+      name: "Harshita S.",
       avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&auto=format&fit=crop&q=80",
-      city: "New Delhi",
-      role: "Heritage Photowalker",
+      city: "Delhi NCR",
+      role: "Street Photographer",
       activityTitle: "Old Delhi Morning Photowalk",
+      rating: 5,
       quote:
-        "As a woman doing early sunrise photography in Chandni Chowk, safety was my biggest concern. Travally's mandatory ID check and mutual approval gate meant zero unsolicited messages—just 3 genuine photographers sharing chai and history.",
+        "wanted to do sunrise street photography in chandni chowk but hated going alone at 5am. found two super chill photographers here and got crazy good shots!",
       badge: "Govt ID Verified",
       type: "City Companion",
     },
     {
-      name: "Arjun Nair",
+      name: "Rohan Verma",
       avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&auto=format&fit=crop&q=80",
       city: "Mumbai",
       role: "Himalayan Backpacker",
       activityTitle: "6-Day Parvati Valley & Tosh Trek",
+      rating: 4,
       quote:
-        "Solo trekking seemed daunting and expensive until I matched with Priya and Kabir. We split the ₹14,000 cab fare from Chandigarh, shared boutique homestays, and bonded for life. We still hike together every winter.",
+        "cab from chandigarh to kasol was 6.5k. matched with 2 guys on here, split the fare 3 ways and shared a homestay in tosh. saved money and made great trek buddies.",
       badge: "Govt ID Verified",
       type: "Travel Expedition",
     },
     {
-      name: "Rhea Deshmukh",
+      name: "Meghana Rao",
       avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80",
       city: "Bengaluru",
-      role: "Cinema & Coffee Explorer",
+      role: "Cinema & Coffee",
       activityTitle: "Suchitra Film Society & Filter Coffee",
+      rating: 5,
       quote:
-        "None of my colleagues wanted to catch an indie film on a Sunday. Posted a 2-person plan on Travally and had filter coffee with two wonderful women who love cinema. Pure, effortless connection with zero awkwardness.",
+        "matched with two girls for a sunday indie film at suchitra. grabbed filter coffee after and debated the ending for 2 hours straight. zero awkwardness!",
       badge: "Superhost",
       type: "City Companion",
     },
     {
-      name: "Tanmay Joshi",
+      name: "Siddharth J.",
       avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=160&auto=format&fit=crop&q=80",
       city: "Pune",
-      role: "Western Ghats Trekker",
+      role: "Weekend Trekker",
       activityTitle: "Harishchandragad Cliff Camping",
+      rating: 4,
       quote:
-        "Found 3 reliable co-trekkers for cliff camping. The transparent budget breakdown avoided all awkward money moments. Travally's safety escrow and ephemeral chat made coordinating logistics seamless.",
+        "was nervous about cliff camping with strangers at harishchandragad, but vibes were unmatched. split tent gear & food equally, no drama at all.",
       badge: "Govt ID Verified",
       type: "Travel Expedition",
     },
     {
-      name: "Ananya Iyer",
+      name: "Pooja Nambiar",
       avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&auto=format&fit=crop&q=80",
       city: "Chennai",
-      role: "Coastal Trail Pilgrim",
+      role: "Solo Backpacker",
       activityTitle: "Rameshwaram & Dhanushkodi Trail",
+      rating: 5,
       quote:
-        "Traveling to Dhanushkodi as a solo female traveler felt daunting until I connected with Meera on Travally. Travally's strict ID verification gave my parents total peace of mind. We shared a temple homestay and sunrise walks.",
+        "parents were worried about me visiting dhanushkodi solo. found meera here with the exact same dates—shared a beachside room and felt 100% safe.",
       badge: "Govt ID Verified",
       type: "Travel Expedition",
     },
     {
-      name: "Vikramaditya Roy",
+      name: "Sourav Banerjee",
       avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=160&auto=format&fit=crop&q=80",
       city: "Kolkata",
-      role: "Heritage & Café Enthusiast",
+      role: "Heritage Walks",
       activityTitle: "North Kolkata Heritage Walk",
+      rating: 5,
       quote:
-        "The community standard here is unmatched. Because both parties review profiles before accepting, you only get people genuinely excited about the experience. It feels like a private club for curious, verified travelers.",
+        "new to kolkata and had nobody to explore north kolkata with. connected with a local guy who knew all the historic sweet shops and hidden lanes.",
       badge: "Superhost",
       type: "City Companion",
     },
     {
-      name: "Divya Menon",
+      name: "Kavya Reddy",
       avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=160&auto=format&fit=crop&q=80",
       city: "Hyderabad",
-      role: "Board Games & Cafe Host",
+      role: "Board Game Host",
       activityTitle: "Jubilee Hills Weekend Board Games",
+      rating: 4,
       quote:
-        "Just moved to Hyderabad for my tech job and knew nobody. Travally helped me find an intimate 3-person board game group at a local cafe. No overwhelming party crowds—just warm, verified, welcoming friends.",
+        "remote work in hyd made meeting people hard. hosted a 3-person catan table at roast cafe on saturday—chill crowd and we still meet up regularly!",
       badge: "Govt ID Verified",
       type: "City Companion",
     },
     {
-      name: "Kabir Mehta",
+      name: "Aditya Sharma",
       avatarUrl: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=160&auto=format&fit=crop&q=80",
       city: "Bengaluru",
-      role: "Remote Nomad Trekker",
+      role: "Remote Workation",
       activityTitle: "South Goa Workation & Surf Camp",
+      rating: 5,
       quote:
-        "Shared a seaside villa in Palolem with 3 other remote workers for 10 days. Having verified LinkedIn and ID credentials made trusting housemates instant. Fast Wi-Fi, morning surf, and productive evenings.",
+        "workation in south goa was 10/10. met 3 remote devs on travally—worked afternoons with fast wifi and hit the beach for sunset surf every evening.",
       badge: "Nomad Leader",
       type: "Travel Expedition",
     },
@@ -350,10 +358,10 @@ export function LandingPageClient() {
         <div className="relative z-30 text-center max-w-4xl mx-auto space-y-4 sm:space-y-6">
 
           {/* Main Headline with Premium Editorial Hierarchy and generous line spacing on mobile */}
-          <h1 className="animate-fade-in-up animation-delay-200 text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight sm:leading-[1.12] max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
-            <span className="block mb-1.5 sm:mb-2">Meet good people.</span>
-            <span className="block font-light italic text-emerald-200 mb-1.5 sm:mb-2">Share real journeys.</span>
-            <span className="block bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
+          <h1 className="animate-fade-in-up animation-delay-200 text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-normal max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] pb-1">
+            <span className="block mb-1 sm:mb-2">Meet good people.</span>
+            <span className="block font-light italic text-emerald-200 mb-1 sm:mb-2">Share real journeys.</span>
+            <span className="inline-block pb-2 sm:pb-3.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
               Never miss an outing again.
             </span>
           </h1>
@@ -380,26 +388,12 @@ export function LandingPageClient() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 px-6 sm:px-8 py-4 sm:py-3.5 rounded-3xl sm:rounded-full bg-slate-900/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] w-[90%] sm:w-auto mx-auto max-w-sm sm:max-w-none">
               {/* Verified Members */}
               <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
-                <div className="flex -space-x-2">
-                  {[
-                    { letter: "R", bg: "bg-emerald-600" },
-                    { letter: "A", bg: "bg-orange-500" },
-                    { letter: "P", bg: "bg-teal-600" },
-                  ].map((item, i) => (
-                    <div
-                      key={i}
-                      className={`w-7 h-7 rounded-full border border-white/20 flex items-center justify-center text-[10px] font-black text-white ${item.bg} shadow-md`}
-                    >
-                      {item.letter}
-                    </div>
-                  ))}
-                  <div className="w-7 h-7 rounded-full border border-white/20 bg-slate-800 flex items-center justify-center text-[10px] font-bold text-white shadow-md">
-                    +15k
-                  </div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="font-extrabold text-white text-xs tracking-wide">15k+ Explorers</span>
-                  <span className="text-emerald-400 text-[10px] font-medium tracking-wide uppercase">Across 50+ Cities</span>
+                  <span className="font-extrabold text-white text-xs tracking-wide">Social Companions</span>
+                  <span className="text-emerald-400 text-[10px] font-medium tracking-wide uppercase">Local &amp; Trip Meetups</span>
                 </div>
               </div>
 
@@ -412,7 +406,7 @@ export function LandingPageClient() {
                   <HeartHandshake className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="font-extrabold text-white text-xs tracking-wide">99.8% Safe Meets</span>
+                  <span className="font-extrabold text-white text-xs tracking-wide">Mutual Approval</span>
                   <span className="text-amber-400 text-[10px] font-medium tracking-wide uppercase">Zero Spam Promise</span>
                 </div>
               </div>
@@ -634,9 +628,9 @@ export function LandingPageClient() {
               <span>COMPANION MODE • CITY ACTIVITIES</span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-snug text-slate-900 dark:text-white pb-1">
               Discover verified partners for{" "}
-              <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 dark:from-emerald-400 dark:via-teal-300 dark:to-emerald-200 bg-clip-text text-transparent">
+              <span className="inline-block pb-1 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 dark:from-emerald-400 dark:via-teal-300 dark:to-emerald-200 bg-clip-text text-transparent">
                 movies, cafes, and everyday urban outings.
               </span>
             </h2>
@@ -725,9 +719,9 @@ export function LandingPageClient() {
               <span>TRAVEL EXPEDITIONS • TRAVEL DATING & DATES</span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-snug text-slate-900 dark:text-white pb-1">
               Multi-day trips &amp; travel dating with people who match your{" "}
-              <span className="bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 dark:from-orange-400 dark:via-amber-300 dark:to-rose-200 bg-clip-text text-transparent">
+              <span className="inline-block pb-1 bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 dark:from-orange-400 dark:via-amber-300 dark:to-rose-200 bg-clip-text text-transparent">
                 travel dates, vibe, and rupee budget.
               </span>
             </h2>

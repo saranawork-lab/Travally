@@ -130,29 +130,26 @@ export const Footer: React.FC<FooterProps> = () => {
           </div>
 
           {/* Col 2: Combined Popular Activities & Expeditions (Centered) */}
-          <div className="flex flex-col items-center text-center space-y-3">
-            <h3 className="text-white font-bold mb-2 text-xs tracking-wider uppercase flex items-center justify-center gap-2">
+          <div className="flex flex-col items-center text-center space-y-2.5">
+            <h3 className="text-white font-bold mb-1 text-xs tracking-wider uppercase flex items-center justify-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
               <span>Popular Activities &amp; Expeditions</span>
               <span className="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
             </h3>
-            <div className="flex flex-wrap justify-center gap-2 max-w-sm pt-1">
+            <ul className="space-y-2 text-center pt-1">
               {[
                 "Cafe Hangouts & Coffee Dates",
                 "Himalayan Treks & Scenic Escapes",
                 "Movies & Indie Film Screenings",
                 "Weekend Road Trips & Stargazing",
-                "Badminton & Fitness Meetups",
-                "Heritage & Photography Walks",
               ].map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="px-3 py-1.5 rounded-xl bg-[#09100c] border border-emerald-950/90 text-slate-300 hover:text-emerald-400 hover:border-emerald-500/40 text-[11px] font-medium transition-all cursor-default"
-                >
-                  {tag}
-                </span>
+                <li key={idx}>
+                  <span className="text-slate-400 hover:text-emerald-400 text-xs font-medium transition-colors cursor-default block">
+                    {tag}
+                  </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* Col 3: Explorer Newsletter (Compact in footer grid) */}

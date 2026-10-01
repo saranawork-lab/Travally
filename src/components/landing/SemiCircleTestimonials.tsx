@@ -157,16 +157,26 @@ export function SemiCircleTestimonials({ testimonials }: SemiCircleTestimonialsP
                   </p>
                 </div>
 
-                {/* Compact Rating */}
-                <div className="flex items-center gap-0.5 text-amber-400 shrink-0">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} className="w-3 h-3 fill-current" />
-                  ))}
+                {/* Dynamic Star Rating */}
+                <div className="flex items-center gap-0.5 shrink-0">
+                  {[1, 2, 3, 4, 5].map((s) => {
+                    const isFilled = s <= (t.rating ?? 5);
+                    return (
+                      <Star
+                        key={s}
+                        className={`w-3 h-3 ${
+                          isFilled
+                            ? "fill-amber-400 text-amber-400"
+                            : "fill-slate-200 dark:fill-slate-800 text-slate-300 dark:text-slate-700"
+                        }`}
+                      />
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Quote */}
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug line-clamp-4 italic font-normal px-0.5">
+              {/* Quote - Fits fully without truncation */}
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed italic font-normal px-0.5">
                 &ldquo;{t.quote}&rdquo;
               </p>
             </div>
