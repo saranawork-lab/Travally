@@ -51,8 +51,13 @@ export const BottomNav: React.FC<BottomNavProps> = () => {
   // 1. NEVER render bottom dock when not logged in
   if (!currentUser) return null;
 
-  // 2. NEVER render on public landing page or auth pages
-  if (pathname === "/" || pathname === "/login" || pathname === "/register") {
+  // 2. NEVER render on public landing page or auth/onboarding pages
+  if (
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname?.startsWith("/onboarding")
+  ) {
     return null;
   }
 

@@ -227,7 +227,7 @@ export const TripCard: React.FC<TripCardProps> = ({
               <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-[#16201b] border border-slate-200/80 dark:border-emerald-950/60">
                 <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 text-[10px] uppercase font-bold tracking-wider mb-1">
                   <Calendar className="w-3 h-3 text-orange-500" />
-                  <span>Dates</span>
+                  <span>Travel Dates</span>
                 </div>
                 <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs">
                   {formatShortDate(trip.startDate)} - {formatShortDate(trip.endDate)}

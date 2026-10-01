@@ -11,6 +11,10 @@ import {
   ArrowUpRight,
   Sparkles,
   Flame,
+  Mail,
+  CheckCircle2,
+  Loader2,
+  ArrowRight,
 } from "lucide-react";
 
 interface FooterProps {
@@ -20,6 +24,11 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = () => {
   const pathname = usePathname();
   const { currentUser } = useAuth();
+
+  // Newsletter subscription state
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
 
   // Mouse tracking state for the dynamic torch beam
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
@@ -51,19 +60,43 @@ export const Footer: React.FC<FooterProps> = () => {
     return () => clearInterval(interval);
   }, [isHovered]);
 
-  // 1. Hide inside chat rooms and auth pages
+  // 1. Hide inside chat rooms, auth pages, and onboarding
   if (
     (pathname?.startsWith("/chats/") && pathname !== "/chats") ||
     pathname === '/login' ||
-    pathname === '/register'
+    pathname === '/register' ||
+    pathname?.startsWith("/onboarding")
   ) {
     return null;
   }
 
-  // 2. Hide for logged-in users (only show before logged in)
-  if (currentUser) {
+  // 2. Hide on internal in-app pages, but ALWAYS show on landing page
+  if (pathname !== "/") {
     return null;
   }
+
+  // Newsletter submit handler
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    setSubscribing(true);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: newsletterEmail.trim() }),
+      });
+      if (res.ok) {
+        setSubscribed(true);
+      } else {
+        alert("Could not subscribe. Please check your email.");
+      }
+    } catch (e) {
+      console.error("Newsletter subscription error:", e);
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   // Handle smooth mouse move tracking
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -88,41 +121,47 @@ export const Footer: React.FC<FooterProps> = () => {
               <Logo size={34} textClassName="text-xl font-black tracking-tight" />
             </Link>
             <p className="text-slate-400 text-xs leading-relaxed">
-              India&apos;s dedicated solo companion &amp; travel discovery network. Meet verified activity partners for movies and cafe crawls in your city, or team up for authentic Himalayan &amp; coastal backpacking expeditions.
+              India&apos;s verified social companion &amp; travel discovery platform. Meet trusted activity partners for daily city hangouts, or find travel companions and travel dates for multi-day expeditions.
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Verified Indian Solo Network</span>
+              <span>100% ID-Verified Explorers</span>
             </div>
           </div>
 
-          {/* Col 2: Companion Mode Categories */}
+          {/* Col 2: Companion Mode Activities */}
           <div>
             <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-              <span>City Companion Meetups</span>
+              <span>Companion Activities</span>
             </h3>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/login" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Cinema &amp; Film Screenings</span>
+                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
+                  <span>Cafe Hangouts &amp; Coffee Dates</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Specialty Coffee &amp; Food Crawls</span>
+                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
+                  <span>Movies &amp; Indie Film Screenings</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Stand-Up Comedy &amp; Music Gigs</span>
+                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
+                  <span>Stand-Up Comedy &amp; Live Music</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-emerald-400 transition flex items-center justify-between group">
+                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
+                  <span>Badminton, Fitness &amp; Bouldering</span>
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
                   <span>Heritage &amp; Photography Walks</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
@@ -130,59 +169,89 @@ export const Footer: React.FC<FooterProps> = () => {
             </ul>
           </div>
 
-          {/* Col 3: Travel Mode Destinations */}
+          {/* Col 3: Travel Expeditions & Dating */}
           <div>
             <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
-              <span>Indian Backpacking Circuits</span>
+              <span>Travel Expeditions &amp; Dating</span>
             </h3>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/login" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Parvati Valley &amp; Kasol Trek</span>
+                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
+                  <span>Himalayan Treks: Parvati &amp; Kasol</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Meghalaya Living Root Bridges</span>
+                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
+                  <span>Travel Dating &amp; Scenic Escapes</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Gokarna Coastal Trails &amp; Hampi</span>
+                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
+                  <span>Weekend Road Trips &amp; Stargazing</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Spiti Valley Circuit Expedition</span>
+                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
+                  <span>Coastal Trails: Gokarna &amp; Varkala</span>
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
+                </Link>
+              </li>
+              <li>
+                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
+                  <span>Backpacking Meghalaya &amp; Spiti</span>
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Trust & Verification */}
-          <div>
+          {/* Col 4: Explorer Newsletter (Compact in footer grid) */}
+          <div className="space-y-3">
             <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Trust &amp; Verification</span>
+              <Mail className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Explorer Newsletter</span>
             </h3>
-            <p className="text-slate-400 leading-relaxed mb-4 text-xs">
-              Every member verifies their identity via government ID or verified social handles. Direct chats unlock strictly after mutual approval.
+            <p className="text-slate-400 text-xs leading-relaxed">
+              Curated weekend companion meetups, hidden treks, and travel dating drops sent every Thursday.
             </p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-slate-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>Zero unsolicited spam DMs</span>
+
+            {subscribed ? (
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Subscribed! Check your inbox.</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
-                <span>Rupee budget transparency</span>
-              </div>
-            </div>
+            ) : (
+              <form onSubmit={handleNewsletterSubmit} className="space-y-2 pt-1">
+                <div className="relative">
+                  <input
+                    type="email"
+                    required
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="w-full pl-3 pr-16 py-2 rounded-xl border border-emerald-950/90 bg-[#09100c] text-white text-xs placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                  />
+                  <button
+                    type="submit"
+                    disabled={subscribing}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-[11px] shadow-xs transition-all flex items-center gap-1 disabled:opacity-50 cursor-pointer"
+                  >
+                    {subscribing ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <span>Join</span>
+                    )}
+                  </button>
+                </div>
+                <p className="text-[10px] text-slate-500 flex items-center gap-1">
+                  <span>🔒 Zero spam • One-click unsubscribe</span>
+                </p>
+              </form>
+            )}
           </div>
         </div>
 

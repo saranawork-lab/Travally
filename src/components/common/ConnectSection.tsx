@@ -1,0 +1,327 @@
+"use client";
+
+import React, { useState } from "react";
+import emailjs from "@emailjs/browser";
+import {
+  Send,
+  Mail,
+  User,
+  Phone,
+  MessageSquare,
+  Sparkles,
+  Loader2,
+  Clock,
+  ShieldCheck,
+} from "lucide-react";
+import { NotificationPopup } from "./NotificationPopup";
+
+export const ConnectSection: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "General Inquiry",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  const SERVICE_ID =
+    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_t9dwwep";
+  const TEMPLATE_ID =
+    process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_lecnff3";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus(null);
+
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setStatus({
+        type: "error",
+        message: "Please fill in your name, email, and message.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const templateParams = {
+      from_name: formData.name.trim(),
+      name: formData.name.trim(),
+      from_email: formData.email.trim(),
+      email: formData.email.trim(),
+      reply_to: formData.email.trim(),
+      phone: formData.phone.trim() || "Not specified",
+      subject: formData.subject,
+      message: formData.message.trim(),
+    };
+
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
+
+    try {
+      if (publicKey) {
+        await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, publicKey);
+      } else {
+        // Fallback to backend route /api/connect
+        const res = await fetch("/api/connect", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to deliver message.");
+        }
+      }
+
+      setStatus({
+        type: "success",
+        message: "Your message has been sent successfully! Our team will get back to you shortly.",
+      });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "General Inquiry",
+        message: "",
+      });
+    } catch (err: any) {
+      console.error("[Connect] Error:", err);
+      setStatus({
+        type: "error",
+        message:
+          err?.text ||
+          err?.message ||
+          "Could not send email right now. Please try again or reach out to support.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section
+      id="connect"
+      className="scroll-mt-28 py-16 sm:py-24 px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70"
+    >
+      {/* Toast popup */}
+      <NotificationPopup
+        show={Boolean(status)}
+        type={status?.type || "success"}
+        message={status?.message || ""}
+        onClose={() => setStatus(null)}
+      />
+
+      {/* ── BIG OUTER BOX ── */}
+      <div className="w-full bg-gradient-to-br from-emerald-500/10 via-amber-500/5 to-emerald-500/5 dark:from-emerald-950/40 dark:via-slate-900 dark:to-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/60 rounded-3xl p-5 sm:p-8 lg:p-10 shadow-xl space-y-8">
+        
+        {/* Header INSIDE the big box */}
+        <div className="text-center max-w-2xl mx-auto space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-black border border-emerald-200 dark:border-emerald-800/60 uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+            <span>DIRECT CONNECT • REACH OUR TEAM</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+            Let’s Connect &amp; Explore Together
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+            Have an inquiry, partnership proposal, or travel question? Send a message directly to our team.
+          </p>
+        </div>
+
+        {/* ── SIDE BY SIDE CONTENT INSIDE THE BIG BOX ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+          
+          {/* Left Side: Communication Channel Information Box */}
+          <div className="lg:col-span-5 bg-white/70 dark:bg-slate-900/60 border border-emerald-100 dark:border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-xs">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2.5">
+                  <span className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 font-bold">
+                    <Mail className="w-4 h-4" />
+                  </span>
+                  Direct Channel
+                </h3>
+
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/60 dark:border-emerald-800/60 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 shrink-0">
+                  <Clock className="w-3 h-3 text-emerald-500" />
+                  <span>Replies &lt; 2h</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                We love hearing from travelers, activity organizers, and partners. Messages sent through this form arrive directly in our team inbox.
+              </p>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200/60 dark:border-white/5 shadow-xs">
+                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 font-bold">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-slate-900 dark:text-slate-200">
+                    Rapid Turnaround
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Average response under 2 business hours
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200/60 dark:border-white/5 shadow-xs">
+                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0 font-bold">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-slate-900 dark:text-slate-200">
+                    Community &amp; Safety Team
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Dedicated support for safety &amp; trips
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: The Details Taking & Sending Box */}
+          <div className="lg:col-span-7 bg-white dark:bg-[#0c1410] border border-slate-200/80 dark:border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-md flex flex-col justify-between">
+            <div className="mb-4 pb-2 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Send Us a Message
+              </span>
+              <span className="text-[11px] text-slate-400 dark:text-slate-500">
+                * Required fields
+              </span>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                    Full Name <span className="text-rose-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      placeholder="Enter your name"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                    Email Address <span className="text-rose-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      placeholder="Enter your email"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                    Phone (Optional)
+                  </label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                      placeholder="Optional phone number"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                    Subject / Topic
+                  </label>
+                  <select
+                    value={formData.subject}
+                    onChange={(e) =>
+                      setFormData({ ...formData, subject: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                  >
+                    <option value="General Inquiry">General Inquiry</option>
+                    <option value="Partnership & Sponsorship">Partnership &amp; Sponsorship</option>
+                    <option value="Travel Companion Feedback">Travel Companion Feedback</option>
+                    <option value="Safety & Verification Support">Safety &amp; Verification Support</option>
+                    <option value="Feature Request">Feature Request</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                  Your Message <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <MessageSquare className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <textarea
+                    required
+                    rows={4}
+                    value={formData.message}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
+                    placeholder="How can we help? Share your trip ideas, questions, or collaboration details..."
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition resize-none"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 px-6 rounded-full font-bold text-xs sm:text-sm text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border border-orange-300/80 dark:border-emerald-400/50 shadow-md transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Transmitting Message...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Send Message
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ConnectSection;

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { signToken, AuthService } from "@/lib/auth";
+import { findUserByIdentifier } from "@/lib/userAccountLookup";
 
 // Default Indian demo persona profiles if needed for on-the-fly MongoDB seeding
 const DEFAULT_DEMO_USERS: Record<string, any> = {
@@ -139,41 +140,17 @@ export async function POST(req: NextRequest) {
           include: { profile: true },
         });
       }
+
+      // If still not found, check if identifier is a registered phone number
+      if (!user) {
+        user = await findUserByIdentifier(normalized);
+      }
     } catch (dbQueryErr: any) {
       console.warn("MongoDB connection issue during findUser:", dbQueryErr?.message);
     }
 
-    // If demo user is missing in MongoDB for any reason (or DB is unreachable), ensure demo persona works
-    if (!user && DEFAULT_DEMO_USERS[targetPrimary]) {
-      const demoData = DEFAULT_DEMO_USERS[targetPrimary];
-      const defaultHash = await bcrypt.hash("Password123!", 10);
-      try {
-        user = await db.user.create({
-          data: {
-            email: demoData.email,
-            passwordHash: defaultHash,
-            role: demoData.role,
-            profile: {
-              create: demoData.profile,
-            },
-          },
-          include: { profile: true },
-        });
-      } catch (createErr: any) {
-        console.warn("Could not upsert demo user to DB (connection issue):", createErr?.message);
-        // Resilient fallback: Provide instant demo user session so 1-click logins NEVER hang or fail
-        user = {
-          id: demoData.id || "6abbae1957dd73964376c65d",
-          email: demoData.email,
-          role: demoData.role,
-          passwordHash: defaultHash,
-          profile: demoData.profile,
-        };
-      }
-    }
-
     if (!user) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+      return NextResponse.json({ error: "Invalid email, phone number, or password" }, { status: 401 });
     }
 
     // Demo password tolerance for seeded testing accounts
@@ -216,7 +193,7 @@ export async function POST(req: NextRequest) {
         isVerified: user.profile?.isVerified,
         verificationStatus: user.profile?.verificationStatus,
       },
-      redirectUrl: user.role === "ADMIN" ? "/admin" : "/discover",
+      redirectUrl: user.role === "ADMIN" ? "/admin" : "/tracking",
     });
 
     response.cookies.set({

@@ -41,6 +41,9 @@ model Profile {
   age                   Int?
   gender                String?   // MALE, FEMALE, NON_BINARY, OTHER, PREFER_NOT_TO_SAY
   city                  String?
+  region                String?
+  address               String?
+  pincode               String?
   country               String?
   interests             String    @default("[]") // JSON string array: ["Cinema", "Coffee", "Hiking"]
   preferredActivities   String    @default("[]") // JSON string array
@@ -233,4 +236,12 @@ model Report {
   status      String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
   actionTaken String?
   createdAt   DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  email        String    @unique
+  subscribedAt DateTime  @default(now())
+  isActive     Boolean   @default(true)
+  metadata     String?
 }

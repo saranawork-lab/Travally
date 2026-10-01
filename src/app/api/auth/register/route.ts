@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { signToken, AuthService } from "@/lib/auth";
+import { evaluatePassword, getPasswordErrorMessage } from "@/lib/passwordValidation";
+import { extractDigits } from "@/lib/userAccountLookup";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,12 +12,19 @@ export async function POST(req: NextRequest) {
       email,
       password,
       displayName,
+      address,
+      region,
       city,
+      pincode,
       gender,
       birthDate,
       bio,
       interests,
       preferredActivities,
+      smokingHabit,
+      drinkingHabit,
+      dietaryPreference,
+      lifestyleTags,
       connectionPreferences,
       linkedinUrl,
     } = body;
@@ -27,9 +36,33 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (password.length < 8) {
+    // Strict email format check
+    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!EMAIL_REGEX.test(email.trim())) {
       return NextResponse.json(
-        { error: "Password must be at least 8 characters long." },
+        { error: "Please enter a valid email address (e.g. name@example.com)." },
+        { status: 400 }
+      );
+    }
+
+    // Mandatory pincode check
+    const cleanPincode = (pincode || "").toString().replace(/[^0-9]/g, "");
+    if (!cleanPincode || cleanPincode.length !== 6) {
+      return NextResponse.json(
+        { error: "Pincode is mandatory and must be a 6-digit postal code." },
+        { status: 400 }
+      );
+    }
+
+    // Password strength check: min 8 char, one Cap, small, number, special char
+    const passwordEvaluation = evaluatePassword(password);
+    if (!passwordEvaluation.isValid) {
+      return NextResponse.json(
+        {
+          error:
+            getPasswordErrorMessage(passwordEvaluation) ||
+            "Password must have at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.",
+        },
         { status: 400 }
       );
     }
@@ -40,9 +73,21 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "An account with this email already exists." },
+        { error: "An account with this email already exists. Please sign in instead." },
         { status: 409 }
       );
+    }
+
+    // Validate phone number format if provided
+    const rawPhone = body.phoneNumber || connectionPreferences?.phoneNumber;
+    if (rawPhone && typeof rawPhone === "string" && rawPhone.trim()) {
+      const cleanDigits = extractDigits(rawPhone);
+      if (cleanDigits.length < 10) {
+        return NextResponse.json(
+          { error: "Please enter a valid 10-digit mobile phone number." },
+          { status: 400 }
+        );
+      }
     }
 
     let calculatedAge: number | undefined = undefined;
@@ -66,6 +111,31 @@ export async function POST(req: NextRequest) {
     const joinRank = totalExistingUsers + 1;
     const membershipNumber = `TRV-${String(joinRank).padStart(4, "0")}`;
 
+    // Prepare connectionPreferences with saved phone number
+    let finalConnPrefs: Record<string, any> = { friendship: true, activityPartner: true };
+    if (connectionPreferences) {
+      if (typeof connectionPreferences === "string") {
+        try {
+          finalConnPrefs = JSON.parse(connectionPreferences);
+        } catch {
+          finalConnPrefs = { friendship: true, activityPartner: true };
+        }
+      } else {
+        finalConnPrefs = { ...connectionPreferences };
+      }
+    }
+    if (rawPhone && typeof rawPhone === "string" && rawPhone.trim()) {
+      finalConnPrefs.phoneNumber = rawPhone.trim();
+    }
+    if (address && typeof address === "string") finalConnPrefs.address = address.trim();
+    if (region && typeof region === "string") finalConnPrefs.region = region.trim();
+    if (city && typeof city === "string") finalConnPrefs.city = city.trim();
+    if (pincode && typeof pincode === "string") finalConnPrefs.pincode = pincode.trim();
+    if (smokingHabit) finalConnPrefs.smokingHabit = smokingHabit;
+    if (drinkingHabit) finalConnPrefs.drinkingHabit = drinkingHabit;
+    if (dietaryPreference) finalConnPrefs.dietaryPreference = dietaryPreference;
+    if (Array.isArray(lifestyleTags)) finalConnPrefs.lifestyleTags = lifestyleTags;
+
     const newUser = await db.user.create({
       data: {
         email: email.toLowerCase().trim(),
@@ -74,8 +144,11 @@ export async function POST(req: NextRequest) {
         profile: {
           create: {
             displayName: displayName.trim(),
-            avatarUrl: `https://avatar.vercel.sh/${encodeURIComponent(displayName)}`,
+            avatarUrl: "/default-avatar.png",
             city: city ? city.trim() : null,
+            region: region ? region.trim() : null,
+            address: address ? address.trim() : null,
+            pincode: pincode ? pincode.trim() : null,
             gender: gender || "PREFER_NOT_TO_SAY",
             birthDate: parsedBirthDate,
             age: calculatedAge,
@@ -84,7 +157,7 @@ export async function POST(req: NextRequest) {
             preferredActivities: JSON.stringify(
               Array.isArray(preferredActivities) ? preferredActivities : []
             ),
-            connectionPreferences: JSON.stringify(connectionPreferences || { friendship: true, activityPartner: true }),
+            connectionPreferences: JSON.stringify(finalConnPrefs),
             isVerified: false,
             verificationStatus: "UNVERIFIED",
             linkedinUrl: linkedinUrl ? linkedinUrl.trim() : null,

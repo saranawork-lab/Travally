@@ -12,6 +12,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@prisma/client": "^5.21.1",
     "@types/three": "^0.186.0",
     "bcryptjs": "^2.4.3",
@@ -22,6 +23,7 @@
     "next": "14.2.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "resend": "^6.31.0",
     "tailwind-merge": "^2.5.4",
     "three": "^0.186.1"
   },

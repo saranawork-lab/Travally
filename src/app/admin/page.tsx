@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   UserCheck,
   RefreshCw,
+  Mail,
 } from "lucide-react";
 import { formatTimeAgo } from "@/lib/utils";
 
@@ -98,12 +99,20 @@ export default function AdminModerationPage() {
           </p>
         </div>
 
-        <button
-          onClick={fetchReports}
-          className="p-2 rounded-xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:bg-slate-100 dark:hover:bg-dark-elevated text-xs flex items-center gap-1 text-slate-600 dark:text-slate-300 transition shadow-xs"
-        >
-          <RefreshCw className="w-3.5 h-3.5" /> Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/newsletter"
+            className="px-3 py-2 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-xs font-bold flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300 transition shadow-xs"
+          >
+            <Mail className="w-3.5 h-3.5" /> Newsletter Center
+          </Link>
+          <button
+            onClick={fetchReports}
+            className="p-2 rounded-xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:bg-slate-100 dark:hover:bg-dark-elevated text-xs flex items-center gap-1 text-slate-600 dark:text-slate-300 transition shadow-xs"
+          >
+            <RefreshCw className="w-3.5 h-3.5" /> Refresh
+          </button>
+        </div>
       </div>
 
       {loading ? (

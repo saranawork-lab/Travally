@@ -99,19 +99,15 @@ export const BrandIntroLoader: React.FC = () => {
               phase === "spinning" ? "opacity-100 scale-100" : "opacity-0 scale-75"
             }`}
           >
-            <div className="text-xl sm:text-2xl font-black tracking-tight flex items-center justify-center gap-1">
-              <span className="text-orange-500">Tra</span>
-              <span
-                className="bg-gradient-to-r from-orange-500 to-emerald-500 bg-clip-text text-transparent inline-block"
+            <div className="text-xl sm:text-2xl font-black tracking-tight flex items-center justify-center">
+              <span className="text-orange-500">Tra</span><span
+                className="bg-gradient-to-r from-orange-500 to-emerald-500 bg-clip-text text-transparent inline"
                 style={{
                   backgroundImage: "linear-gradient(to right, #f97316 0%, #10b981 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
-              >
-                va
-              </span>
-              <span className="text-emerald-600">lly</span>
+              >va</span><span className="text-emerald-600">lly</span>
             </div>
             <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase mt-1">
               Your Solo Travel Companion

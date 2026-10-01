@@ -280,11 +280,9 @@ export default function MyProfilePage() {
                 onChange={(e) => setGender(e.target.value)}
                 className="w-full rounded-2xl border border-slate-300 dark:border-dark-border bg-white dark:bg-dark-elevated px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
               >
-                <option value="FEMALE">Female</option>
                 <option value="MALE">Male</option>
-                <option value="NON_BINARY">Non-Binary</option>
-                <option value="OTHER">Other</option>
-                <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Others</option>
               </select>
             </div>
           </div>

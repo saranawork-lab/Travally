@@ -5,6 +5,10 @@ import Navbar from "@/components/layout/Navbar";
 import BottomNav from "@/components/layout/BottomNav";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { getCurrentUser } from "@/lib/auth";
+import { AuthProvider } from "@/context/AuthContext";
+import BrandIntroLoader from "@/components/common/BrandIntroLoader";
+import DesktopSidebar from "@/components/layout/DesktopSidebar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -38,13 +42,15 @@ export const metadata: Metadata = {
     description:
       "Find companions for everyday activities and travel adventures with mutual approval and safe coordination.",
   },
+  icons: {
+    icon: [
+      { url: "/brand-logo.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/brand-logo.png",
+    apple: "/brand-logo.png",
+  },
 };
-
-import { getCurrentUser } from "@/lib/auth";
-import { AuthProvider } from "@/context/AuthContext";
-
-import BrandIntroLoader from "@/components/common/BrandIntroLoader";
-import DesktopSidebar from "@/components/layout/DesktopSidebar";
 
 export default async function RootLayout({
   children,

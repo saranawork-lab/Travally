@@ -23,7 +23,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   if (!mounted) {
     return (
       <div
-        className={`w-9 h-9 rounded-full border border-slate-200 dark:border-emerald-900/50 bg-slate-100 dark:bg-[#131c18] animate-pulse ${className}`}
+        className={`w-14 h-8 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 animate-pulse ${className}`}
       />
     );
   }
@@ -31,42 +31,56 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   const isDark = resolvedTheme === "dark";
 
   return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      title={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      className={`group relative flex items-center gap-2 p-2 rounded-full border transition-all duration-200 ${
-        isDark
-          ? "bg-[#131c18] border-emerald-800/40 text-emerald-400 hover:text-emerald-300 hover:border-emerald-500/60 hover:bg-[#18241f] shadow-sm shadow-emerald-950/50"
-          : "bg-white border-slate-200 text-slate-700 hover:text-orange-600 hover:border-orange-300 hover:bg-orange-50/50 shadow-sm"
-      } ${className}`}
-    >
-      <div className="relative w-5 h-5 flex items-center justify-center">
-        {/* Sun Icon for switching to light mode */}
-        <Sun
-          className={`w-4 h-4 transition-all duration-300 ${
+    <div className={`inline-flex items-center gap-2.5 ${className}`}>
+      <button
+        type="button"
+        onClick={toggleTheme}
+        aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+        title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+        className="group relative w-14 h-8 rounded-full p-1 cursor-pointer select-none transition-colors duration-500 ease-in-out border shadow-inner focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 bg-slate-200 hover:bg-slate-300/80 border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700"
+      >
+        {/* Background Icons on track */}
+        <div className="absolute inset-0 px-2 flex items-center justify-between pointer-events-none">
+          {/* Sun on left */}
+          <Sun
+            className={`w-3.5 h-3.5 transition-all duration-300 ${
+              isDark
+                ? "text-slate-500 opacity-40 scale-75"
+                : "text-amber-500 opacity-90 scale-100"
+            }`}
+          />
+          {/* Moon on right */}
+          <Moon
+            className={`w-3.5 h-3.5 transition-all duration-300 ${
+              isDark
+                ? "text-indigo-400 opacity-90 scale-100"
+                : "text-slate-400 opacity-40 scale-75"
+            }`}
+          />
+        </div>
+
+        {/* Sliding Thumb Knob with Spring Animation */}
+        <div
+          className={`relative z-10 w-6 h-6 rounded-full bg-white dark:bg-[#0f172a] shadow-md flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
             isDark
-              ? "rotate-0 scale-100 text-emerald-400"
-              : "-rotate-90 scale-0 opacity-0 absolute"
+              ? "translate-x-6 text-indigo-400 shadow-indigo-950/50"
+              : "translate-x-0 text-amber-500 shadow-slate-400/30"
           }`}
-        />
-        {/* Moon Icon for switching to dark mode */}
-        <Moon
-          className={`w-4 h-4 transition-all duration-300 ${
-            isDark
-              ? "rotate-90 scale-0 opacity-0 absolute"
-              : "rotate-0 scale-100 text-slate-700 group-hover:text-orange-600"
-          }`}
-        />
-      </div>
+        >
+          {isDark ? (
+            <Moon className="w-3.5 h-3.5 transform transition-transform duration-500 -rotate-12 group-hover:rotate-0" />
+          ) : (
+            <Sun className="w-3.5 h-3.5 transform transition-transform duration-500 rotate-0 group-hover:rotate-45" />
+          )}
+        </div>
+      </button>
 
       {showLabel && (
-        <span className="text-xs font-semibold select-none pr-1">
-          {isDark ? "Light Mode" : "Dark Mode"}
+        <span className="text-xs font-bold text-slate-700 dark:text-gray-300 select-none">
+          {isDark ? "Dark" : "Light"}
         </span>
       )}
-    </button>
+    </div>
   );
 };
 

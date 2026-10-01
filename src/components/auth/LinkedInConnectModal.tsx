@@ -61,7 +61,7 @@ export const LinkedInConnectModal: React.FC<LinkedInConnectModalProps> = ({
       }
 
       // Hard redirect to load session cookies cleanly
-      window.location.href = "/discover?verified=linkedin";
+      window.location.href = "/tracking";
     } catch (err: any) {
       setError(err.message || "Failed to complete LinkedIn verification");
       setLoading(false);

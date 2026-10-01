@@ -80,7 +80,7 @@ export const DemoUserSwitcher: React.FC = () => {
       });
       if (res.ok) {
         setCurrentUserEmail(account.email);
-        window.location.href = account.id === "admin" ? "/admin" : "/discover";
+        window.location.href = account.id === "admin" ? "/admin" : "/tracking";
       } else {
         alert("Failed to switch account");
       }

@@ -99,18 +99,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
     };
   }, [isProfileOpen]);
 
-  // 1. NEVER render sidebar when not logged in
-  if (!currentUser) return null;
 
-  // 2. NEVER render on public landing page or auth pages
-  if (pathname === "/" || pathname === "/login" || pathname === "/register") {
-    return null;
-  }
-
-  // 3. Never render sidebar inside an active private chat room (chat has its own dedicated full-height view)
-  if (pathname?.startsWith("/chats/") && pathname !== "/chats") {
-    return null;
-  }
 
   // Mouse hover handlers
   const handleMouseEnter = () => {
@@ -156,6 +145,18 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = () => {
   const isChats = pathname.startsWith("/chats");
   const isSafety = pathname.startsWith("/safety");
   const isProfileActive = pathname.startsWith("/profile") || pathname.startsWith("/settings");
+
+  // Hide sidebar when not logged in, or on landing, full-screen onboarding, login, register, and single chat rooms
+  if (
+    !currentUser ||
+    pathname === "/" ||
+    pathname?.startsWith("/onboarding") ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    (pathname?.startsWith("/chats/") && pathname !== "/chats")
+  ) {
+    return null;
+  }
 
   const navItems = [
     {

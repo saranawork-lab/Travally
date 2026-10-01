@@ -3,9 +3,5 @@ export { ModeToggle } from "./ModeToggle";
 export type { AppMode } from "./ModeToggle";
 export { ReportModal } from "./ReportModal";
 export { VerificationBadge } from "./VerificationBadge";
-export {
-  EmvChip,
-  ContactlessIcon,
-  TvlyCardBadge,
-  VideoBriefingPill,
-} from "./DigitalPassElements";
+export { ConnectSection } from "./ConnectSection";
+export { NotificationPopup } from "./NotificationPopup";

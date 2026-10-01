@@ -24,10 +24,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   const pathname = usePathname();
   const router = useRouter();
   const [mode, setMode] = useState<AppMode>(initialMode);
-  const { currentUser, logout: handleLogout } = useAuth();
+  const { currentUser } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -39,42 +41,6 @@ export const Navbar: React.FC<NavbarProps> = ({
       }
     }
   }, [pathname]);
-
-  const handleMobileSearch = (q: string) => {
-    setSearchQuery(q);
-    // Instant real-time event for zero-latency UI update across companion and travel feeds
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("travally-search", { detail: q }));
-      const params = new URLSearchParams(window.location.search);
-      if (q.trim()) {
-        params.set("search", q.trim());
-      } else {
-        params.delete("search");
-      }
-      const currentMode = params.get("mode") || (pathname.startsWith("/travel") ? "travel" : "companion");
-      params.set("mode", currentMode);
-      router.replace(`/discover?${params.toString()}`);
-    }
-  };
-
-  // Hide global navbar inside active chat rooms (chat has its own complete header)
-  if (pathname?.startsWith("/chats/") && pathname !== "/chats") {
-    return null;
-  }
-
-  const handleModeSwitch = (newMode: AppMode) => {
-    setMode(newMode);
-    if (onModeChange) {
-      onModeChange(newMode);
-    } else {
-      const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("search") : null;
-      const query = search ? `?mode=${newMode}&search=${encodeURIComponent(search)}` : `?mode=${newMode}`;
-      router.push(`/discover${query}`);
-    }
-  };
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -89,7 +55,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   // Track scroll position to transition the navbar on the landing page
   useEffect(() => {
     const handleScroll = () => {
-      // Transition when scrolled past 80% of the viewport (near the end of the hero section)
       setIsScrolled(window.scrollY > (window.innerHeight * 0.8));
     };
     
@@ -105,9 +70,42 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsSidebarOpen(false);
   }, [pathname]);
 
+  const handleMobileSearch = (q: string) => {
+    setSearchQuery(q);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("travally-search", { detail: q }));
+      const params = new URLSearchParams(window.location.search);
+      if (q.trim()) {
+        params.set("search", q.trim());
+      } else {
+        params.delete("search");
+      }
+      const currentMode = params.get("mode") || (pathname.startsWith("/travel") ? "travel" : "companion");
+      params.set("mode", currentMode);
+      router.replace(`/discover?${params.toString()}`);
+    }
+  };
+
+  const handleModeSwitch = (newMode: AppMode) => {
+    setMode(newMode);
+    if (onModeChange) {
+      onModeChange(newMode);
+    } else {
+      const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("search") : null;
+      const query = search ? `?mode=${newMode}&search=${encodeURIComponent(search)}` : `?mode=${newMode}`;
+      router.push(`/discover${query}`);
+    }
+  };
+
+  // Hide global navbar inside active chat rooms and full-screen onboarding (AFTER all hooks have executed)
+  if (
+    (pathname?.startsWith("/chats/") && pathname !== "/chats") ||
+    pathname?.startsWith("/onboarding")
+  ) {
+    return null;
+  }
+
   const isAuthOrLandingPage = pathname === "/" || pathname === "/login" || pathname === "/register";
-  // On landing, login, register: keep the original brand intro/stay animation.
-  // On in-app pages (logged-in): animate ONLY when sidebar is open! When sidebar is closed: STRICTLY NO ANIMATION!
   const shouldAnimateLogo = isAuthOrLandingPage ? true : isSidebarOpen;
 
   // Determine navbar styles based on route and scroll
@@ -124,7 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     }`}>
       <div className="w-full px-3 sm:px-8 md:px-10 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4 relative">
         {/* Brand Area */}
-        <div className="flex items-center gap-2 flex-1 sm:flex-initial min-w-0">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Desktop/Tablet Logo: Animates ONLY when sidebar opens (or on login/register/landing) */}
           <Link
             href="/"
@@ -138,19 +136,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           </Link>
 
           {/* Mobile Responsive: Single Clean Logo when logged out/landing, or LogoMark + Search when logged in */}
-          <div className="flex sm:hidden items-center gap-2 w-full min-w-0">
+          <div className="flex sm:hidden items-center gap-1.5 shrink-0">
             {currentUser && pathname !== "/" ? (
               <>
                 <Link
-                  href="/discover"
+                  href="/"
                   className="flex items-center shrink-0 transition hover:opacity-90"
                   title="Travally"
                 >
                   <LogoMark size={28} animate={isAuthOrLandingPage} />
                 </Link>
 
-                <div className="relative flex-1 min-w-0 max-w-[210px] xs:max-w-[250px]">
-                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <div className="relative flex-1 min-w-0 max-w-[140px] xs:max-w-[180px]">
+                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
                     type="text"
                     value={searchQuery}
@@ -159,7 +157,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     onBlur={() => setIsSearchFocused(false)}
                     placeholder={isSearchFocused ? "" : "Travally"}
                     aria-label="Search Travally"
-                    className="w-full pl-8 pr-7 py-1.5 rounded-full bg-slate-100/90 dark:bg-[#16201b] border border-slate-200/90 dark:border-emerald-950/80 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all shadow-inner"
+                    className="w-full pl-7 pr-6 py-1.5 rounded-full bg-slate-100/90 dark:bg-[#16201b] border border-slate-200/90 dark:border-emerald-950/80 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
                   />
                   {searchQuery ? (
                     <button
@@ -174,57 +172,57 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               </>
             ) : (
-              <Link href="/" className="flex items-center gap-1.5 transition hover:opacity-90">
-                <Logo size={28} showText />
+              <Link href="/" className="flex items-center gap-1 transition hover:opacity-90 shrink-0">
+                <Logo size={26} showText textClassName="text-base sm:text-xl font-black tracking-tight" />
               </Link>
             )}
           </div>
         </div>
 
-        {/* ── LOGGED-IN NAV: Central Mode Toggle (In-App Pages Only) ── */}
-        {currentUser && pathname !== "/" && (
+        {/* ── LOGGED-IN NAV: Central Mode Toggle (In-App Pages Only, NOT on login/register/landing) ── */}
+        {currentUser && pathname !== "/" && pathname !== "/login" && pathname !== "/register" && (
           <div className="hidden sm:flex items-center justify-center absolute left-1/2 -translate-x-1/2 pointer-events-auto">
             <ModeToggle currentMode={mode} onModeChange={handleModeSwitch} size="sm" />
           </div>
         )}
 
         {/* Right Actions: Theme Toggle, Notifications & Profile / Auth */}
-        <div className="flex items-center gap-2">
-          {/* Functional Light/Dark Mode Switcher: ONLY for logged-in users, hidden on landing, login & register */}
-          {currentUser && pathname !== "/" && pathname !== "/login" && pathname !== "/register" && <ThemeToggle />}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-auto">
+          {/* Functional Light/Dark Mode Switcher: scaled slightly on mobile to guarantee comfortable fit */}
+          <div className="scale-[0.82] sm:scale-100 origin-right -mr-1 sm:mr-0 shrink-0">
+            <ThemeToggle />
+          </div>
 
-          {currentUser && pathname !== "/" ? (
+          {currentUser && pathname !== "/" && pathname !== "/login" && pathname !== "/register" ? (
             <NotificationDropdown />
           ) : (
-            <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3">
               {currentUser && pathname === "/" ? (
-                <>
-                  <Link
-                    href="/discover"
-                    className={`px-5 py-2 rounded-full text-xs font-bold transition-all shadow-xs border ${
-                      isTransparent 
-                        ? "text-emerald-900 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 border-emerald-300 hover:from-emerald-200 hover:to-teal-100"
-                        : "text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border-emerald-300/80 dark:border-emerald-800/60"
-                    }`}
-                  >
-                    Go to App
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className={`px-3.5 py-2 rounded-full text-xs font-semibold transition-colors ${
-                      isTransparent
-                        ? "text-white/80 hover:text-white"
-                        : "text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400"
-                    }`}
-                  >
-                    Sign Out
-                  </button>
-                </>
+                <Link
+                  href="/tracking"
+                  className="px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs font-bold transition-all shadow-xs border whitespace-nowrap text-slate-900 dark:text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border-orange-300/80 dark:border-emerald-400/50 hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Go to App
+                </Link>
+              ) : pathname === "/login" ? (
+                <Link
+                  href="/register"
+                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold text-slate-900 dark:text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border border-orange-300/80 dark:border-emerald-400/50 shadow-xs whitespace-nowrap hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Join Free
+                </Link>
+              ) : pathname === "/register" ? (
+                <Link
+                  href="/login"
+                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition whitespace-nowrap"
+                >
+                  Log In
+                </Link>
               ) : (
                 <>
                   <Link
                     href="/login"
-                    className={`px-4 py-2 rounded-full text-xs font-bold transition-colors ${
+                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                       isTransparent
                         ? "text-white/90 hover:text-white hover:bg-white/10"
                         : "text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#131c18]"
@@ -234,11 +232,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </Link>
                   <Link
                     href="/register"
-                    className={`px-5 py-2 rounded-full text-xs font-bold transition-all shadow-xs border hover:scale-[1.02] active:scale-[0.98] ${
-                      isTransparent
-                        ? "text-emerald-900 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 border-emerald-300 hover:from-emerald-200 hover:to-teal-100"
-                        : "text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border-emerald-300/80 dark:border-emerald-800/60"
-                    }`}
+                    className="px-3 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all shadow-xs border hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap text-slate-900 dark:text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border-orange-300/80 dark:border-emerald-400/50"
                   >
                     Join Free
                   </Link>

@@ -68,18 +68,14 @@ export const Logo: React.FC<LogoProps> = ({
       <LogoMark size={size} animate={animate} animateType={animateType} />
       {showText && variant === "full" && (
         <div className={`flex items-center tracking-tight font-black select-none ${textClassName}`}>
-          <span className="text-orange-500 dark:text-orange-400">Tra</span>
-          <span
-            className="bg-gradient-to-r from-orange-500 to-emerald-500 dark:from-orange-400 dark:to-emerald-400 bg-clip-text text-transparent inline-block"
+          <span className="text-orange-500 dark:text-orange-400">Tra</span><span
+            className="bg-gradient-to-r from-orange-500 to-emerald-500 dark:from-orange-400 dark:to-emerald-400 bg-clip-text text-transparent inline"
             style={{
               backgroundImage: "linear-gradient(to right, #f97316 0%, #10b981 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
-          >
-            va
-          </span>
-          <span className="text-emerald-600 dark:text-emerald-400">lly</span>
+          >va</span><span className="text-emerald-600 dark:text-emerald-400">lly</span>
         </div>
       )}
     </div>

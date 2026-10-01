@@ -194,7 +194,7 @@ export async function GET(req: NextRequest) {
       role: user.role,
     });
 
-    const successRedirect = new URL("/discover", appUrl);
+    const successRedirect = new URL("/tracking", appUrl);
     successRedirect.searchParams.set("verified", "linkedin");
     successRedirect.searchParams.set("welcome", encodeURIComponent(displayName));
 

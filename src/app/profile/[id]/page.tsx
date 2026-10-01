@@ -202,15 +202,45 @@ export default function PublicProfilePage() {
           </div>
         )}
 
-        {/* Connection Intentions */}
-        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-elevated border border-slate-200/60 dark:border-dark-border text-xs space-y-2">
-          <span className="font-bold text-slate-800 dark:text-slate-200 block">Connection Intent</span>
-          <div className="flex flex-wrap gap-3 text-slate-600 dark:text-slate-400">
-            {connPrefs.friendship && <span>• Open to friendship</span>}
-            {connPrefs.activityPartner && <span>• Seeking activity companions</span>}
-            {connPrefs.travel && <span>• Open to travel partnerships</span>}
-            {connPrefs.dating && <span>• Open to romantic dating</span>}
+        {/* Connection Intentions & Lifestyle Badges */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-elevated border border-slate-200/60 dark:border-dark-border text-xs space-y-2">
+            <span className="font-bold text-slate-800 dark:text-slate-200 block">Connection Intent</span>
+            <div className="flex flex-wrap gap-2 text-slate-600 dark:text-slate-400">
+              {connPrefs.friendship && <span className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold">🤝 Friendship</span>}
+              {connPrefs.activityPartner && <span className="px-2.5 py-1 rounded-lg bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-semibold">🎯 Activity Partner</span>}
+              {connPrefs.travel && <span className="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold">✈️ Travel Trips</span>}
+              {connPrefs.dating && <span className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-semibold">❤️ Dating</span>}
+            </div>
           </div>
+
+          {(connPrefs.smokingHabit || connPrefs.drinkingHabit || connPrefs.dietaryPreference || (connPrefs.lifestyleTags && connPrefs.lifestyleTags.length > 0)) && (
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-elevated border border-slate-200/60 dark:border-dark-border text-xs space-y-2">
+              <span className="font-bold text-slate-800 dark:text-slate-200 block">Lifestyle & Compatibility</span>
+              <div className="flex flex-wrap gap-1.5">
+                {connPrefs.smokingHabit && (
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-[11px]">
+                    {connPrefs.smokingHabit === "NON_SMOKER" ? "🚭 Non-Smoker" : connPrefs.smokingHabit === "OCCASIONAL" ? "🚬 Occasional Smoker" : connPrefs.smokingHabit === "REGULAR" ? "💨 Regular Smoker" : "🤐 Smoking: Private"}
+                  </span>
+                )}
+                {connPrefs.drinkingHabit && (
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-[11px]">
+                    {connPrefs.drinkingHabit === "NON_DRINKER" ? "🧃 Non-Drinker" : connPrefs.drinkingHabit === "SOCIAL" ? "🥂 Social Drinker" : connPrefs.drinkingHabit === "REGULAR" ? "🍷 Regular Drinker" : "🤐 Drinking: Private"}
+                  </span>
+                )}
+                {connPrefs.dietaryPreference && (
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-[11px]">
+                    {connPrefs.dietaryPreference === "PURE_VEG" ? "🥗 Pure Veg" : connPrefs.dietaryPreference === "EGGETARIAN" ? "🍳 Eggetarian" : connPrefs.dietaryPreference === "NON_VEG" ? "🍗 Non-Veg" : "🥑 Vegan"}
+                  </span>
+                )}
+                {Array.isArray(connPrefs.lifestyleTags) && connPrefs.lifestyleTags.map((t: string) => (
+                  <span key={t} className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold text-[11px]">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

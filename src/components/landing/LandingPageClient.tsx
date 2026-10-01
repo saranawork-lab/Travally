@@ -22,6 +22,7 @@ import {
   Wallet,
   CheckCircle2,
   HeartHandshake,
+  Heart,
   Tag,
   Bookmark,
   Menu,
@@ -29,6 +30,7 @@ import {
   HelpCircle,
   Coffee,
 } from "lucide-react";
+import { ConnectSection } from "@/components/common/ConnectSection";
 
 /**
  * 3D Tilt Component with Interactive Mouse Perspective & Ambient Mobile Float
@@ -702,18 +704,18 @@ export function LandingPageClient() {
           <div className="lg:col-span-6 space-y-6 order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white text-xs font-black shadow-md shadow-orange-500/30 uppercase tracking-wider">
               <Mountain className="w-3.5 h-3.5" />
-              <span>TRAVEL EXPEDITIONS • MULTI-DAY ITINERARIES</span>
+              <span>TRAVEL EXPEDITIONS • TRAVEL DATING & DATES</span>
             </div>
 
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight text-slate-900 dark:text-white">
-              Multi-day trips with travelers who match your{" "}
+              Multi-day trips &amp; travel dating with people who match your{" "}
               <span className="bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 dark:from-orange-400 dark:via-amber-300 dark:to-rose-200 bg-clip-text text-transparent">
-                dates, pace, and rupee budget.
+                travel dates, vibe, and rupee budget.
               </span>
             </h2>
 
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-              Solo travel in India is thrilling, but sharing cabs, homestays, and trekking trails makes the journey significantly safer and more affordable. The Travel Card displays complete clarity up front:
+              Solo travel in India is thrilling, but sharing cabs, homestays, or finding a romantic travel date makes the journey significantly safer and more exciting. The Travel Card highlights synchronized travel dates and travel dating vibes up front:
             </p>
 
             {/* Feature Breakdown Grid Explaining What the Card Shows */}
@@ -731,14 +733,14 @@ export function LandingPageClient() {
               </div>
 
               <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
-                  <HeartHandshake className="w-4 h-4" />
+                <div className="w-8 h-8 rounded-xl bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold mb-2.5">
+                  <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />
                 </div>
                 <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  2. 94%+ AI Compatibility Score
+                  2. Travel Dating &amp; Synced Dates
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Smart compatibility analyzes travel style (Adventure vs Relaxation), pace, departure cities, and common interests before matching.
+                  Planning a scenic getaway? Filter for verified singles looking for travel dating, or platonic explorers aligned on your exact dates and itinerary.
                 </p>
               </div>
 
@@ -773,7 +775,7 @@ export function LandingPageClient() {
                 href="/register"
                 className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-extrabold text-sm shadow-xl shadow-orange-500/35 hover:shadow-orange-500/50 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span>Join Free to Plan Trips</span>
+                <span>Join Free to Match Travel Dates</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
               </Link>
             </div>
@@ -800,6 +802,10 @@ export function LandingPageClient() {
                     </span>
 
                     <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-bold bg-rose-500/90 text-white backdrop-blur-md border border-rose-400/40 shadow-sm">
+                        <Heart className="w-3 h-3 fill-white text-white" />
+                        <span>Travel Dating</span>
+                      </span>
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40 border border-orange-400/40 animate-pulse">
                         <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
                         <span>1 spot left</span>
@@ -872,7 +878,7 @@ export function LandingPageClient() {
                     </div>
 
                     <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed italic">
-                      &ldquo;A 6-day immersive Himalayan trek covering Parvati Valley, Chalal trail, and hot springs of Manikaran. Staying at cozy boutique hostels.&rdquo;
+                      &ldquo;A 6-day immersive Himalayan trek covering Parvati Valley, Chalal trail, and hot springs of Manikaran. Open to travel dates &amp; compatible travel companions.&rdquo;
                     </p>
 
                     {/* Key Trip Info Grid */}
@@ -883,9 +889,12 @@ export function LandingPageClient() {
                           <Calendar className="w-3.5 h-3.5" />
                         </div>
                         <div className="min-w-0">
-                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Dates</p>
+                          <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Travel Dates</p>
                           <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">Oct 12 - Oct 18</p>
-                          <p className="text-[10px] text-orange-600 dark:text-orange-400 font-semibold">6 Days Duration</p>
+                          <p className="text-[10px] text-rose-500 dark:text-rose-400 font-semibold flex items-center gap-1">
+                            <Heart className="w-2.5 h-2.5 fill-rose-500" />
+                            <span>Travel Dates Synced</span>
+                          </p>
                         </div>
                       </div>
 
@@ -939,6 +948,10 @@ export function LandingPageClient() {
 
                     {/* Planned Attractions Chips */}
                     <div className="flex flex-wrap gap-1.5 pt-0.5">
+                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200/70 dark:border-rose-900/60 flex items-center gap-1">
+                        <Heart className="w-2.5 h-2.5 fill-rose-500" />
+                        Travel Dating Ready
+                      </span>
                       <span className="px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-slate-100 dark:bg-[#18241f] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-emerald-950/60">
                         📍 Parvati Valley
                       </span>
@@ -1069,7 +1082,7 @@ export function LandingPageClient() {
         className={`py-14 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu ${testimonialsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
       >
-        <div className="text-center max-w-2xl mx-auto mb-6 space-y-2">
+        <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
           <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
             COMMUNITY STORIES
           </span>
@@ -1079,29 +1092,6 @@ export function LandingPageClient() {
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
             Stories from verified travelers who turned solo weekends into trusted, lifelong friendships.
           </p>
-        </div>
-
-        {/* Aggregate Trust Badges Strip */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-8 text-xs font-semibold">
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-emerald-950/40 border border-slate-200/80 dark:border-emerald-900/60 shadow-xs">
-            <div className="flex text-amber-400">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-3.5 h-3.5 fill-current" />
-              ))}
-            </div>
-            <span className="font-extrabold text-slate-900 dark:text-white">4.96/5</span>
-            <span className="text-slate-400 dark:text-slate-500">• 2,400+ Verified Reviews</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300 shadow-xs">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span className="font-bold">100% Govt ID Vetted Members</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-50 dark:bg-emerald-950/40 border border-slate-200/80 dark:border-emerald-900/60 text-slate-700 dark:text-slate-300 shadow-xs">
-            <Users className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-            <span>Over 12,000 Verified Explorers</span>
-          </div>
         </div>
 
         {/* Single-Line Smooth Conveyor */}
@@ -1234,7 +1224,10 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* ── 8. FREQUENTLY ASKED QUESTIONS (ACCORDION) ── */}
+      {/* ── 8. CONNECT WITH US (EMAILJS) ── */}
+      <ConnectSection />
+
+      {/* ── 9. FREQUENTLY ASKED QUESTIONS (ACCORDION) ── */}
       <section
         id="faq"
         ref={faqReveal.ref}
@@ -1295,8 +1288,6 @@ export function LandingPageClient() {
           })}
         </div>
       </section>
-
-
     </div>
   );
 }
