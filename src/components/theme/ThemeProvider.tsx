@@ -16,14 +16,14 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const THEME_STORAGE_KEY = "travally_theme";
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>("light");
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // 1. Read stored theme or system preference
+    // 1. Read stored theme or default to dark
     const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-    const initialTheme: Theme = stored || "light";
+    const initialTheme: Theme = stored || "dark";
     setThemeState(initialTheme);
 
     const systemIsDark = window.matchMedia("(prefers-color-scheme: dark)").matches;

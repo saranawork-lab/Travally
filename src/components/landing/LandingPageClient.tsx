@@ -34,7 +34,7 @@ import { ConnectSection } from "@/components/common/ConnectSection";
 import { FirstComePassNotification } from "./FirstComePassNotification";
 
 /**
- * 3D Tilt Component with Interactive Mouse Perspective & Ambient Mobile Float
+ * 3D Tilt Component with Interactive Mouse Perspective & High-Performance Mobile Mode
  */
 function Card3DContainer({
   children,
@@ -54,6 +54,10 @@ function Card3DContainer({
   });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Only perform 3D tilt calculations on desktop precision pointers (avoids mobile scroll jank)
+    if (typeof window !== "undefined" && !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      return;
+    }
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -61,8 +65,8 @@ function Card3DContainer({
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
+    const rotateX = ((y - centerY) / centerY) * -8;
+    const rotateY = ((x - centerX) / centerX) * 8;
 
     setTransform(
       `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
@@ -70,7 +74,7 @@ function Card3DContainer({
     setGlare({
       x: (x / rect.width) * 100,
       y: (y / rect.height) * 100,
-      opacity: 0.35,
+      opacity: 0.3,
     });
   };
 
@@ -86,15 +90,15 @@ function Card3DContainer({
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative transition-all duration-300 ease-out transform-gpu cursor-pointer select-none group/3d"
+      className="relative transition-all duration-300 ease-out transform-gpu cursor-pointer select-none group/3d will-change-transform"
       style={{
         transform,
         transformStyle: "preserve-3d",
       }}
     >
-      {/* 3D Ambient Backdrop Glow */}
+      {/* 3D Ambient Backdrop Glow - Optimized for mobile GPU */}
       <div
-        className={`absolute -inset-4 rounded-3xl blur-2xl opacity-40 group-hover/3d:opacity-70 transition-opacity duration-500 pointer-events-none ${accentColor === "emerald"
+        className={`absolute -inset-3 sm:-inset-4 rounded-3xl blur-lg sm:blur-2xl opacity-35 group-hover/3d:opacity-65 transition-opacity duration-500 pointer-events-none ${accentColor === "emerald"
           ? "bg-gradient-to-tr from-emerald-500/40 via-teal-500/30 to-emerald-400/20"
           : "bg-gradient-to-tr from-orange-500/40 via-amber-500/30 to-rose-500/20"
           }`}
@@ -102,9 +106,9 @@ function Card3DContainer({
 
       {/* Dynamic Lighting Glare Sheen */}
       <div
-        className="absolute inset-0 pointer-events-none rounded-3xl z-40 transition-opacity duration-300"
+        className="absolute inset-0 pointer-events-none rounded-3xl z-40 transition-opacity duration-300 hidden sm:block"
         style={{
-          background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.45) 0%, transparent 65%)`,
+          background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255, 255, 255, 0.4) 0%, transparent 65%)`,
           opacity: glare.opacity,
         }}
       />
@@ -343,19 +347,19 @@ export function LandingPageClient() {
         <div className="absolute -top-24 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/18 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
         <div className="absolute -bottom-24 right-1/4 w-[32rem] h-[32rem] bg-amber-500/14 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
 
-        <div className="relative z-30 text-center max-w-4xl mx-auto space-y-4">
+        <div className="relative z-30 text-center max-w-4xl mx-auto space-y-4 sm:space-y-6">
 
-          {/* Main Headline with Premium Editorial Hierarchy */}
-          <h1 className="animate-fade-in-up animation-delay-200 text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
-            Meet good people. <br />
-            <span className="font-light italic text-emerald-200">Share real journeys.</span> <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
+          {/* Main Headline with Premium Editorial Hierarchy and generous line spacing on mobile */}
+          <h1 className="animate-fade-in-up animation-delay-200 text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight sm:leading-[1.12] max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
+            <span className="block mb-1.5 sm:mb-2">Meet good people.</span>
+            <span className="block font-light italic text-emerald-200 mb-1.5 sm:mb-2">Share real journeys.</span>
+            <span className="block bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
               Never miss an outing again.
             </span>
           </h1>
 
           {/* Natural, Human-Centric Subtitle */}
-          <p className="animate-fade-in-up animation-delay-300 text-sm sm:text-base text-emerald-50/90 w-[95%] sm:max-w-2xl mx-auto leading-snug sm:leading-relaxed font-normal pt-1 drop-shadow-md">
+          <p className="animate-fade-in-up animation-delay-300 text-sm sm:text-base text-emerald-50/90 w-[92%] sm:max-w-2xl mx-auto leading-relaxed font-normal mt-4 sm:mt-6 drop-shadow-md">
             Connect with a trusted network of verified travelers and local explorers. We match people who share your vibe and budget, ensuring every journey is safe and authentic.
           </p>
 
@@ -373,7 +377,7 @@ export function LandingPageClient() {
 
           {/* Social Proof & Trust Glass Panel */}
           <div className="animate-fade-in-up animation-delay-500 pt-6 sm:pt-8 flex flex-col items-center justify-center gap-6 animate-float-soft">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8 px-8 py-5 sm:py-3.5 rounded-3xl sm:rounded-full bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] w-[85%] sm:w-auto mx-auto max-w-sm sm:max-w-none">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 px-6 sm:px-8 py-4 sm:py-3.5 rounded-3xl sm:rounded-full bg-slate-900/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] w-[90%] sm:w-auto mx-auto max-w-sm sm:max-w-none">
               {/* Verified Members */}
               <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
                 <div className="flex -space-x-2">

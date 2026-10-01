@@ -114,13 +114,13 @@ export const Footer: React.FC<FooterProps> = () => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-gradient-to-b from-orange-500/10 via-emerald-500/10 to-transparent blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-14">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-14 items-start">
           {/* Col 1: Brand & Purpose */}
-          <div className="space-y-4 md:col-span-1">
+          <div className="space-y-4 text-center md:text-left">
             <Link href="/" className="inline-block hover:opacity-90 transition">
               <Logo size={34} textClassName="text-xl font-black tracking-tight" themeVariant="dark" />
             </Link>
-            <p className="text-slate-400 text-xs leading-relaxed">
+            <p className="text-slate-400 text-xs leading-relaxed max-w-sm mx-auto md:mx-0">
               India&apos;s verified social companion &amp; travel discovery platform. Meet trusted activity partners for daily city hangouts, or find travel companions and travel dates for multi-day expeditions.
             </p>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
@@ -129,39 +129,35 @@ export const Footer: React.FC<FooterProps> = () => {
             </div>
           </div>
 
-          {/* Col 2: Companion Mode Activities */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center gap-1.5">
+          {/* Col 2: Combined Popular Activities & Expeditions (Centered) */}
+          <div className="flex flex-col items-center text-center space-y-3">
+            <h3 className="text-white font-bold mb-2 text-xs tracking-wider uppercase flex items-center justify-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-              <span>Companion Activities</span>
-            </h3>
-            <ul className="space-y-2.5">
-              <li><span>Cafe Hangouts &amp; Coffee Dates</span></li>
-              <li><span>Movies &amp; Indie Film Screenings</span></li>
-              <li><span>Stand-Up Comedy &amp; Live Music</span></li>
-              <li><span>Badminton, Fitness &amp; Bouldering</span></li>
-              <li><span>Heritage &amp; Photography Walks</span></li>
-            </ul>
-          </div>
-
-          {/* Col 3: Travel Expeditions & Dating */}
-          <div>
-            <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center gap-1.5">
+              <span>Popular Activities &amp; Expeditions</span>
               <span className="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
-              <span>Travel Expeditions &amp; Dating</span>
             </h3>
-            <ul className="space-y-2.5">
-              <li><span>Himalayan Treks: Parvati &amp; Kasol</span></li>
-              <li><span>Travel Dating &amp; Scenic Escapes</span></li>
-              <li><span>Weekend Road Trips &amp; Stargazing</span></li>
-              <li><span>Coastal Trails: Gokarna &amp; Varkala</span></li>
-              <li><span>Backpacking Meghalaya &amp; Spiti</span></li>
-            </ul>
+            <div className="flex flex-wrap justify-center gap-2 max-w-sm pt-1">
+              {[
+                "Cafe Hangouts & Coffee Dates",
+                "Himalayan Treks & Scenic Escapes",
+                "Movies & Indie Film Screenings",
+                "Weekend Road Trips & Stargazing",
+                "Badminton & Fitness Meetups",
+                "Heritage & Photography Walks",
+              ].map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="px-3 py-1.5 rounded-xl bg-[#09100c] border border-emerald-950/90 text-slate-300 hover:text-emerald-400 hover:border-emerald-500/40 text-[11px] font-medium transition-all cursor-default"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
 
-          {/* Col 4: Explorer Newsletter (Compact in footer grid) */}
-          <div className="space-y-3">
-            <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center gap-1.5">
+          {/* Col 3: Explorer Newsletter (Compact in footer grid) */}
+          <div className="space-y-3 text-center md:text-left">
+            <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center justify-center md:justify-start gap-1.5">
               <Mail className="w-3.5 h-3.5 text-emerald-400" />
               <span>Explorer Newsletter</span>
             </h3>

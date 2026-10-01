@@ -35,13 +35,9 @@ export const BrandIntroLoader: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] pointer-events-none flex items-center justify-center transition-opacity duration-500 ease-out select-none ${
+      className={`fixed inset-0 z-[9999] pointer-events-none flex items-center justify-center transition-opacity duration-500 ease-out select-none bg-[#090d0b]/98 backdrop-blur-md ${
         phase === "gliding" ? "opacity-0" : "opacity-100"
       }`}
-      style={{
-        backgroundColor: "rgba(255, 255, 255, 0.96)",
-        backdropFilter: "blur(12px)",
-      }}
     >
       {/* ── Soft Emerald & Warm Amber Aura behind center emblem ── */}
       <div
@@ -57,44 +53,21 @@ export const BrandIntroLoader: React.FC = () => {
         }}
       />
 
-      {/* ── Center Emblem that Spins and Glides to Top Navbar Position ── */}
+      {/* ── Center Emblem that Spins and Smoothly Fades Out ── */}
       <div
-        className="fixed z-[10000] pointer-events-none transform-gpu"
-        style={
+        className={`fixed z-[10000] pointer-events-none transform-gpu transition-all duration-500 ease-out top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${
           phase === "spinning"
-            ? {
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%) scale(1)",
-                transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-              }
-            : {
-                // Glides directly into the top-left Navbar logo slot
-                top: "1.1rem",
-                left: "1.5rem",
-                transform: "translate(0, 0) scale(0.32)",
-                transition: "all 0.55s cubic-bezier(0.16, 1, 0.3, 1)",
-              }
-        }
+            ? "scale-100 opacity-100"
+            : "scale-90 opacity-0"
+        }`}
       >
         <div className="relative flex flex-col items-center justify-center">
           {/* Spinning Logo Wheel */}
           <div className="relative flex items-center justify-center">
             <img
-              src="/brand-logo.png"
-              alt="Travally Logo"
-              className={`dark:hidden w-28 h-28 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_4px_20px_rgba(16,185,129,0.3)] ${
-                phase === "spinning" ? "animate-spin" : ""
-              }`}
-              style={{
-                animationDuration: "1.2s",
-                animationTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-              }}
-            />
-            <img
               src="/brand-logo-dark.png"
               alt="Travally Logo"
-              className={`hidden dark:block w-28 h-28 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_4px_24px_rgba(52,211,153,0.4)] ${
+              className={`w-28 h-28 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_4px_24px_rgba(52,211,153,0.4)] ${
                 phase === "spinning" ? "animate-spin" : ""
               }`}
               style={{
@@ -118,9 +91,9 @@ export const BrandIntroLoader: React.FC = () => {
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
-              >va</span><span className="text-emerald-600">lly</span>
+              >va</span><span className="text-emerald-500">lly</span>
             </div>
-            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase mt-1">
+            <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase mt-1">
               Your Solo Travel Companion
             </p>
           </div>

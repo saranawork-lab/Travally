@@ -67,12 +67,14 @@ export default async function RootLayout({
             __html: `
               try {
                 var t = localStorage.getItem('travally_theme');
-                if (t === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
+                if (t === 'light') {
                   document.documentElement.classList.remove('dark');
+                } else {
+                  document.documentElement.classList.add('dark');
                 }
-              } catch (_) {}
+              } catch (_) {
+                document.documentElement.classList.add('dark');
+              }
             `,
           }}
         />
