@@ -132,6 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               size={36}
               animate={shouldAnimateLogo}
               animateType={isSidebarOpen ? "smooth" : "stay"}
+              themeVariant={isTransparent ? "dark" : "auto"}
             />
           </Link>
 
@@ -144,7 +145,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="flex items-center shrink-0 transition hover:opacity-90"
                   title="Travally"
                 >
-                  <LogoMark size={28} animate={isAuthOrLandingPage} />
+                  <LogoMark
+                    size={28}
+                    animate={isAuthOrLandingPage}
+                    themeVariant={isTransparent ? "dark" : "auto"}
+                  />
                 </Link>
 
                 <div className="relative flex-1 min-w-0 max-w-[140px] xs:max-w-[180px]">
@@ -173,7 +178,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               </>
             ) : (
               <Link href="/" className="flex items-center gap-1 transition hover:opacity-90 shrink-0">
-                <Logo size={26} showText textClassName="text-base sm:text-xl font-black tracking-tight" />
+                <Logo
+                  size={26}
+                  showText
+                  textClassName="text-base sm:text-xl font-black tracking-tight"
+                  themeVariant={isTransparent ? "dark" : "auto"}
+                />
               </Link>
             )}
           </div>

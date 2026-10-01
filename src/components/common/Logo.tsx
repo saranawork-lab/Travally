@@ -6,6 +6,7 @@ interface LogoProps {
   showText?: boolean;
   textClassName?: string;
   variant?: "full" | "icon";
+  themeVariant?: "auto" | "light" | "dark";
   animate?: boolean;
   animateType?: "smooth" | "stay";
 }
@@ -14,17 +15,20 @@ interface LogoProps {
  * Travally Brand Emblem:
  * Four-leaf compass flora with cardinal waypoints and warm golden sunrise beacon.
  * Features a periodic wheel spin like a chakra in place, without wobble.
+ * High-contrast rendering for both pristine light mode and radiant dark mode.
  */
 export const LogoMark: React.FC<{
   size?: number;
   className?: string;
   animate?: boolean;
   animateType?: "smooth" | "stay";
+  themeVariant?: "auto" | "light" | "dark";
 }> = ({
   size = 36,
   className = "",
   animate = true,
   animateType = "stay",
+  themeVariant = "auto",
 }) => {
   const animClass = animate
     ? animateType === "smooth"
@@ -34,18 +38,41 @@ export const LogoMark: React.FC<{
 
   return (
     <div
-      className={`relative inline-flex items-center justify-center shrink-0 select-none filter drop-shadow-[0_0_8px_rgba(16,185,129,0.2)] ${className}`}
+      className={`relative inline-flex items-center justify-center shrink-0 select-none filter drop-shadow-[0_0_8px_rgba(16,185,129,0.2)] dark:drop-shadow-[0_0_12px_rgba(52,211,153,0.35)] transition-all duration-300 ${className}`}
       style={{ width: size, height: size }}
       aria-label="Travally Logo"
     >
+      {/* Light Mode Logo: Rich forest emerald with warm sun on light surfaces */}
       <img
         src="/brand-logo.png"
-        alt="Travally Compass Rose Logo"
+        alt="Travally Logo"
         width={size}
         height={size}
         className={`w-full h-full object-contain block transition-transform duration-300 ${
-          animate ? "group-hover:scale-105" : ""
-        } ${animClass}`}
+          themeVariant === "auto"
+            ? "dark:hidden"
+            : themeVariant === "dark"
+            ? "hidden"
+            : "block"
+        } ${animate ? "group-hover:scale-105" : ""} ${animClass}`}
+        style={{
+          transformOrigin: "center center",
+        }}
+      />
+
+      {/* Dark Mode Logo: Luminous high-contrast emerald & radiant sun, perfectly clear on dark backgrounds */}
+      <img
+        src="/brand-logo-dark.png"
+        alt="Travally Logo"
+        width={size}
+        height={size}
+        className={`w-full h-full object-contain block transition-transform duration-300 ${
+          themeVariant === "auto"
+            ? "hidden dark:block"
+            : themeVariant === "light"
+            ? "hidden"
+            : "block"
+        } ${animate ? "group-hover:scale-105" : ""} ${animClass}`}
         style={{
           transformOrigin: "center center",
         }}
@@ -60,12 +87,18 @@ export const Logo: React.FC<LogoProps> = ({
   showText = true,
   textClassName = "text-xl font-black tracking-tight",
   variant = "full",
+  themeVariant = "auto",
   animate = true,
   animateType = "stay",
 }) => {
   return (
     <div className={`inline-flex items-center gap-2.5 select-none group ${className}`}>
-      <LogoMark size={size} animate={animate} animateType={animateType} />
+      <LogoMark
+        size={size}
+        animate={animate}
+        animateType={animateType}
+        themeVariant={themeVariant}
+      />
       {showText && variant === "full" && (
         <div className={`flex items-center tracking-tight font-black select-none ${textClassName}`}>
           <span className="text-orange-500 dark:text-orange-400">Tra</span><span

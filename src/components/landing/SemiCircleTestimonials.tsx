@@ -125,7 +125,7 @@ export function SemiCircleTestimonials({ testimonials }: SemiCircleTestimonialsP
             <div
               key={idx}
               className={`
-                w-[280px] sm:w-[290px] h-[195px] shrink-0
+                w-[280px] sm:w-[290px] shrink-0
                 p-4 rounded-2xl
                 bg-white/90 dark:bg-[#0d1511]/90 backdrop-blur-xl
                 border border-slate-200/80 dark:border-emerald-950/70
@@ -133,7 +133,7 @@ export function SemiCircleTestimonials({ testimonials }: SemiCircleTestimonialsP
                 transition-all duration-300 transform-gpu
                 hover:-translate-y-1 hover:border-emerald-500/50
                 hover:shadow-[0_12px_28px_rgba(16,185,129,0.14)]
-                flex flex-col justify-between
+                flex flex-col gap-2.5
                 relative overflow-hidden group
               `}
             >
@@ -148,26 +148,13 @@ export function SemiCircleTestimonials({ testimonials }: SemiCircleTestimonialsP
 
               {/* Upper Section: Author info + Star Rating */}
               <div className="flex items-center justify-between gap-2 pt-1">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="relative shrink-0">
-                    <img
-                      src={t.avatarUrl || "/default-avatar.png"}
-                      alt={t.name}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/default-avatar.png";
-                      }}
-                      className="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-500/30 shadow-xs"
-                    />
-                  </div>
-
-                  <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                      {t.name}
-                    </h4>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                      {t.city} • {t.role.split(" ")[0]}
-                    </p>
-                  </div>
+                <div className="min-w-0">
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                    {t.name}
+                  </h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                    {t.city} • {t.role.split(" ")[0]}
+                  </p>
                 </div>
 
                 {/* Compact Rating */}
@@ -178,29 +165,10 @@ export function SemiCircleTestimonials({ testimonials }: SemiCircleTestimonialsP
                 </div>
               </div>
 
-              {/* Middle Section: Short Crisp Quote */}
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug line-clamp-3 italic font-normal px-0.5">
+              {/* Quote */}
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug line-clamp-4 italic font-normal px-0.5">
                 &ldquo;{t.quote}&rdquo;
               </p>
-
-              {/* Lower Section: Activity Tag & Verified Badge */}
-              <div className="flex items-center justify-between gap-1.5 pt-2 border-t border-slate-100 dark:border-emerald-950/60 text-[10px]">
-                {t.activityTitle ? (
-                  <span className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 truncate max-w-[160px] font-medium">
-                    <MapPin className="w-3 h-3 text-emerald-500 shrink-0" />
-                    <span className="truncate">{t.activityTitle}</span>
-                  </span>
-                ) : (
-                  <span className="text-[10px] text-emerald-600 font-semibold">
-                    ⭐ Verified Experience
-                  </span>
-                )}
-
-                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full font-bold text-[9px] bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-900/60 shrink-0">
-                  <ShieldCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
-                  <span>{t.badge.replace("Govt ID ", "")}</span>
-                </span>
-              </div>
             </div>
           ))}
         </div>

@@ -259,7 +259,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex items-start sm:items-center justify-center px-3 sm:px-4 pt-2 sm:pt-6 pb-10 relative">
+    <div className="flex items-center justify-center w-full min-h-[calc(100vh-8rem)] px-3 sm:px-4 py-8 relative">
       <NotificationPopup
         show={successNotification}
         type="success"

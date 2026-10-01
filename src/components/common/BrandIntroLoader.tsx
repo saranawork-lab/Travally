@@ -83,7 +83,18 @@ export const BrandIntroLoader: React.FC = () => {
             <img
               src="/brand-logo.png"
               alt="Travally Logo"
-              className={`w-28 h-28 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_4px_20px_rgba(16,185,129,0.3)] ${
+              className={`dark:hidden w-28 h-28 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_4px_20px_rgba(16,185,129,0.3)] ${
+                phase === "spinning" ? "animate-spin" : ""
+              }`}
+              style={{
+                animationDuration: "1.2s",
+                animationTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            />
+            <img
+              src="/brand-logo-dark.png"
+              alt="Travally Logo"
+              className={`hidden dark:block w-28 h-28 sm:w-32 sm:h-32 object-contain filter drop-shadow-[0_4px_24px_rgba(52,211,153,0.4)] ${
                 phase === "spinning" ? "animate-spin" : ""
               }`}
               style={{

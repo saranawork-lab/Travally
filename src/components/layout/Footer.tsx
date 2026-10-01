@@ -118,7 +118,7 @@ export const Footer: React.FC<FooterProps> = () => {
           {/* Col 1: Brand & Purpose */}
           <div className="space-y-4 md:col-span-1">
             <Link href="/" className="inline-block hover:opacity-90 transition">
-              <Logo size={34} textClassName="text-xl font-black tracking-tight" />
+              <Logo size={34} textClassName="text-xl font-black tracking-tight" themeVariant="dark" />
             </Link>
             <p className="text-slate-400 text-xs leading-relaxed">
               India&apos;s verified social companion &amp; travel discovery platform. Meet trusted activity partners for daily city hangouts, or find travel companions and travel dates for multi-day expeditions.
@@ -136,36 +136,11 @@ export const Footer: React.FC<FooterProps> = () => {
               <span>Companion Activities</span>
             </h3>
             <ul className="space-y-2.5">
-              <li>
-                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Cafe Hangouts &amp; Coffee Dates</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Movies &amp; Indie Film Screenings</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Stand-Up Comedy &amp; Live Music</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Badminton, Fitness &amp; Bouldering</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=companion" className="hover:text-emerald-400 transition flex items-center justify-between group">
-                  <span>Heritage &amp; Photography Walks</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
+              <li><span>Cafe Hangouts &amp; Coffee Dates</span></li>
+              <li><span>Movies &amp; Indie Film Screenings</span></li>
+              <li><span>Stand-Up Comedy &amp; Live Music</span></li>
+              <li><span>Badminton, Fitness &amp; Bouldering</span></li>
+              <li><span>Heritage &amp; Photography Walks</span></li>
             </ul>
           </div>
 
@@ -176,36 +151,11 @@ export const Footer: React.FC<FooterProps> = () => {
               <span>Travel Expeditions &amp; Dating</span>
             </h3>
             <ul className="space-y-2.5">
-              <li>
-                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Himalayan Treks: Parvati &amp; Kasol</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Travel Dating &amp; Scenic Escapes</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Weekend Road Trips &amp; Stargazing</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Coastal Trails: Gokarna &amp; Varkala</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
-              <li>
-                <Link href="/discover?mode=travel" className="hover:text-orange-400 transition flex items-center justify-between group">
-                  <span>Backpacking Meghalaya &amp; Spiti</span>
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" />
-                </Link>
-              </li>
+              <li><span>Himalayan Treks: Parvati &amp; Kasol</span></li>
+              <li><span>Travel Dating &amp; Scenic Escapes</span></li>
+              <li><span>Weekend Road Trips &amp; Stargazing</span></li>
+              <li><span>Coastal Trails: Gokarna &amp; Varkala</span></li>
+              <li><span>Backpacking Meghalaya &amp; Spiti</span></li>
             </ul>
           </div>
 

@@ -31,6 +31,7 @@ import {
   Coffee,
 } from "lucide-react";
 import { ConnectSection } from "@/components/common/ConnectSection";
+import { FirstComePassNotification } from "./FirstComePassNotification";
 
 /**
  * 3D Tilt Component with Interactive Mouse Perspective & Ambient Mobile Float
@@ -123,40 +124,40 @@ export function LandingPageClient() {
 
   const heroDestinations = [
     {
-      name: "Kasol & Parvati Valley",
-      state: "Himachal Pradesh",
+      name: "Friends on a Journey",
+      state: "India",
       image:
-        "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1920&auto=format&fit=crop&q=85",
-      tag: "Trekking & Hostels",
-      price: "₹8,500+ avg",
-      spots: "3 spots open",
+        "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1920&auto=format&fit=crop&q=85",
+      tag: "Social Travel",
+      price: "",
+      spots: "",
     },
     {
-      name: "Living Root Bridges",
-      state: "Meghalaya",
+      name: "City Cafe Hangout",
+      state: "Urban Explorer",
       image:
-        "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=1920&auto=format&fit=crop&q=85",
-      tag: "Eco Hikes & Waterfalls",
-      price: "₹18,000+ avg",
-      spots: "2 spots open",
+        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&auto=format&fit=crop&q=85",
+      tag: "Companion Meetups",
+      price: "",
+      spots: "",
     },
     {
-      name: "Hampi & Gokarna",
-      state: "Karnataka",
+      name: "Trekking Together",
+      state: "Adventure",
       image:
-        "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1920&auto=format&fit=crop&q=85",
-      tag: "Heritage & Beaches",
-      price: "₹7,000+ avg",
-      spots: "4 spots open",
+        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&auto=format&fit=crop&q=85",
+      tag: "Group Expeditions",
+      price: "",
+      spots: "",
     },
     {
-      name: "Alleppey & Munnar",
-      state: "Kerala",
+      name: "Sunset Companions",
+      state: "Coastal",
       image:
-        "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1920&auto=format&fit=crop&q=85",
-      tag: "Tea Estates & Waterways",
-      price: "₹12,000+ avg",
-      spots: "2 spots open",
+        "https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=1920&auto=format&fit=crop&q=85",
+      tag: "Travel Dating",
+      price: "",
+      spots: "",
     },
   ];
 
@@ -166,6 +167,15 @@ export function LandingPageClient() {
       setActiveHeroBg((prev) => (prev + 1) % 4);
     }, 6000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Limited seats popup notification every time a user enters the landing page
+  const [showLimitedSeatsPopup, setShowLimitedSeatsPopup] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLimitedSeatsPopup(true);
+    }, 600);
+    return () => clearTimeout(timer);
   }, []);
 
   const companionReveal = useScrollReveal();
@@ -295,12 +305,20 @@ export function LandingPageClient() {
 
   return (
     <div className="relative min-h-screen bg-white dark:bg-[#090d0b] text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans overflow-x-clip">
+      {/* Limited Seats Popup Notification Every Time User Enters Landing Page */}
+      <FirstComePassNotification
+        show={showLimitedSeatsPopup}
+        duration={15000}
+        onClose={() => setShowLimitedSeatsPopup(false)}
+      />
+
+
       {/* Background Gradient Meshes for Lower Sections */}
       <div className="absolute top-1/3 right-4 w-80 sm:w-[34rem] h-80 sm:h-[34rem] bg-gradient-to-bl from-orange-500/20 via-amber-500/15 to-rose-500/10 rounded-full blur-[110px] pointer-events-none transform-gpu" />
       <div className="absolute top-2/3 left-4 w-80 sm:w-[36rem] h-80 sm:h-[36rem] bg-gradient-to-tr from-emerald-500/18 via-teal-500/14 to-emerald-400/10 rounded-full blur-[120px] pointer-events-none transform-gpu" />
 
       {/* ── 1. HERO SECTION WITH CINEMATIC DYNAMIC TRAVEL BACKGROUND ── */}
-      <section className="relative w-full overflow-hidden bg-slate-950 text-white pt-20 pb-20 sm:pt-24 sm:pb-28 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl">
+      <section className="relative w-full overflow-clip touch-pan-y bg-slate-950 text-white min-h-[100svh] min-h-[100dvh] min-h-screen pt-20 pb-12 sm:pt-24 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl flex flex-col justify-center items-center">
         {/* Dynamic Background Image Layers with Smooth Crossfade */}
         {heroDestinations.map((dest, idx) => (
           <div
@@ -354,7 +372,7 @@ export function LandingPageClient() {
           </div>
 
           {/* Social Proof & Trust Glass Panel */}
-          <div className="animate-fade-in-up animation-delay-500 pt-6 sm:pt-8 flex flex-col items-center justify-center gap-6">
+          <div className="animate-fade-in-up animation-delay-500 pt-6 sm:pt-8 flex flex-col items-center justify-center gap-6 animate-float-soft">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8 px-8 py-5 sm:py-3.5 rounded-3xl sm:rounded-full bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] w-[85%] sm:w-auto mx-auto max-w-sm sm:max-w-none">
               {/* Verified Members */}
               <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
@@ -376,8 +394,8 @@ export function LandingPageClient() {
                   </div>
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="font-extrabold text-white text-xs tracking-wide">Active Members</span>
-                  <span className="text-emerald-400 text-[10px] font-medium tracking-wide uppercase">ID Verified</span>
+                  <span className="font-extrabold text-white text-xs tracking-wide">15k+ Explorers</span>
+                  <span className="text-emerald-400 text-[10px] font-medium tracking-wide uppercase">Across 50+ Cities</span>
                 </div>
               </div>
 
@@ -478,10 +496,7 @@ export function LandingPageClient() {
                             <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
                               Ananya Sharma
                             </span>
-                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/80 text-emerald-800 dark:text-emerald-300 text-[9px] font-black tracking-wide uppercase">
-                              <ShieldCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
-                              Govt ID Verified
-                            </span>
+
                           </div>
                           <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                             <span className="flex items-center gap-0.5 font-bold text-amber-500">
@@ -636,7 +651,7 @@ export function LandingPageClient() {
                   1. Verified Host Identity
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  The card displays the host’s verified credentials (Govt ID or LinkedIn badge) so you know exactly who you are joining.
+                  Know exactly who you join with confirmed Govt ID and verified profile badges.
                 </p>
               </div>
 
@@ -648,7 +663,7 @@ export function LandingPageClient() {
                   2. Public Meeting Venues
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Every activity designates a safe public spot (such as Indiranagar cafes or cultural centers) before meetups occur.
+                  All meetups happen in vibrant, well-lit cafes, galleries, and city hotspots.
                 </p>
               </div>
 
@@ -660,7 +675,7 @@ export function LandingPageClient() {
                   3. Strict Spots Left Pill
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Clear spot indicators (e.g. &ldquo;1 spot left&rdquo;) ensure meetups remain intimate (1-on-1 or 2–3 companions max) without chaotic crowds.
+                  Intimate groups of 2–3 companions only—no awkward crowds or chaotic meetups.
                 </p>
               </div>
 
@@ -672,7 +687,7 @@ export function LandingPageClient() {
                   4. Mutual Approval Chat Gate
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Direct group messaging unlocks only when the host reviews and accepts your request. Zero unsolicited messages.
+                  Chat unlocks only when both members accept. Zero spam or cold DMs.
                 </p>
               </div>
             </div>
@@ -727,7 +742,7 @@ export function LandingPageClient() {
                   1. Transparent Rupee Budget
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  The card states clear cost ranges (e.g. ₹8,500 – ₹14,500) covering shared transit and stays. Zero uncomfortable money talks.
+                  Clear upfront cost ranges for stays and cabs—zero awkward money talks.
                 </p>
               </div>
 
@@ -739,7 +754,7 @@ export function LandingPageClient() {
                   2. Travel Dating &amp; Synced Dates
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Planning a scenic getaway? Filter for verified singles looking for travel dating, or platonic explorers aligned on your exact dates and itinerary.
+                  Match with verified singles for scenic dates, or find companions on your exact travel days.
                 </p>
               </div>
 
@@ -751,7 +766,7 @@ export function LandingPageClient() {
                   3. Planned Route &amp; Attractions
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Every card tags daily route highlights (Chalal trail, Manikaran hot springs) and accommodation preference (cozy hostels or boutique camps).
+                  Daily route highlights, stays, and trails mapped out before you pack your bags.
                 </p>
               </div>
 
@@ -763,7 +778,7 @@ export function LandingPageClient() {
                   4. Ephemeral 7-Day Chat Expiry
                 </h4>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Group chats automatically delete from the database 7 days after the trip completes for permanent privacy &amp; clean storage.
+                  Group chats auto-delete 7 days post-trip for complete peace of mind and privacy.
                 </p>
               </div>
             </div>
@@ -852,10 +867,7 @@ export function LandingPageClient() {
                             <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate">
                               Priya Iyer
                             </span>
-                            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-900/80 text-orange-900 dark:text-orange-200 text-[9px] font-black tracking-wide uppercase">
-                              <ShieldCheck className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
-                              Govt ID Verified
-                            </span>
+
                           </div>
                           <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                             <span className="flex items-center gap-0.5 font-bold text-amber-500">
@@ -1013,9 +1025,9 @@ export function LandingPageClient() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-children">
           {/* Step 1 */}
-          <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(16,185,129,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
+          <div className="animate-reveal-bottom p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(16,185,129,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
             <div className="space-y-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-black text-base flex items-center justify-center shadow-md shadow-emerald-600/40 group-hover:scale-105 transition-transform duration-300">
                 1
@@ -1034,7 +1046,7 @@ export function LandingPageClient() {
           </div>
 
           {/* Step 2 */}
-          <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-orange-500 hover:shadow-[0_12px_30px_rgba(249,115,22,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
+          <div className="animate-reveal-bottom animation-delay-200 p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-orange-500 hover:shadow-[0_12px_30px_rgba(249,115,22,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
             <div className="space-y-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 text-white font-black text-base flex items-center justify-center shadow-md shadow-orange-500/40 group-hover:scale-105 transition-transform duration-300">
                 2
@@ -1053,7 +1065,7 @@ export function LandingPageClient() {
           </div>
 
           {/* Step 3 */}
-          <div className="p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(16,185,129,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
+          <div className="animate-reveal-bottom animation-delay-400 p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(16,185,129,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
             <div className="space-y-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-white font-black text-base flex items-center justify-center shadow-md shadow-teal-600/40 group-hover:scale-105 transition-transform duration-300">
                 3
@@ -1106,10 +1118,10 @@ export function LandingPageClient() {
       <section
         id="faq"
         ref={faqReveal.ref}
-        className={`scroll-mt-28 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${faqReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        className={`scroll-mt-28 py-10 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto border-t border-slate-200/80 dark:border-emerald-950/70 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-gpu relative ${faqReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
       >
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
+        <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-emerald-950/60 text-slate-700 dark:text-emerald-300 text-xs font-black border border-slate-200 dark:border-emerald-800/60 uppercase tracking-wider">
             <HelpCircle className="w-3.5 h-3.5 text-emerald-500" />
             <span>TRANSPARENCY FIRST</span>
@@ -1122,42 +1134,45 @@ export function LandingPageClient() {
           </p>
         </div>
 
-        <div className="space-y-3.5">
+        <div className="space-y-3">
           {FAQS.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
               <div
                 key={idx}
-                className={`rounded-2xl transition-all duration-200 border ${
-                  isOpen
-                    ? "bg-white dark:bg-[#111915] border-emerald-500/60 dark:border-emerald-600/60 shadow-md shadow-emerald-500/5"
+                className={`rounded-2xl transition-all duration-300 border overflow-hidden ${isOpen
+                    ? "bg-white dark:bg-[#111915] border-emerald-500/60 dark:border-emerald-600/60 shadow-lg shadow-emerald-500/10 scale-[1.01]"
                     : "bg-slate-50/80 dark:bg-[#111915]/60 border-slate-200/80 dark:border-emerald-950/70 hover:border-slate-300 dark:hover:border-emerald-900"
-                }`}
+                  }`}
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : idx)}
                   type="button"
-                  className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer"
+                  className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer"
                 >
-                  <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
+                  <span className={`text-sm sm:text-base font-extrabold transition-colors duration-300 ${isOpen ? "text-emerald-700 dark:text-emerald-400" : "text-slate-900 dark:text-white"}`}>
                     {faq.q}
                   </span>
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                      isOpen
-                        ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 rotate-180"
-                        : "bg-slate-200/70 dark:bg-emerald-950/60 text-slate-500 dark:text-slate-400"
-                    }`}
+                    className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isOpen
+                        ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 rotate-180"
+                        : "bg-slate-200/70 dark:bg-emerald-950/60 text-slate-500 dark:text-slate-400 rotate-0"
+                      }`}
                   >
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </button>
 
-                {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-emerald-950/60 mt-1">
-                    {faq.a}
+                <div
+                  className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-4 sm:px-5 pb-5 pt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-emerald-950/60">
+                      {faq.a}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}

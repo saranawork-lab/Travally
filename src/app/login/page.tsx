@@ -49,7 +49,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-start sm:items-center justify-center px-3 sm:px-4 pt-2 sm:pt-6 pb-10">
+    <div className="flex items-center justify-center w-full min-h-[calc(100vh-8rem)] px-3 sm:px-4 py-8">
       <div className="w-full max-w-md bg-white dark:bg-[#111815] rounded-3xl border border-slate-200 dark:border-emerald-950/60 p-6 sm:p-8 shadow-2xl space-y-5">
         {/* Brand header */}
         <div className="text-center space-y-1.5">
