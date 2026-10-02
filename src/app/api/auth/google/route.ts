@@ -9,14 +9,15 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    req.nextUrl.origin ||
-    "http://localhost:3000";
 
-  const redirectUri =
-    process.env.GOOGLE_REDIRECT_URI ||
-    `${appUrl}/api/auth/google/callback`;
+  const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+  const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  const requestOrigin = `${proto}://${host}`;
+
+  let redirectUri = process.env.GOOGLE_REDIRECT_URI;
+  if (!redirectUri || (redirectUri.includes("localhost") && !host.includes("localhost"))) {
+    redirectUri = `${requestOrigin}/api/auth/google/callback`;
+  }
 
   // Check if Google credentials are configured in environment
   const isConfigured = Boolean(
@@ -38,8 +39,8 @@ export async function GET(req: NextRequest) {
 
   if (!isConfigured) {
     const returnTo = searchParams.get("returnTo") || "/login";
-    const redirectUrl = new URL(returnTo, req.nextUrl.origin);
-    redirectUrl.searchParams.set("error", "Google credentials are not configured in .env");
+    const redirectUrl = new URL(returnTo, requestOrigin);
+    redirectUrl.searchParams.set("error", "Google credentials are not configured in environment variables.");
     return NextResponse.redirect(redirectUrl);
   }
 
@@ -53,10 +54,20 @@ export async function GET(req: NextRequest) {
 
   const response = NextResponse.redirect(googleAuthUrl);
 
-  // Store state cookie for verification
+  // Store state and redirectUri cookies for verification
   response.cookies.set({
     name: "google_oauth_state",
     value: state,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 60 * 15, // 15 mins
+    path: "/",
+  });
+
+  response.cookies.set({
+    name: "google_oauth_redirect_uri",
+    value: redirectUri,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

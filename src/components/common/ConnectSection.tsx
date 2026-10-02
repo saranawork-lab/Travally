@@ -302,7 +302,7 @@ export const ConnectSection: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-6 rounded-full font-bold text-xs sm:text-sm text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border border-orange-300/80 dark:border-emerald-400/50 shadow-md transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full py-3 px-6 rounded-full font-bold text-xs sm:text-sm text-slate-900 bg-gradient-to-r from-emerald-400 via-emerald-300 to-white hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-50 border border-emerald-400/50 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>

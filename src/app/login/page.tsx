@@ -1,20 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/common/Logo";
 import { Mail, ArrowRight, Loader2, KeyRound, CheckCircle2 } from "lucide-react";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    const urlError = searchParams?.get("error");
+    if (urlError) {
+      setError(decodeURIComponent(urlError));
+    }
+  }, [searchParams]);
 
   // Authenticate user with given credentials
   const performLogin = async (loginEmail: string, loginPass: string) => {
@@ -148,5 +156,19 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center w-full min-h-[calc(100vh-8rem)]">
+          <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

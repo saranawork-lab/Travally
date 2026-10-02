@@ -91,6 +91,7 @@ module.exports = {
         "pulse-slow": "pulseSlow 8s ease-in-out infinite",
         "telegram-pop": "telegram-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
         "telegram-float": "telegram-float 2.8s ease-in-out infinite",
+        "gradient-flow": "gradient-flow 4s ease infinite",
       },
       keyframes: {
         fadeIn: {
@@ -117,6 +118,11 @@ module.exports = {
         "telegram-float": {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-3px)" },
+        },
+        "gradient-flow": {
+          "0%": { "background-position": "0% 50%" },
+          "50%": { "background-position": "100% 50%" },
+          "100%": { "background-position": "0% 50%" },
         },
       },
     },

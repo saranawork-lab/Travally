@@ -91,17 +91,11 @@ export default function RegisterPage() {
   const [bio, setBio] = useState("");
 
   // Lifestyle & Habits
-  const [smokingHabit, setSmokingHabit] = useState("NON_SMOKER");
-  const [drinkingHabit, setDrinkingHabit] = useState("SOCIAL");
-  const [dietaryPreference, setDietaryPreference] = useState("NON_VEG");
-  const [selectedLifestyleTags, setSelectedLifestyleTags] = useState<string[]>([
-    "📸 Photographer",
-    "🚗 Long Drives",
-  ]);
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([
-    "☕ Coffee & Cafe Walks",
-    "🚗 Weekend Road Trips",
-  ]);
+  const [smokingHabit, setSmokingHabit] = useState("");
+  const [drinkingHabit, setDrinkingHabit] = useState("");
+  const [dietaryPreference, setDietaryPreference] = useState("");
+  const [selectedLifestyleTags, setSelectedLifestyleTags] = useState<string[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
   const toggleInterest = (interest: string) => {
     setSelectedInterests((prev) =>

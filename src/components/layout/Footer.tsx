@@ -25,10 +25,7 @@ export const Footer: React.FC<FooterProps> = () => {
   const pathname = usePathname();
   const { currentUser } = useAuth();
 
-  // Newsletter subscription state
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [subscribing, setSubscribing] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
+
 
   // Mouse tracking state for the dynamic torch beam
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
@@ -75,28 +72,7 @@ export const Footer: React.FC<FooterProps> = () => {
     return null;
   }
 
-  // Newsletter submit handler
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newsletterEmail.trim()) return;
-    setSubscribing(true);
-    try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: newsletterEmail.trim() }),
-      });
-      if (res.ok) {
-        setSubscribed(true);
-      } else {
-        alert("Could not subscribe. Please check your email.");
-      }
-    } catch (e) {
-      console.error("Newsletter subscription error:", e);
-    } finally {
-      setSubscribing(false);
-    }
-  };
+
 
   // Handle smooth mouse move tracking
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -109,94 +85,12 @@ export const Footer: React.FC<FooterProps> = () => {
   };
 
   return (
-    <footer className="bg-[#050806] text-slate-300 text-xs border-t border-emerald-950/70 pb-16 pt-16 transition-colors overflow-hidden relative select-none">
+    <footer className="bg-[#050806] text-slate-300 text-xs border-t border-emerald-950/70 pb-16 pt-6 transition-colors overflow-hidden relative select-none">
       {/* Ambient background glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-gradient-to-b from-orange-500/10 via-emerald-500/10 to-transparent blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-14 items-start">
-          {/* Col 1: Brand & Purpose */}
-          <div className="space-y-4 text-center md:text-left">
-            <Link href="/" className="inline-block hover:opacity-90 transition">
-              <Logo size={34} textClassName="text-xl font-black tracking-tight" themeVariant="dark" />
-            </Link>
-            <p className="text-slate-400 text-xs leading-relaxed max-w-sm mx-auto md:mx-0">
-              India&apos;s verified social companion &amp; travel discovery platform. Meet trusted activity partners for daily city hangouts, or find travel companions and travel dates for multi-day expeditions.
-            </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>100% ID-Verified Explorers</span>
-            </div>
-          </div>
 
-          {/* Col 2: Combined Popular Activities & Expeditions (Centered) */}
-          <div className="flex flex-col items-center text-center space-y-2.5">
-            <h3 className="text-white font-bold mb-1 text-xs tracking-wider uppercase flex items-center justify-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
-              <span>Popular Activities &amp; Expeditions</span>
-              <span className="w-2 h-2 rounded-full bg-orange-500 shadow-sm shadow-orange-500/50"></span>
-            </h3>
-            <ul className="space-y-2 text-center pt-1">
-              {[
-                "Cafe Hangouts & Coffee Dates",
-                "Himalayan Treks & Scenic Escapes",
-                "Movies & Indie Film Screenings",
-                "Weekend Road Trips & Stargazing",
-              ].map((tag, idx) => (
-                <li key={idx}>
-                  <span className="text-slate-400 hover:text-emerald-400 text-xs font-medium transition-colors cursor-default block">
-                    {tag}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 3: Explorer Newsletter (Compact in footer grid) */}
-          <div className="space-y-3 text-center md:text-left">
-            <h3 className="text-white font-bold mb-4 text-xs tracking-wider uppercase flex items-center justify-center md:justify-start gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Explorer Newsletter</span>
-            </h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              Curated weekend companion meetups, hidden treks, and travel dating drops sent every Thursday.
-            </p>
-
-            {subscribed ? (
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Subscribed! Check your inbox.</span>
-              </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="space-y-2 pt-1">
-                <div className="relative">
-                  <input
-                    type="email"
-                    required
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="w-full pl-3 pr-16 py-2 rounded-xl border border-emerald-950/90 bg-[#09100c] text-white text-xs placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
-                  />
-                  <button
-                    type="submit"
-                    disabled={subscribing}
-                    className="absolute right-1 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-[11px] shadow-xs transition-all flex items-center gap-1 disabled:opacity-50 cursor-pointer"
-                  >
-                    {subscribing ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <span>Join</span>
-                    )}
-                  </button>
-                </div>
-                <p className="text-[10px] text-slate-500 flex items-center gap-1">
-                  <span>🔒 Zero spam • One-click unsubscribe</span>
-                </p>
-              </form>
-            )}
-          </div>
-        </div>
 
         {/* Legal Notice */}
         <div className="pt-8 border-t border-emerald-950/60 text-xs leading-relaxed text-slate-400 space-y-3">

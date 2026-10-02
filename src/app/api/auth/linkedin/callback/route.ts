@@ -11,9 +11,13 @@ export const dynamic = "force-dynamic";
  * and upserts the user with LinkedIn Verified Member status.
  */
 export async function GET(req: NextRequest) {
+  const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+  const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  const requestOrigin = `${proto}://${host}`;
+
   const appUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
-    req.nextUrl.origin ||
+    requestOrigin ||
     "http://localhost:3000";
 
   const searchParams = req.nextUrl.searchParams;
@@ -24,7 +28,7 @@ export async function GET(req: NextRequest) {
 
   if (error || !code) {
     console.error("LinkedIn OAuth error received:", error, errorDescription);
-    const redirectUrl = new URL("/login", appUrl);
+    const redirectUrl = new URL("/login", requestOrigin);
     redirectUrl.searchParams.set(
       "error",
       errorDescription || "LinkedIn authorization was cancelled or failed."
@@ -41,9 +45,15 @@ export async function GET(req: NextRequest) {
   try {
     const clientId = process.env.LINKEDIN_CLIENT_ID;
     const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
-    const redirectUri =
-      process.env.LINKEDIN_REDIRECT_URI ||
-      `${appUrl}/api/auth/linkedin/callback`;
+
+    // Use exact redirectUri stored during authorization request to guarantee no mismatch
+    const storedRedirectUri = req.cookies.get("linkedin_oauth_redirect_uri")?.value;
+    let fallbackRedirectUri = process.env.LINKEDIN_REDIRECT_URI;
+    if (!fallbackRedirectUri || (fallbackRedirectUri.includes("localhost") && !host.includes("localhost"))) {
+      fallbackRedirectUri = `${requestOrigin}/api/auth/linkedin/callback`;
+    }
+
+    const redirectUri = storedRedirectUri || fallbackRedirectUri;
 
     if (!clientId || !clientSecret) {
       throw new Error("LinkedIn credentials are not configured in environment.");
@@ -194,7 +204,7 @@ export async function GET(req: NextRequest) {
       role: user.role,
     });
 
-    const successRedirect = new URL("/tracking", appUrl);
+    const successRedirect = new URL("/tracking", requestOrigin);
     successRedirect.searchParams.set("verified", "linkedin");
     successRedirect.searchParams.set("welcome", encodeURIComponent(displayName));
 
@@ -204,19 +214,20 @@ export async function GET(req: NextRequest) {
       name: AuthService.getCookieName(),
       value: token,
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 90 * 24 * 60 * 60, // 90 days
       path: "/",
     });
 
-    // Clear state cookie
+    // Clear state and redirect cookies
     response.cookies.delete("linkedin_oauth_state");
+    response.cookies.delete("linkedin_oauth_redirect_uri");
 
     return response;
   } catch (err: any) {
     console.error("LinkedIn OAuth Callback exception:", err);
-    const redirectUrl = new URL("/login", appUrl);
+    const redirectUrl = new URL("/login", requestOrigin);
     redirectUrl.searchParams.set(
       "error",
       err.message || "Failed to complete LinkedIn sign-in"

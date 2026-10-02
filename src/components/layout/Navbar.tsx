@@ -9,6 +9,7 @@ import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
 import { Search, X } from "lucide-react";
+import { LiquidWaveButton } from "@/components/ui/LiquidWaveButton";
 
 interface NavbarProps {
   initialMode?: AppMode;
@@ -208,19 +209,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <div className="flex items-center gap-1.5 sm:gap-3">
               {currentUser && pathname === "/" ? (
-                <Link
-                  href="/tracking"
-                  className="px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs font-bold transition-all shadow-xs border whitespace-nowrap text-slate-900 dark:text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border-orange-300/80 dark:border-emerald-400/50 hover:scale-[1.02] active:scale-[0.98]"
-                >
+                <LiquidWaveButton href="/tracking">
                   Go to App
-                </Link>
+                </LiquidWaveButton>
               ) : pathname === "/login" ? (
-                <Link
-                  href="/register"
-                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold text-slate-900 dark:text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border border-orange-300/80 dark:border-emerald-400/50 shadow-xs whitespace-nowrap hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
+                <LiquidWaveButton href="/register" size="sm">
                   Join Free
-                </Link>
+                </LiquidWaveButton>
               ) : pathname === "/register" ? (
                 <Link
                   href="/login"
@@ -240,12 +235,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                   >
                     Log In
                   </Link>
-                  <Link
-                    href="/register"
-                    className="px-3 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all shadow-xs border hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap text-slate-900 dark:text-slate-950 bg-gradient-to-r from-orange-200 via-amber-100 to-emerald-200 hover:from-orange-300 hover:via-amber-200 hover:to-emerald-300 border-orange-300/80 dark:border-emerald-400/50"
-                  >
+                  <LiquidWaveButton href="/register">
                     Join Free
-                  </Link>
+                  </LiquidWaveButton>
                 </>
               )}
             </div>

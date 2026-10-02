@@ -98,7 +98,7 @@ function Card3DContainer({
     >
       {/* 3D Ambient Backdrop Glow - Optimized for mobile GPU */}
       <div
-        className={`absolute -inset-3 sm:-inset-4 rounded-3xl blur-lg sm:blur-2xl opacity-35 group-hover/3d:opacity-65 transition-opacity duration-500 pointer-events-none ${accentColor === "emerald"
+        className={`hidden sm:block absolute -inset-4 rounded-3xl blur-2xl opacity-35 group-hover/3d:opacity-65 transition-opacity duration-500 pointer-events-none ${accentColor === "emerald"
           ? "bg-gradient-to-tr from-emerald-500/40 via-teal-500/30 to-emerald-400/20"
           : "bg-gradient-to-tr from-orange-500/40 via-amber-500/30 to-rose-500/20"
           }`}
@@ -326,8 +326,8 @@ export function LandingPageClient() {
 
 
       {/* Background Gradient Meshes for Lower Sections */}
-      <div className="absolute top-1/3 right-4 w-80 sm:w-[34rem] h-80 sm:h-[34rem] bg-gradient-to-bl from-orange-500/20 via-amber-500/15 to-rose-500/10 rounded-full blur-[110px] pointer-events-none transform-gpu" />
-      <div className="absolute top-2/3 left-4 w-80 sm:w-[36rem] h-80 sm:h-[36rem] bg-gradient-to-tr from-emerald-500/18 via-teal-500/14 to-emerald-400/10 rounded-full blur-[120px] pointer-events-none transform-gpu" />
+      <div className="hidden sm:block absolute top-1/3 right-4 w-[34rem] h-[34rem] bg-gradient-to-bl from-orange-500/20 via-amber-500/15 to-rose-500/10 rounded-full blur-[110px] pointer-events-none transform-gpu" />
+      <div className="hidden sm:block absolute top-2/3 left-4 w-[36rem] h-[36rem] bg-gradient-to-tr from-emerald-500/18 via-teal-500/14 to-emerald-400/10 rounded-full blur-[120px] pointer-events-none transform-gpu" />
 
       {/* ── 1. HERO SECTION WITH CINEMATIC DYNAMIC TRAVEL BACKGROUND ── */}
       <section className="relative w-full overflow-clip touch-pan-y bg-slate-950 text-white min-h-[100svh] min-h-[100dvh] min-h-screen pt-20 pb-12 sm:pt-24 sm:pb-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 shadow-2xl flex flex-col justify-center items-center">
@@ -352,15 +352,15 @@ export function LandingPageClient() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/65 to-slate-950/90 pointer-events-none z-20" />
 
         {/* Atmospheric ambient lighting glow */}
-        <div className="absolute -top-24 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/18 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
-        <div className="absolute -bottom-24 right-1/4 w-[32rem] h-[32rem] bg-amber-500/14 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
+        <div className="hidden sm:block absolute -top-24 left-1/4 w-[36rem] h-[36rem] bg-emerald-500/18 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
+        <div className="hidden sm:block absolute -bottom-24 right-1/4 w-[32rem] h-[32rem] bg-amber-500/14 rounded-full blur-[140px] pointer-events-none transform-gpu z-20" />
 
         <div className="relative z-30 text-center max-w-4xl mx-auto space-y-4 sm:space-y-6">
 
           {/* Main Headline with Premium Editorial Hierarchy and generous line spacing on mobile */}
-          <h1 className="animate-fade-in-up animation-delay-200 text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-normal max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] pb-1">
-            <span className="block mb-1 sm:mb-2">Meet good people.</span>
-            <span className="block font-light italic text-emerald-200 mb-1 sm:mb-2">Share real journeys.</span>
+          <h1 className="animate-fade-in-up animation-delay-200 text-5xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight max-w-4xl mx-auto drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] pb-1">
+            <span className="block sm:mb-2">Meet good people.</span>
+            <span className="block font-light italic text-emerald-200 sm:mb-2">Share real journeys.</span>
             <span className="inline-block pb-2 sm:pb-3.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
               Never miss an outing again.
             </span>
@@ -425,11 +425,11 @@ export function LandingPageClient() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* LEFT COLUMN: Discover-style Companion Card Preview */}
-          <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none">
+          <div className="lg:col-span-5 w-full max-w-sm mx-auto lg:max-w-none">
             <Card3DContainer accentColor="emerald">
               <div className="group relative w-full bg-white dark:bg-[#101915] rounded-3xl border border-emerald-100 dark:border-emerald-950/70 shadow-[0_20px_50px_rgba(16,185,129,0.12)] hover:shadow-[0_25px_60px_rgba(16,185,129,0.22)] transition-all duration-500 flex flex-col overflow-hidden">
                 {/* ── TOP THUMBNAIL BANNER (High clarity, zero muddy fog!) ── */}
-                <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900">
+                <div className="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-900">
                   <img
                     src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=900&auto=format&fit=crop&q=80"
                     alt="Suchitra Film Society Screening & Filter Coffee"
@@ -446,8 +446,8 @@ export function LandingPageClient() {
                     </span>
 
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 border border-emerald-400/40 animate-pulse">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 border border-emerald-400/40 sm:animate-pulse">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white sm:animate-ping" />
                         <span>1 spot left</span>
                       </span>
                     </div>
@@ -467,11 +467,11 @@ export function LandingPageClient() {
                 </div>
 
                 {/* ── CARD CONTENT BODY ── */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
                   <div className="space-y-3.5">
                     {/* Activity Title */}
                     <div>
-                      <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug tracking-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug tracking-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                         Suchitra Film Society Screening &amp; Filter Coffee
                       </h3>
                     </div>
@@ -483,7 +483,7 @@ export function LandingPageClient() {
                           <img
                             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80"
                             alt="Ananya Sharma"
-                            className="w-10 h-10 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-sm"
+                            className="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-sm"
                           />
                           <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-white dark:ring-[#101915]">
                             <BadgeCheck className="w-3 h-3" />
@@ -622,7 +622,7 @@ export function LandingPageClient() {
 
 
           {/* RIGHT COLUMN: Narrative & Details of "What All It Shows" */}
-          <div className="lg:col-span-6 space-y-6">
+          <div className="lg:col-span-7 space-y-5">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-black shadow-md shadow-emerald-600/30 uppercase tracking-wider">
               <Film className="w-3.5 h-3.5" />
               <span>COMPANION MODE • CITY ACTIVITIES</span>
@@ -639,54 +639,54 @@ export function LandingPageClient() {
               Companion Mode gives you a structured, reassuring interface for discovering weekend activities happening in your city. Every detail is established up front:
             </p>
 
-            {/* Feature Breakdown Grid Explaining What the Card Shows */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+            {/* Feature Breakdown — Accent Bar List */}
+            <div className="space-y-4 pt-1">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-emerald-500 hover:border-emerald-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <BadgeCheck className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  1. Verified Host Identity
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Know exactly who you join with confirmed Govt ID and verified profile badges.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Verified Host Identity</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    Know exactly who you join with confirmed Govt ID and verified profile badges.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-emerald-500 hover:border-emerald-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  2. Public Meeting Venues
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  All meetups happen in vibrant, well-lit cafes, galleries, and city hotspots.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Public Meeting Venues</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    All meetups happen in vibrant, well-lit cafes, galleries, and city hotspots.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-emerald-500 hover:border-emerald-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <Users className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  3. Strict Spots Left Pill
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Intimate groups of 2–3 companions only—no awkward crowds or chaotic meetups.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Strict Spots Left Pill</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    Intimate groups of 2–3 companions only—no awkward crowds or chaotic meetups.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#131c18] border border-emerald-200 dark:border-emerald-950/80 shadow-xs hover:border-emerald-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold mb-2.5">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-emerald-500 hover:border-emerald-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <Lock className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  4. Mutual Approval Chat Gate
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Chat unlocks only when both members accept. Zero spam or cold DMs.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Mutual Approval Chat Gate</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    Chat unlocks only when both members accept. Zero spam or cold DMs.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -713,7 +713,7 @@ export function LandingPageClient() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* LEFT COLUMN: Narrative & Details of "What All It Shows" (Alternating!) */}
-          <div className="lg:col-span-6 space-y-6 order-2 lg:order-1">
+          <div className="lg:col-span-7 space-y-5 order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white text-xs font-black shadow-md shadow-orange-500/30 uppercase tracking-wider">
               <Mountain className="w-3.5 h-3.5" />
               <span>TRAVEL EXPEDITIONS • TRAVEL DATING & DATES</span>
@@ -730,54 +730,54 @@ export function LandingPageClient() {
               Solo travel in India is thrilling, but sharing cabs, homestays, or finding a romantic travel date makes the journey significantly safer and more exciting. The Travel Card highlights synchronized travel dates and travel dating vibes up front:
             </p>
 
-            {/* Feature Breakdown Grid Explaining What the Card Shows */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
+            {/* Feature Breakdown — Accent Bar List */}
+            <div className="space-y-4 pt-1">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-orange-500 hover:border-orange-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <Wallet className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  1. Transparent Rupee Budget
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Clear upfront cost ranges for stays and cabs—zero awkward money talks.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Transparent Rupee Budget</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    Clear upfront cost ranges for stays and cabs—zero awkward money talks.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold mb-2.5">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-rose-500 hover:border-rose-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  2. Travel Dating &amp; Synced Dates
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Match with verified singles for scenic dates, or find companions on your exact travel days.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Travel Dating &amp; Synced Dates</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    Match with verified singles for scenic dates, or find companions on your exact travel days.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-orange-500 hover:border-orange-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <Compass className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  3. Planned Route &amp; Attractions
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Daily route highlights, stays, and trails mapped out before you pack your bags.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Planned Route &amp; Attractions</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    Daily route highlights, stays, and trails mapped out before you pack your bags.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#17120d] border border-orange-200 dark:border-orange-950/80 shadow-xs hover:border-orange-500/60 hover:shadow-md transition-all">
-                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 flex items-center justify-center font-bold mb-2.5">
+              <div className="flex items-start gap-3.5 pl-4 border-l-2 border-orange-500 hover:border-orange-400 transition-colors group">
+                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                   <Clock className="w-4 h-4" />
                 </div>
-                <h4 className="text-xs font-black text-slate-900 dark:text-white mb-1">
-                  4. Ephemeral 7-Day Chat Expiry
-                </h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                  Group chats auto-delete 7 days post-trip for complete peace of mind and privacy.
-                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Ephemeral 7-Day Chat Expiry</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                    Group chats auto-delete 7 days post-trip for complete peace of mind and privacy.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -794,11 +794,11 @@ export function LandingPageClient() {
           </div>
 
           {/* RIGHT COLUMN: Discover-style Travel Card Preview */}
-          <div className="lg:col-span-6 w-full max-w-md mx-auto lg:max-w-none order-1 lg:order-2">
+          <div className="lg:col-span-5 w-full max-w-sm mx-auto lg:max-w-none order-1 lg:order-2">
             <Card3DContainer accentColor="orange">
               <div className="group relative w-full bg-white dark:bg-[#121815] rounded-3xl border border-orange-100 dark:border-orange-950/70 shadow-[0_20px_50px_rgba(249,115,22,0.12)] hover:shadow-[0_25px_60px_rgba(249,115,22,0.22)] transition-all duration-500 flex flex-col justify-between overflow-hidden">
                 {/* ── TOP THUMBNAIL BANNER ── */}
-                <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900">
+                <div className="relative h-40 sm:h-44 w-full overflow-hidden bg-slate-900">
                   <img
                     src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop&q=80"
                     alt="Kasol &amp; Tosh: Parvati Valley Trek"
@@ -818,8 +818,8 @@ export function LandingPageClient() {
                         <Heart className="w-3 h-3 fill-white text-white" />
                         <span>Travel Dating</span>
                       </span>
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40 border border-orange-400/40 animate-pulse">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/40 border border-orange-400/40 sm:animate-pulse">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white sm:animate-ping" />
                         <span>1 spot left</span>
                       </span>
                     </div>
@@ -838,11 +838,11 @@ export function LandingPageClient() {
                 </div>
 
                 {/* ── CARD CONTENT BODY ── */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
                   <div className="space-y-3.5">
                     {/* Destination Title */}
                     <div>
-                      <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-snug tracking-tight group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                      <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug tracking-tight group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
                         Kasol &amp; Tosh: Parvati Valley Trek
                       </h3>
                     </div>
@@ -854,7 +854,7 @@ export function LandingPageClient() {
                           <img
                             src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&auto=format&fit=crop&q=80"
                             alt="Priya Iyer"
-                            className="w-10 h-10 rounded-full object-cover ring-2 ring-orange-500/40 shadow-sm"
+                            className="w-8 h-8 rounded-full object-cover ring-2 ring-orange-500/40 shadow-sm"
                           />
                           <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center ring-2 ring-white dark:ring-[#121815]">
                             <BadgeCheck className="w-3 h-3" />
@@ -1023,61 +1023,109 @@ export function LandingPageClient() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-children">
+        {/* Vertical Timeline */}
+        <div className="relative max-w-3xl mx-auto">
+          {/* Connecting line */}
+          <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-500/60 via-orange-500/60 to-teal-500/60 md:-translate-x-px" />
+
           {/* Step 1 */}
-          <div className="animate-reveal-bottom p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(16,185,129,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-black text-base flex items-center justify-center shadow-md shadow-emerald-600/40 group-hover:scale-105 transition-transform duration-300">
-                1
+          <div className="animate-reveal-bottom relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-14 group">
+            {/* Left content (desktop) */}
+            <div className="hidden md:flex md:w-[calc(50%-2rem)] justify-end">
+              <div className="text-right space-y-2 max-w-xs">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Sign Up &amp; Verify
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Create your profile with verification credentials. Browse weekend city hangouts or multi-day travel expeditions once you log into the platform.
+                </p>
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  Quick &amp; Secure
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
               </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                1. Sign Up &amp; Verify
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Create your profile with verification credentials. Browse weekend city hangouts or multi-day travel expeditions once you log into the platform.
-              </p>
             </div>
-            <div className="pt-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <span>Quick &amp; Secure</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+            {/* Node */}
+            <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-700 text-white font-black text-lg flex items-center justify-center shadow-lg shadow-emerald-600/40 ring-4 ring-white dark:ring-[#0a0f0d] group-hover:scale-110 transition-transform duration-300">
+              1
+            </div>
+            {/* Right content (mobile + desktop spacer) */}
+            <div className="md:w-[calc(50%-2rem)]">
+              <div className="md:hidden space-y-2">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Sign Up &amp; Verify
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Create your profile with verification credentials. Browse weekend city hangouts or multi-day travel expeditions once you log into the platform.
+                </p>
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  Quick &amp; Secure
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Step 2 */}
-          <div className="animate-reveal-bottom animation-delay-200 p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-orange-500 hover:shadow-[0_12px_30px_rgba(249,115,22,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 text-white font-black text-base flex items-center justify-center shadow-md shadow-orange-500/40 group-hover:scale-105 transition-transform duration-300">
-                2
-              </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                2. Mutual Compatibility Check
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Review verified member badges, bio notes, and compatibility scores. Send a personalized join request. No unsolicited messages ever reach your inbox.
-              </p>
+          <div className="animate-reveal-bottom animation-delay-200 relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-14 group">
+            {/* Left spacer (desktop) */}
+            <div className="hidden md:block md:w-[calc(50%-2rem)]" />
+            {/* Node */}
+            <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 text-white font-black text-lg flex items-center justify-center shadow-lg shadow-orange-500/40 ring-4 ring-white dark:ring-[#0a0f0d] group-hover:scale-110 transition-transform duration-300">
+              2
             </div>
-            <div className="pt-2 text-xs font-bold text-orange-600 dark:text-orange-400 flex items-center gap-1">
-              <span>Zero Unwanted DMs</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+            {/* Right content */}
+            <div className="md:w-[calc(50%-2rem)]">
+              <div className="space-y-2">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Mutual Compatibility Check
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Review verified member badges, bio notes, and compatibility scores. Send a personalized join request. No unsolicited messages ever reach your inbox.
+                </p>
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-orange-600 dark:text-orange-400">
+                  Zero Unwanted DMs
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Step 3 */}
-          <div className="animate-reveal-bottom animation-delay-400 p-6 rounded-3xl bg-slate-50 dark:bg-[#111815] border border-slate-200 dark:border-emerald-950/80 space-y-3 hover:border-emerald-500 hover:shadow-[0_12px_30px_rgba(16,185,129,0.20)] transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-white font-black text-base flex items-center justify-center shadow-md shadow-teal-600/40 group-hover:scale-105 transition-transform duration-300">
-                3
+          <div className="animate-reveal-bottom animation-delay-400 relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8 group">
+            {/* Left content (desktop) */}
+            <div className="hidden md:flex md:w-[calc(50%-2rem)] justify-end">
+              <div className="text-right space-y-2 max-w-xs">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Encrypted Chat &amp; Public Meetup
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  When the host confirms, an end-to-end encrypted room opens. Confirm details, meet in welcoming public spots, and turn solo plans into memorable days.
+                </p>
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  Safe Public Spaces
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
               </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                3. Encrypted Chat &amp; Public Meetup
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                When the host confirms, an end-to-end encrypted room opens. Confirm details, meet in welcoming public spots, and turn solo plans into memorable days.
-              </p>
             </div>
-            <div className="pt-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <span>Safe Public Spaces</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+            {/* Node */}
+            <div className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-700 text-white font-black text-lg flex items-center justify-center shadow-lg shadow-teal-600/40 ring-4 ring-white dark:ring-[#0a0f0d] group-hover:scale-110 transition-transform duration-300">
+              3
+            </div>
+            {/* Right content (mobile) */}
+            <div className="md:w-[calc(50%-2rem)]">
+              <div className="md:hidden space-y-2">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Encrypted Chat &amp; Public Meetup
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  When the host confirms, an end-to-end encrypted room opens. Confirm details, meet in welcoming public spots, and turn solo plans into memorable days.
+                </p>
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  Safe Public Spaces
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
             </div>
           </div>
         </div>

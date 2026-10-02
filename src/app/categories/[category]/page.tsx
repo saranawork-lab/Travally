@@ -94,7 +94,7 @@ export default async function CategorySEOPage({
     "@type": "CollectionPage",
     name: catInfo.title,
     description: catInfo.desc,
-    url: `https://travally.app/categories/${catKey}`,
+    url: `https://travally.in/categories/${catKey}`,
   };
 
   return (

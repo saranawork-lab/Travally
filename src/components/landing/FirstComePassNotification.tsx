@@ -110,7 +110,7 @@ export function FirstComePassNotification({
           onClick={handleClose}
           className="relative z-10 w-full py-2 px-3 rounded-lg bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:via-teal-500 hover:to-emerald-400 text-white font-extrabold text-[11px] sm:text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/25 hover:shadow-emerald-600/35 transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
         >
-          <span>Register & Claim Your Pass</span>
+          <span>Register Now</span>
           <ArrowRight className="w-3 h-3" />
         </Link>
 

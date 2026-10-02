@@ -10,14 +10,20 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   const clientId = process.env.LINKEDIN_CLIENT_ID;
   const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
+
+  const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+  const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  const requestOrigin = `${proto}://${host}`;
+
   const appUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
-    req.nextUrl.origin ||
+    requestOrigin ||
     "http://localhost:3000";
 
-  const redirectUri =
-    process.env.LINKEDIN_REDIRECT_URI ||
-    `${appUrl}/api/auth/linkedin/callback`;
+  let redirectUri = process.env.LINKEDIN_REDIRECT_URI;
+  if (!redirectUri || (redirectUri.includes("localhost") && !host.includes("localhost"))) {
+    redirectUri = `${requestOrigin}/api/auth/linkedin/callback`;
+  }
 
   // Check if live LinkedIn credentials are configured
   const isConfigured = Boolean(
@@ -40,10 +46,12 @@ export async function GET(req: NextRequest) {
   }
 
   if (!isConfigured) {
-    // If not configured, redirect back to register/login with a flag to show the instant verification modal
-    const returnTo = searchParams.get("returnTo") || "/register";
-    const redirectUrl = new URL(returnTo, req.nextUrl.origin);
-    redirectUrl.searchParams.set("linkedin_quick_connect", "true");
+    const returnTo = searchParams.get("returnTo") || "/login";
+    const redirectUrl = new URL(returnTo, requestOrigin);
+    redirectUrl.searchParams.set(
+      "error",
+      "LinkedIn credentials are not configured in environment variables."
+    );
     return NextResponse.redirect(redirectUrl);
   }
 
@@ -57,8 +65,16 @@ export async function GET(req: NextRequest) {
 
   const response = NextResponse.redirect(linkedinAuthUrl);
 
-  // Store state for CSRF validation
+  // Store state and redirectUri for CSRF and callback verification
   response.cookies.set("linkedin_oauth_state", state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 10 * 60, // 10 minutes
+    path: "/",
+  });
+
+  response.cookies.set("linkedin_oauth_redirect_uri", redirectUri, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

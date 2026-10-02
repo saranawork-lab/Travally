@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Loader2, HelpCircle } from "lucide-react";
-import { LinkedInConnectModal } from "./LinkedInConnectModal";
 
 interface LinkedInAuthButtonProps {
   mode?: "signup" | "login";
@@ -17,27 +16,11 @@ export const LinkedInAuthButton: React.FC<LinkedInAuthButtonProps> = ({
   defaultEmail = "",
   defaultName = "",
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [checking, setChecking] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     setChecking(true);
-    try {
-      const res = await fetch("/api/auth/linkedin?check=true");
-      const data = await res.json();
-
-      if (data.configured) {
-        // Live LinkedIn credentials exist: redirect to LinkedIn OAuth consent screen
-        window.location.href = "/api/auth/linkedin";
-      } else {
-        // Fallback: open the instant verified member modal
-        setIsModalOpen(true);
-      }
-    } catch {
-      setIsModalOpen(true);
-    } finally {
-      setChecking(false);
-    }
+    window.location.href = "/api/auth/linkedin";
   };
 
   return (
@@ -87,13 +70,6 @@ export const LinkedInAuthButton: React.FC<LinkedInAuthButtonProps> = ({
           </span>
         </button>
       </div>
-
-      <LinkedInConnectModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        defaultEmail={defaultEmail}
-        defaultName={defaultName}
-      />
     </>
   );
 };

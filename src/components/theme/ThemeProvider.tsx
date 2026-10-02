@@ -16,27 +16,15 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const THEME_STORAGE_KEY = "travally_theme";
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>("dark");
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // 1. Read stored theme or default to dark
-    const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-    const initialTheme: Theme = stored || "dark";
-    setThemeState(initialTheme);
-
-    const systemIsDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const effective: "light" | "dark" =
-      initialTheme === "system" ? (systemIsDark ? "dark" : "light") : initialTheme;
-    setResolvedTheme(effective);
-
-    if (effective === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
+    // 1. Force light mode
+    setThemeState("light");
+    setResolvedTheme("light");
+    document.documentElement.classList.remove("dark");
     setMounted(true);
   }, []);
 
@@ -63,21 +51,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Listen to system preference changes when in "system" mode
   useEffect(() => {
-    if (!mounted) return;
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (theme === "system") {
-        const effective = e.matches ? "dark" : "light";
-        setResolvedTheme(effective);
-        if (effective === "dark") {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      }
-    };
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    // Disabled listener, force light mode
+    document.documentElement.classList.remove("dark");
   }, [theme, mounted]);
 
   return (

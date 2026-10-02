@@ -82,8 +82,8 @@ export function SemiCircleTestimonials({ testimonials }: SemiCircleTestimonialsP
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Subtle ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-32 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
+      {/* Subtle ambient lighting - desktop only */}
+      <div className="hidden sm:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-32 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Edge gradient fade masks */}
       <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-r from-white via-white/80 dark:from-[#090d0b] dark:via-[#090d0b]/80 to-transparent z-20 pointer-events-none" />
@@ -127,7 +127,7 @@ export function SemiCircleTestimonials({ testimonials }: SemiCircleTestimonialsP
               className={`
                 w-[280px] sm:w-[290px] shrink-0
                 p-4 rounded-2xl
-                bg-white/90 dark:bg-[#0d1511]/90 backdrop-blur-xl
+                bg-white dark:bg-[#0d1511]
                 border border-slate-200/80 dark:border-emerald-950/70
                 shadow-[0_4px_20px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.35)]
                 transition-all duration-300 transform-gpu

@@ -11,9 +11,13 @@ export const dynamic = "force-dynamic";
  * Creates or updates user, issues session cookie, and directs to onboarding if profile data is needed.
  */
 export async function GET(req: NextRequest) {
+  const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+  const proto = req.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  const requestOrigin = `${proto}://${host}`;
+
   const appUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
-    req.nextUrl.origin ||
+    requestOrigin ||
     "http://localhost:3000";
 
   const searchParams = req.nextUrl.searchParams;
@@ -23,7 +27,7 @@ export async function GET(req: NextRequest) {
 
   if (error || !code) {
     console.error("Google OAuth error:", error);
-    const redirectUrl = new URL("/login", appUrl);
+    const redirectUrl = new URL("/login", requestOrigin);
     redirectUrl.searchParams.set("error", error || "Google sign-in was cancelled.");
     return NextResponse.redirect(redirectUrl);
   }
@@ -31,9 +35,14 @@ export async function GET(req: NextRequest) {
   try {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-    const redirectUri =
-      process.env.GOOGLE_REDIRECT_URI ||
-      `${appUrl}/api/auth/google/callback`;
+
+    const storedRedirectUri = req.cookies.get("google_oauth_redirect_uri")?.value;
+    let fallbackRedirectUri = process.env.GOOGLE_REDIRECT_URI;
+    if (!fallbackRedirectUri || (fallbackRedirectUri.includes("localhost") && !host.includes("localhost"))) {
+      fallbackRedirectUri = `${requestOrigin}/api/auth/google/callback`;
+    }
+
+    const redirectUri = storedRedirectUri || fallbackRedirectUri;
 
     if (!clientId || !clientSecret) {
       throw new Error("Google credentials are not configured in environment.");
@@ -156,7 +165,7 @@ export async function GET(req: NextRequest) {
 
     // If profile is already complete, go straight to tracking; otherwise ask remaining data in /onboarding
     const targetPath = isProfileComplete ? "/tracking" : "/onboarding";
-    const redirectUrl = new URL(targetPath, appUrl);
+    const redirectUrl = new URL(targetPath, requestOrigin);
     if (!isProfileComplete) {
       redirectUrl.searchParams.set("google", "true");
     }
@@ -173,13 +182,14 @@ export async function GET(req: NextRequest) {
       path: "/",
     });
 
-    // Clear oauth state cookie
+    // Clear oauth cookies
     response.cookies.delete("google_oauth_state");
+    response.cookies.delete("google_oauth_redirect_uri");
 
     return response;
   } catch (err: any) {
     console.error("Google OAuth Callback exception:", err);
-    const redirectUrl = new URL("/login", appUrl);
+    const redirectUrl = new URL("/login", requestOrigin);
     redirectUrl.searchParams.set("error", err.message || "Failed to complete Google sign-in");
     return NextResponse.redirect(redirectUrl);
   }

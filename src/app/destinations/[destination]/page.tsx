@@ -103,7 +103,7 @@ export default async function DestinationSEOPage({
     "@type": "TouristDestination",
     name: `${destInfo.name}, ${destInfo.country}`,
     description: destInfo.desc,
-    url: `https://travally.app/destinations/${destKey}`,
+    url: `https://travally.in/destinations/${destKey}`,
   };
 
   return (

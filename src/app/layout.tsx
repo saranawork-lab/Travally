@@ -27,11 +27,12 @@ export const metadata: Metadata = {
     "explore companion",
   ],
   authors: [{ name: "Travally Platform" }],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://travally.in"),
   openGraph: {
     title: "Travally — Social Travel Companion & Discovery",
     description:
       "Find genuine companions for everyday activities and upcoming travel with mutual approval and transparent compatibility.",
-    url: "https://travally.app",
+    url: "https://travally.in",
     siteName: "Travally",
     locale: "en_US",
     type: "website",
@@ -65,16 +66,8 @@ export default async function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              try {
-                var t = localStorage.getItem('travally_theme');
-                if (t === 'light') {
-                  document.documentElement.classList.remove('dark');
-                } else {
-                  document.documentElement.classList.add('dark');
-                }
-              } catch (_) {
-                document.documentElement.classList.add('dark');
-              }
+              // Enforce light mode only
+              document.documentElement.classList.remove('dark');
             `,
           }}
         />
