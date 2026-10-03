@@ -393,7 +393,7 @@ export default function TrackingPage() {
           </div>
 
           {/* Right Card: Interactive Travel Mini-Game in Place of Chat */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#111422] rounded-3xl sm:rounded-[2.5rem] p-3 sm:p-6 lg:p-7 text-slate-900 dark:text-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] dark:shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[550px] h-auto sm:h-[600px] lg:h-[640px] border border-slate-200/90 dark:border-slate-800/80">
+          <div className="lg:col-span-7 bg-white dark:bg-[#111422] rounded-3xl sm:rounded-[2.5rem] p-2.5 sm:p-6 lg:p-7 text-slate-900 dark:text-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] dark:shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[550px] h-auto sm:h-[600px] lg:h-[640px] border border-slate-200/90 dark:border-slate-800/80">
             <TravelMiniGame />
           </div>
 
