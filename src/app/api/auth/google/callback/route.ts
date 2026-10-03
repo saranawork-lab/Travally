@@ -109,8 +109,9 @@ export async function GET(req: NextRequest) {
       const hasPincode = Boolean(profile?.pincode && profile.pincode.trim() !== "");
       const hasDob = Boolean(profile?.birthDate);
       const hasAddress = Boolean(profile?.address || prefs?.address);
+      const hasCustomPassword = Boolean(prefs?.hasCustomPassword);
 
-      isProfileComplete = Boolean(hasPhone && hasCity && hasPincode && hasDob && hasAddress);
+      isProfileComplete = Boolean(hasPhone && hasCity && hasPincode && hasDob && hasAddress && hasCustomPassword);
 
       // If user has no avatar or vercel placeholder, update with Google picture
       if (!user.profile?.avatarUrl || user.profile.avatarUrl.includes("avatar.vercel.sh")) {
@@ -135,8 +136,8 @@ export async function GET(req: NextRequest) {
             create: {
               displayName,
               avatarUrl,
-              isVerified: true,
-              verificationStatus: "VERIFIED",
+              isVerified: false,
+              verificationStatus: "UNVERIFIED",
               membershipStatus: "ACTIVE",
               membershipTier: "FOUNDING_EXPLORER",
               membershipNumber,

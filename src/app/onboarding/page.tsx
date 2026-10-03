@@ -26,6 +26,9 @@ import {
   Upload,
   Trash2,
   ShieldCheck,
+  Mail,
+  Lock,
+  KeyRound,
 } from "lucide-react";
 
 const TRAVEL_INTERESTS = [
@@ -75,6 +78,7 @@ function OnboardingForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isGoogle = searchParams.get("google") === "true";
+  const isLinkedin = searchParams.get("linkedin") === "true";
 
   const [loadingUser, setLoadingUser] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -84,6 +88,9 @@ function OnboardingForm() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [avatarUrl, setAvatarUrl] = useState<string>("/default-avatar.png");
   const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [pincode, setPincode] = useState("");
@@ -164,6 +171,7 @@ function OnboardingForm() {
         if (data?.user) {
           const u = data.user;
           setCurrentUser(u);
+          setEmail(u.email || "");
           const p = u.profile || {};
           setDisplayName(p.displayName || u.displayName || "");
 
@@ -263,6 +271,32 @@ function OnboardingForm() {
     setSaving(true);
     setError(null);
 
+    // 0. Email validation
+    if (!email.trim() || !email.includes("@")) {
+      setError("Please enter a valid email address.");
+      setSaving(false);
+      return;
+    }
+
+    // 0.1 Password validation
+    if (!password) {
+      setError("Please create a password for your account to enable direct email login.");
+      setSaving(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      setSaving(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match. Please re-type your password.");
+      setSaving(false);
+      return;
+    }
+
     // 1. Full name validation
     if (!displayName.trim()) {
       setError("Please enter your display name.");
@@ -313,6 +347,8 @@ function OnboardingForm() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          email: email.trim(),
+          password,
           displayName: displayName.trim(),
           avatarUrl: avatarUrl || "/default-avatar.png",
           city: city.trim(),
@@ -508,6 +544,70 @@ function OnboardingForm() {
                         <span>Use Default</span>
                       </button>
                     )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Row 0: Email & Password for Direct Login */}
+              <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 space-y-3">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                  <KeyRound className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>Login Credentials & Account Email</span>
+                </div>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400">
+                  Confirm your email and set a password so you can also log in directly using email & password.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                      Account Email *
+                    </label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-500 transition"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                      Create Password *
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Min 6 characters"
+                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-500 transition"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1">
+                      Confirm Password *
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="password"
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Re-type password"
+                        className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-emerald-950/70 bg-white dark:bg-[#16201b] text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-500 transition"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

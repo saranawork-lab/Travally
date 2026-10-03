@@ -134,8 +134,9 @@ export async function GET(req: NextRequest) {
       const hasPincode = Boolean(profile?.pincode && profile.pincode.trim() !== "");
       const hasDob = Boolean(profile?.birthDate);
       const hasAddress = Boolean(profile?.address || prefs?.address);
+      const hasCustomPassword = Boolean(prefs?.hasCustomPassword);
 
-      isProfileComplete = Boolean(hasPhone && hasCity && hasPincode && hasDob && hasAddress);
+      isProfileComplete = Boolean(hasPhone && hasCity && hasPincode && hasDob && hasAddress && hasCustomPassword);
 
       // User exists: Update profile to ensure LinkedIn Verified Member status
       await db.profile.upsert({

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
-
+import bcrypt from "bcryptjs";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +51,8 @@ export async function PUT(req: NextRequest) {
 
     const body = await req.json();
     const {
+      email,
+      password,
       displayName,
       bio,
       city,
@@ -73,6 +75,21 @@ export async function PUT(req: NextRequest) {
       discoveryVisible,
     } = body;
 
+    // If password or email are provided (e.g. from Google or LinkedIn OAuth users creating a direct login password/email), update User model
+    const userUpdates: any = {};
+    if (email && typeof email === "string" && email.includes("@")) {
+      userUpdates.email = email.toLowerCase().trim();
+    }
+    if (password && typeof password === "string" && password.trim().length >= 4) {
+      userUpdates.passwordHash = await bcrypt.hash(password.trim(), 10);
+    }
+    if (Object.keys(userUpdates).length > 0) {
+      await db.user.update({
+        where: { id: user.id },
+        data: userUpdates,
+      });
+    }
+
     let parsedBirthDate: Date | undefined = undefined;
     let calculatedAge: number | undefined = undefined;
     if (birthDate) {
@@ -89,8 +106,6 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-
-
     // Merge lifestyle habits & phone number into connectionPreferences
     let mergedConnPrefs: Record<string, any> = {};
     if (connectionPreferences) {
@@ -106,6 +121,9 @@ export async function PUT(req: NextRequest) {
     if (drinkingHabit !== undefined) mergedConnPrefs.drinkingHabit = drinkingHabit;
     if (dietaryPreference !== undefined) mergedConnPrefs.dietaryPreference = dietaryPreference;
     if (lifestyleTags !== undefined) mergedConnPrefs.lifestyleTags = lifestyleTags;
+    if (password && typeof password === "string" && password.trim().length >= 4) {
+      mergedConnPrefs.hasCustomPassword = true;
+    }
 
     const updatedProfile = await db.profile.upsert({
       where: { userId: user.id },

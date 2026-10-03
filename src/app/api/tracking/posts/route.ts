@@ -138,6 +138,33 @@ export async function PUT(req: Request) {
   }
 }
 
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, action } = body;
+
+    const postIndex = communityPostsStore.findIndex((p) => p.id === id);
+    if (postIndex === -1) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    if (action === "like") {
+      communityPostsStore[postIndex].likesCount += 1;
+    } else if (action === "unlike") {
+      communityPostsStore[postIndex].likesCount = Math.max(0, communityPostsStore[postIndex].likesCount - 1);
+    }
+
+    return NextResponse.json({
+      success: true,
+      post: communityPostsStore[postIndex],
+      posts: communityPostsStore,
+    });
+  } catch (error) {
+    console.error("Error updating likes:", error);
+    return NextResponse.json({ error: "Failed to update likes" }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
