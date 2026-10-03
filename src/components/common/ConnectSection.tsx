@@ -142,42 +142,28 @@ export const ConnectSection: React.FC = () => {
           </p>
         </div>
 
-        {/* ── SIDE BY SIDE CONTENT INSIDE THE BIG BOX ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-          
-          {/* Left Side: Communication Channel Information Box */}
-          <div className="lg:col-span-5 bg-white/70 dark:bg-slate-900/60 border border-emerald-100 dark:border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-xs">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-2">
+        {/* ── CLEAN FULL-WIDTH MESSAGE FORM WITH DIRECT CHANNEL HEADER ── */}
+        <div className="max-w-3xl mx-auto w-full">
+          <div className="bg-white dark:bg-[#0c1410] border border-slate-200/80 dark:border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-md">
+            
+            {/* Header Above the Inputs */}
+            <div className="mb-6 pb-4 border-b border-slate-100 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
                 <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2.5">
                   <span className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 font-bold">
                     <Mail className="w-4 h-4" />
                   </span>
-                  Direct Channel
+                  Direct Channel • Send Us a Message
                 </h3>
-
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/60 dark:border-emerald-800/60 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 shrink-0">
-                  <Clock className="w-3 h-3 text-emerald-500" />
-                  <span>Replies &lt; 2h</span>
-                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  We love hearing from travelers, activity organizers, and partners. Messages arrive directly in our inbox.
+                </p>
               </div>
 
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                We love hearing from travelers, activity organizers, and partners. Messages sent through this form arrive directly in our team inbox.
-              </p>
-            </div>
-
-          </div>
-
-          {/* Right Side: The Details Taking & Sending Box */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#0c1410] border border-slate-200/80 dark:border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-md flex flex-col justify-between">
-            <div className="mb-4 pb-2 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                Send Us a Message
-              </span>
-              <span className="text-[11px] text-slate-400 dark:text-slate-500">
-                * Required fields
-              </span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/60 dark:border-emerald-800/60 text-xs font-bold text-emerald-700 dark:text-emerald-300 shrink-0">
+                <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Replies &lt; 2h</span>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
