@@ -10,8 +10,6 @@ import {
   MessageSquare,
   Sparkles,
   Loader2,
-  Clock,
-  ShieldCheck,
 } from "lucide-react";
 import { NotificationPopup } from "./NotificationPopup";
 
@@ -158,11 +156,6 @@ export const ConnectSection: React.FC = () => {
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   We love hearing from travelers, activity organizers, and partners. Messages arrive directly in our inbox.
                 </p>
-              </div>
-
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/60 dark:border-emerald-800/60 text-xs font-bold text-emerald-700 dark:text-emerald-300 shrink-0">
-                <Clock className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Replies &lt; 2h</span>
               </div>
             </div>
 
