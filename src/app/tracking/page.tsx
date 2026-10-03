@@ -157,7 +157,7 @@ export default function TrackingPage() {
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 items-stretch my-auto">
 
           {/* Left Card: 3D Flip Card Container */}
-          <div className="lg:col-span-5 h-[560px] sm:h-[600px] lg:h-[640px] w-full [perspective:1000px]">
+          <div className="lg:col-span-5 h-[580px] sm:h-[600px] lg:h-[640px] w-full [perspective:1000px]">
             <div
               onClick={() => setIsFlipped(!isFlipped)}
               className={`relative w-full h-full cursor-pointer select-none transition-transform duration-700 [transform-style:preserve-3d] ${
@@ -299,82 +299,82 @@ export default function TrackingPage() {
               </div>
 
               {/* ── BACK SIDE: Live Community & Early Access Card ── */}
-              <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-slate-50 dark:bg-[#111422] rounded-[2.5rem] p-6 sm:p-8 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] dark:shadow-2xl border border-slate-200 dark:border-slate-800/80 flex flex-col justify-between overflow-hidden">
+              <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-slate-50 dark:bg-[#111422] rounded-3xl sm:rounded-[2.5rem] p-4 sm:p-7 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] dark:shadow-2xl border border-slate-200 dark:border-slate-800/80 flex flex-col justify-between overflow-hidden">
                 {/* Ambient Glow */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-emerald-100 via-teal-100 to-amber-100 dark:from-emerald-900/20 dark:via-teal-900/20 dark:to-amber-900/20 rounded-full blur-3xl opacity-60 pointer-events-none" />
 
-                <div className="relative z-10 space-y-5">
+                <div className="relative z-10 space-y-2 sm:space-y-4 my-auto">
                   <div className="flex items-center justify-between">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-400 text-xs font-black border border-orange-200 dark:border-orange-800/60 shadow-xs uppercase tracking-wider">
-                      <Rocket className="w-3.5 h-3.5" />
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-400 text-[10px] sm:text-xs font-black border border-orange-200 dark:border-orange-800/60 shadow-xs uppercase tracking-wider">
+                      <Rocket className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
                       <span>EARLY ACCESS • COMING SOON</span>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                      Live Community <br /> &amp; Early Access
+                  <div className="space-y-1 sm:space-y-2.5">
+                    <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                      Live Community &amp; Early Access
                     </h1>
 
-                    <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-2">
+                    <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-1 sm:space-y-1.5">
                       <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug">
                         🚀 Full Platform Launching Soon!
                       </p>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                      <p className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 leading-snug sm:leading-relaxed">
                         Thank you for joining Travally Early Access. Our AI companion matching, group expedition trips, and verified travel buddy requests are launching soon.
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex flex-col items-center text-center">
-                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-1">
+                  <div className="pt-2 sm:pt-3 border-t border-slate-200 dark:border-slate-800/80 flex flex-col items-center text-center">
+                    <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 mb-0.5 sm:mb-1">
                       {loading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       ) : (
-                        <div className="w-4 h-4 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
-                          <div className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
+                        <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
                         </div>
                       )}
-                      <span className="font-extrabold text-xs uppercase tracking-wider text-slate-700 dark:text-gray-300">
+                      <span className="font-extrabold text-[10px] sm:text-xs uppercase tracking-wider text-slate-700 dark:text-gray-300">
                         Total Registered Early Explorers
                       </span>
                     </div>
 
-                    <span className="text-5xl sm:text-6xl font-black text-slate-900 dark:text-white tracking-tighter tabular-nums drop-shadow-sm">
+                    <span className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tighter tabular-nums drop-shadow-sm">
                       {displayCount.toLocaleString()}
                     </span>
 
-                    <div className="flex items-center justify-center gap-2 mt-2 text-xs font-bold text-slate-600 dark:text-slate-400">
-                      <UserCheck className="w-4 h-4 text-emerald-500" />
+                    <div className="flex items-center justify-center gap-1.5 mt-1 sm:mt-1.5 text-[11px] sm:text-xs font-bold text-slate-600 dark:text-slate-400">
+                      <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
                       <span>Early Access Member Rank:</span>
                       <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">#{userNumber || 365}</span>
                     </div>
 
-                    {/* Upcoming Experience Tags (Filling empty space on back of card) */}
-                    <div className="pt-3 pb-1 flex flex-col items-center gap-2 w-full">
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+                    {/* Upcoming Experience Tags (Cleanly proportioned for mobile) */}
+                    <div className="pt-2 sm:pt-3 pb-0 flex flex-col items-center gap-1.5 w-full">
+                      <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
                         Upcoming Platform Modes
                       </span>
-                      <div className="flex flex-wrap items-center justify-center gap-1.5 max-w-sm">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-[11px] font-bold text-rose-600 dark:text-rose-400 shadow-xs">
+                      <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 max-w-sm">
+                        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 text-[10px] sm:text-[11px] font-bold text-rose-600 dark:text-rose-400 shadow-2xs whitespace-nowrap">
                           ❤️ Travel Dating
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 shadow-xs">
+                        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-900/60 text-[10px] sm:text-[11px] font-bold text-emerald-700 dark:text-emerald-400 shadow-2xs whitespace-nowrap">
                           🎒 Solo Buddy Match
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 text-[11px] font-bold text-amber-700 dark:text-amber-400 shadow-xs">
+                        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 text-[10px] sm:text-[11px] font-bold text-amber-700 dark:text-amber-400 shadow-2xs whitespace-nowrap">
                           ☕ Cafe &amp; City Walk
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/60 text-[11px] font-bold text-indigo-700 dark:text-indigo-400 shadow-xs">
+                        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/60 text-[10px] sm:text-[11px] font-bold text-indigo-700 dark:text-indigo-400 shadow-2xs whitespace-nowrap">
                           🏔️ Weekend Treks
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-violet-50 dark:bg-violet-950/40 border border-violet-200/80 dark:border-violet-900/60 text-[11px] font-bold text-violet-700 dark:text-violet-400 shadow-xs">
+                        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-violet-50 dark:bg-violet-950/40 border border-violet-200/80 dark:border-violet-900/60 text-[10px] sm:text-[11px] font-bold text-violet-700 dark:text-violet-400 shadow-2xs whitespace-nowrap">
                           🎉 Nightlife &amp; Events
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-fuchsia-50 dark:bg-fuchsia-950/40 border border-fuchsia-200/80 dark:border-fuchsia-900/60 text-[11px] font-bold text-fuchsia-700 dark:text-fuchsia-400 shadow-xs">
+                        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-fuchsia-50 dark:bg-fuchsia-950/40 border border-fuchsia-200/80 dark:border-fuchsia-900/60 text-[10px] sm:text-[11px] font-bold text-fuchsia-700 dark:text-fuchsia-400 shadow-2xs whitespace-nowrap">
                           🍸 Pubs n Clubs
                         </span>
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-300 shadow-xs">
+                        <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-[10px] sm:text-[11px] font-bold text-slate-700 dark:text-slate-300 shadow-2xs whitespace-nowrap">
                           ✨ Others
                         </span>
                       </div>
@@ -382,7 +382,7 @@ export default function TrackingPage() {
                   </div>
                 </div>
 
-                <div className="relative z-10 pt-4 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                <div className="relative z-10 pt-2 sm:pt-4 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   <span className="flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Verified Pass
                   </span>
