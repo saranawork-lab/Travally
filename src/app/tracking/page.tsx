@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import {
   Loader2,
@@ -13,6 +13,10 @@ import {
   Rocket,
   Heart,
   UserCheck,
+  Pencil,
+  Trash2,
+  Check,
+  X,
 } from "lucide-react";
 import { Logo } from "@/components/common/Logo";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
@@ -58,6 +62,18 @@ export default function TrackingPage() {
   const [newPostContent, setNewPostContent] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({});
+
+  // Editing state
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState("");
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+
+  const postsEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom of messages container
+  const scrollToBottom = () => {
+    postsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -126,6 +142,13 @@ export default function TrackingPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Scroll to bottom when posts load or update
+  useEffect(() => {
+    if (posts.length > 0) {
+      scrollToBottom();
+    }
+  }, [posts.length]);
+
   // Animate the counter when actualTotal changes
   useEffect(() => {
     if (actualTotal === 0) return;
@@ -164,11 +187,59 @@ export default function TrackingPage() {
       if (data.success && data.posts) {
         setPosts(data.posts);
         setNewPostContent("");
+        setTimeout(scrollToBottom, 100);
       }
     } catch (error) {
       console.error("Error creating post:", error);
     } finally {
       setIsPosting(false);
+    }
+  };
+
+  // Start Editing a Post
+  const handleStartEdit = (post: CommunityPost) => {
+    setEditingPostId(post.id);
+    setEditContent(post.content);
+  };
+
+  // Save Edit
+  const handleSaveEdit = async (id: string) => {
+    if (!editContent.trim() || isSavingEdit) return;
+
+    setIsSavingEdit(true);
+    try {
+      const res = await fetch("/api/tracking/posts", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, content: editContent }),
+      });
+
+      const data = await res.json();
+      if (data.success && data.posts) {
+        setPosts(data.posts);
+        setEditingPostId(null);
+        setEditContent("");
+      }
+    } catch (error) {
+      console.error("Error saving post edit:", error);
+    } finally {
+      setIsSavingEdit(false);
+    }
+  };
+
+  // Delete Post
+  const handleDeletePost = async (id: string) => {
+    try {
+      const res = await fetch(`/api/tracking/posts?id=${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+      if (data.success && data.posts) {
+        setPosts(data.posts);
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
     }
   };
 
@@ -304,10 +375,10 @@ export default function TrackingPage() {
             </div>
           </div>
 
-          {/* Right Card: Single Public Community Post & Broadcast Wall (No calls, No user list) */}
+          {/* Right Card: Single Public Community Post & Broadcast Wall (Latest messages at bottom, Heart on right edge, Edit & Delete) */}
           <div className="lg:col-span-7 bg-white dark:bg-[#111422] rounded-[2.5rem] p-6 sm:p-8 text-slate-900 dark:text-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.06)] dark:shadow-2xl relative overflow-hidden flex flex-col justify-between h-[600px] border border-slate-200/90 dark:border-slate-800/80">
             
-            {/* Header of Public Post Wall (Clean, No user list, No calls) */}
+            {/* Header of Public Post Wall */}
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800/80 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-md font-bold">
@@ -329,7 +400,7 @@ export default function TrackingPage() {
               </div>
             </div>
 
-            {/* Scrollable Community Posts Feed Area */}
+            {/* Scrollable Community Posts Feed Area (Chronological Order: Latest at Bottom) */}
             <div className="flex-1 overflow-y-auto my-4 space-y-4 pr-1 custom-scrollbar">
               {posts.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400">
@@ -340,9 +411,10 @@ export default function TrackingPage() {
                 posts.map((post) => (
                   <div
                     key={post.id}
-                    className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/70 hover:border-emerald-500/30 transition-all duration-200 group"
+                    className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/70 hover:border-emerald-500/30 transition-all duration-200 group relative"
                   >
                     <div className="flex items-start justify-between gap-3">
+                      {/* Author Info */}
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full border border-emerald-500/60 overflow-hidden bg-slate-200 dark:bg-slate-800 shrink-0">
                           <img
@@ -362,11 +434,6 @@ export default function TrackingPage() {
                             <span className="text-xs font-black text-slate-900 dark:text-white">
                               {post.authorName}
                             </span>
-                            {post.isEarlyAccessFounder && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-[10px] font-extrabold text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
-                                <ShieldCheck className="w-3 h-3 text-emerald-500" /> Early Access
-                              </span>
-                            )}
                           </div>
                           <div className="flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-500 font-medium">
                             {post.authorCity && (
@@ -380,38 +447,92 @@ export default function TrackingPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Post Content Body */}
-                    <p className="mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal whitespace-pre-wrap">
-                      {post.content}
-                    </p>
+                      {/* Side Edge Actions: Heart Like Button & Edit/Delete Controls */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        {/* Edit / Delete Options */}
+                        <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                          {editingPostId === post.id ? (
+                            <>
+                              <button
+                                onClick={() => handleSaveEdit(post.id)}
+                                disabled={isSavingEdit}
+                                className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 transition"
+                                title="Save Edit"
+                              >
+                                {isSavingEdit ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <Check className="w-3.5 h-3.5" />
+                                )}
+                              </button>
+                              <button
+                                onClick={() => setEditingPostId(null)}
+                                className="p-1.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 transition"
+                                title="Cancel"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => handleStartEdit(post)}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition"
+                                title="Edit Post"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleDeletePost(post.id)}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition"
+                                title="Delete Post"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </>
+                          )}
+                        </div>
 
-                    {/* Post Footer Actions */}
-                    <div className="mt-3 pt-2.5 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-between text-[11px] text-slate-400">
-                      <button
-                        onClick={() => toggleLike(post.id)}
-                        className={`flex items-center gap-1.5 transition font-bold ${
-                          likedPosts[post.id]
-                            ? "text-rose-500"
-                            : "hover:text-rose-500 text-slate-400"
-                        }`}
-                      >
-                        <Heart
-                          className={`w-3.5 h-3.5 ${
-                            likedPosts[post.id] ? "fill-rose-500 text-rose-500" : ""
+                        {/* Heart Emoji Button placed on right side edge */}
+                        <button
+                          onClick={() => toggleLike(post.id)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-full border transition font-bold text-xs ${
+                            likedPosts[post.id]
+                              ? "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900 text-rose-500"
+                              : "bg-slate-100 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500"
                           }`}
-                        />
-                        <span>{post.likesCount} {post.likesCount === 1 ? "Like" : "Likes"}</span>
-                      </button>
-
-                      <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
-                        Public Community Post
-                      </span>
+                          title="Like Post"
+                        >
+                          <Heart
+                            className={`w-3.5 h-3.5 ${
+                              likedPosts[post.id] ? "fill-rose-500 text-rose-500" : ""
+                            }`}
+                          />
+                          <span>{post.likesCount}</span>
+                        </button>
+                      </div>
                     </div>
+
+                    {/* Post Content Body or Inline Edit Mode */}
+                    {editingPostId === post.id ? (
+                      <div className="mt-3 space-y-2">
+                        <textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          className="w-full p-2.5 text-xs sm:text-sm rounded-xl border border-emerald-400 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden"
+                          rows={2}
+                        />
+                      </div>
+                    ) : (
+                      <p className="mt-3 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-normal whitespace-pre-wrap">
+                        {post.content}
+                      </p>
+                    )}
                   </div>
                 ))
               )}
+              <div ref={postsEndRef} />
             </div>
 
             {/* Post Input Box (Everyone logged in can post) */}

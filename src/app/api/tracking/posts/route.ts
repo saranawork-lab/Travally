@@ -24,7 +24,7 @@ let communityPostsStore: CommunityPostItem[] = [
     authorAvatar: "/default-avatar.png?v=2",
     authorCity: "Mumbai",
     content: "Welcome to Travally Early Access! Super excited to connect with fellow weekend travelers, cafe explorers, and adventure seekers! 🏔️✨",
-    createdAt: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
     likesCount: 14,
     isEarlyAccessFounder: true,
   },
@@ -46,7 +46,7 @@ let communityPostsStore: CommunityPostItem[] = [
     authorAvatar: "/default-avatar.png?v=2",
     authorCity: "Delhi NCR",
     content: "Thrilled to be an Early Access Founding Member on Travally! Looking forward to meeting travel companions for North India trips! ✈️☕",
-    createdAt: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
     likesCount: 21,
     isEarlyAccessFounder: true,
   },
@@ -94,8 +94,8 @@ export async function POST(req: Request) {
       isEarlyAccessFounder: true,
     };
 
-    // Prepend new post to the top
-    communityPostsStore = [newPost, ...communityPostsStore];
+    // Append new post so latest messages appear at the bottom
+    communityPostsStore = [...communityPostsStore, newPost];
 
     return NextResponse.json({
       success: true,
@@ -105,5 +105,56 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Error creating community post:", error);
     return NextResponse.json({ error: "Failed to publish post" }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, content } = body;
+
+    if (!id || !content || typeof content !== "string" || !content.trim()) {
+      return NextResponse.json({ error: "Post ID and valid content are required" }, { status: 400 });
+    }
+
+    const postIndex = communityPostsStore.findIndex((p) => p.id === id);
+    if (postIndex === -1) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    communityPostsStore[postIndex] = {
+      ...communityPostsStore[postIndex],
+      content: content.trim(),
+    };
+
+    return NextResponse.json({
+      success: true,
+      post: communityPostsStore[postIndex],
+      posts: communityPostsStore,
+    });
+  } catch (error) {
+    console.error("Error updating community post:", error);
+    return NextResponse.json({ error: "Failed to update post" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Post ID is required" }, { status: 400 });
+    }
+
+    communityPostsStore = communityPostsStore.filter((p) => p.id !== id);
+
+    return NextResponse.json({
+      success: true,
+      posts: communityPostsStore,
+    });
+  } catch (error) {
+    console.error("Error deleting community post:", error);
+    return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
   }
 }
