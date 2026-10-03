@@ -245,10 +245,6 @@ export default function TrackingPage() {
                   <Rocket className="w-3.5 h-3.5" />
                   <span>EARLY ACCESS • COMING SOON</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-xs font-black border border-emerald-200 dark:border-emerald-800/60 shadow-xs uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>FOUNDING MEMBER</span>
-                </div>
               </div>
 
               {/* Title & Sentences Explaining Coming Soon Early Access */}
