@@ -167,35 +167,6 @@ export const ConnectSection: React.FC = () => {
               </p>
             </div>
 
-            <div className="space-y-3 pt-2">
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200/60 dark:border-white/5 shadow-xs">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 font-bold">
-                  <Clock className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-slate-900 dark:text-slate-200">
-                    Rapid Turnaround
-                  </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Average response under 2 business hours
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-slate-800/70 border border-slate-200/60 dark:border-white/5 shadow-xs">
-                <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0 font-bold">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-slate-900 dark:text-slate-200">
-                    Community &amp; Safety Team
-                  </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Dedicated support for safety &amp; trips
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right Side: The Details Taking & Sending Box */}
