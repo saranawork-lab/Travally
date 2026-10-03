@@ -414,6 +414,121 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   transform: none !important;
 }
 
+/* ── Luxury Travally Logo Entrance Animation ── */
+@keyframes travallyAuroraPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  40% {
+    opacity: 0.8;
+    transform: scale(1.15);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes travallyLetterFloatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(5px) scale(0.92);
+    filter: blur(1.5px);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translateY(-0.8px) scale(1.02);
+    filter: blur(0px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes travallyLightSweep {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.7;
+  }
+
+  80% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translateX(450%) skewX(-25deg);
+    opacity: 0;
+  }
+}
+
+@keyframes travallyLaserTrail {
+  0% {
+    width: 0%;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  75% {
+    width: 100%;
+    opacity: 1;
+  }
+
+  90% {
+    width: 100%;
+    opacity: 0.5;
+  }
+
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes travallySparkGlider {
+  0% {
+    left: 0%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  75% {
+    left: 100%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  90% {
+    left: 100%;
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+
+  100% {
+    left: 100%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
 
@@ -866,12 +981,12 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(6, 78, 59, 0.25) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(6, 78, 59, 0.2) 100%);
   z-index: 1;
   pointer-events: none;
 }
 
-/* Fluid Chamber containing waves and bubbles */
+/* Fluid Chamber containing SVG waves & micro bubbles */
 .liquid-fluid-chamber {
   position: absolute;
   inset: 0;
@@ -881,129 +996,127 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   pointer-events: none;
 }
 
-/* Base rotating wave properties */
-.liquid-wave {
+/* SVG Wave Wrappers (Positioned at liquid level) */
+.liquid-svg-wrapper {
   position: absolute;
-  left: 50%;
-  border-radius: 42% 44% 41% 45%;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  bottom: -4px;
   pointer-events: none;
-  transform-origin: 50% 50%;
-  transition: bottom 0.65s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.65s ease;
+  transition: bottom 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform, bottom;
 }
 
-/* Wave 1: Back Deep Ocean Wave */
-.liquid-wave-back {
-  width: 290px;
-  height: 290px;
-  margin-left: -145px;
-  bottom: -238px;
-  background: linear-gradient(135deg, #047857 0%, #0f766e 55%, #0e7490 100%);
-  opacity: 0.75;
-  border-radius: 38% 46% 37% 47%;
-  animation: liquidSpinWave 6.5s linear infinite;
+.liquid-svg-element {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-/* Wave 2: Middle Vibrant Aqua/Teal Wave */
-.liquid-wave-mid {
-  width: 280px;
-  height: 280px;
-  margin-left: -140px;
-  bottom: -242px;
-  background: linear-gradient(135deg, #10b981 0%, #14b8a6 50%, #06b6d4 100%);
-  opacity: 0.9;
-  border-radius: 46% 38% 47% 37%;
-  animation: liquidSpinWaveRev 5s linear infinite;
+/* Wave 1: Deep Ocean Background Wave */
+.wave-layer-back {
+  z-index: 1;
+  bottom: -4px;
+  animation: waveFlowHorizontal 7.5s linear infinite, waveBobVertical 4s ease-in-out infinite alternate;
 }
 
-/* Wave 3: Front Sea Crest Wave with White Foam Rim */
-.liquid-wave-front {
-  width: 270px;
-  height: 270px;
-  margin-left: -135px;
-  bottom: -246px;
-  background: linear-gradient(135deg, rgba(52, 211, 153, 0.95) 0%, rgba(45, 212, 191, 0.9) 45%, rgba(34, 211, 238, 0.95) 100%);
-  border: 2.2px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
-  border-radius: 39% 47% 37% 45%;
-  opacity: 0.98;
-  animation: liquidSpinWave 3.8s linear infinite;
+/* Wave 2: Middle Vibrant Aqua Wave */
+.wave-layer-mid {
+  z-index: 2;
+  bottom: -6px;
+  animation: waveFlowHorizontalReverse 5.2s linear infinite, waveBobVertical 3.2s ease-in-out infinite alternate-reverse;
 }
 
-/* Hover State: Surge upward like high-tide sea waves */
-.liquid-bottle-btn:hover .liquid-wave-back {
-  bottom: -188px;
-  animation-duration: 2.6s;
+/* Wave 3: Front Sea Crest Wave with White Foam */
+.wave-layer-front {
+  z-index: 3;
+  bottom: -8px;
+  animation: waveFlowHorizontal 3.6s linear infinite, waveBobVertical 2.6s ease-in-out infinite alternate;
 }
 
-.liquid-bottle-btn:hover .liquid-wave-mid {
-  bottom: -194px;
-  animation-duration: 2s;
+/* Hover State: High-Tide Surge */
+.liquid-bottle-btn:hover .wave-layer-back {
+  bottom: 1px;
+  animation-duration: 4s, 2s;
 }
 
-.liquid-bottle-btn:hover .liquid-wave-front {
-  bottom: -198px;
-  animation-duration: 1.6s;
+.liquid-bottle-btn:hover .wave-layer-mid {
+  bottom: 0px;
+  animation-duration: 3s, 1.8s;
+}
+
+.liquid-bottle-btn:hover .wave-layer-front {
+  bottom: -1px;
+  animation-duration: 2.2s, 1.4s;
 }
 
 /* Water Bubbles inside bottle */
 .liquid-bubble {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   box-shadow:
-    inset 0 0 2px rgba(255, 255, 255, 0.9),
-    0 0 4px rgba(103, 232, 249, 0.8);
+    inset 0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 5px rgba(103, 232, 249, 0.9);
   pointer-events: none;
   z-index: 5;
-  animation: bubbleRiseFloat 3.5s ease-in-out infinite;
+  animation: bubbleRiseFloat 3.2s ease-in-out infinite;
 }
 
 .liquid-bubble.b1 {
   width: 3.5px;
   height: 3.5px;
-  left: 22%;
+  left: 18%;
   animation-delay: 0s;
-  animation-duration: 3.2s;
+  animation-duration: 3.1s;
 }
 
 .liquid-bubble.b2 {
-  width: 4.5px;
-  height: 4.5px;
-  left: 48%;
-  animation-delay: 1.1s;
-  animation-duration: 2.8s;
+  width: 4px;
+  height: 4px;
+  left: 38%;
+  animation-delay: 0.9s;
+  animation-duration: 2.7s;
 }
 
 .liquid-bubble.b3 {
   width: 3px;
   height: 3px;
-  left: 72%;
-  animation-delay: 1.8s;
-  animation-duration: 3.6s;
+  left: 58%;
+  animation-delay: 1.6s;
+  animation-duration: 3.4s;
 }
 
 .liquid-bubble.b4 {
+  width: 3.5px;
+  height: 3.5px;
+  left: 76%;
+  animation-delay: 2.2s;
+  animation-duration: 2.6s;
+}
+
+.liquid-bubble.b5 {
   width: 2.5px;
   height: 2.5px;
-  left: 85%;
-  animation-delay: 2.4s;
-  animation-duration: 2.5s;
+  left: 90%;
+  animation-delay: 0.5s;
+  animation-duration: 3.5s;
 }
 
 .liquid-bottle-btn:hover .liquid-bubble {
-  animation-duration: 1.5s;
+  animation-duration: 1.6s;
 }
 
 /* Glass Bottle Specular Sheens */
 .liquid-glass-specular-top {
   position: absolute;
   top: 1.5px;
-  left: 12%;
-  right: 12%;
-  height: 36%;
+  left: 10%;
+  right: 10%;
+  height: 38%;
   border-radius: 9999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.15) 60%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 65%, transparent 100%);
   pointer-events: none;
   z-index: 20;
 }
@@ -1011,33 +1124,43 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 .liquid-glass-specular-bottom {
   position: absolute;
   bottom: 1px;
-  left: 20%;
-  right: 20%;
+  left: 18%;
+  right: 18%;
   height: 22%;
   border-radius: 9999px;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.35) 0%, transparent 100%);
   pointer-events: none;
   z-index: 20;
 }
 
-/* Wave & Bubble Keyframes */
-@keyframes liquidSpinWave {
+/* Natural Fluid Wave Animations */
+@keyframes waveFlowHorizontal {
   0% {
-    transform: rotate(0deg);
+    transform: translateX(0);
   }
 
   100% {
-    transform: rotate(360deg);
+    transform: translateX(-50%);
   }
 }
 
-@keyframes liquidSpinWaveRev {
+@keyframes waveFlowHorizontalReverse {
   0% {
-    transform: rotate(360deg);
+    transform: translateX(-50%);
   }
 
   100% {
-    transform: rotate(0deg);
+    transform: translateX(0);
+  }
+}
+
+@keyframes waveBobVertical {
+  0% {
+    transform: translateY(0px);
+  }
+
+  100% {
+    transform: translateY(-3px);
   }
 }
 
@@ -1049,17 +1172,17 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   }
 
   20% {
-    opacity: 0.9;
+    opacity: 0.95;
   }
 
   80% {
-    opacity: 0.8;
+    opacity: 0.85;
   }
 
   100% {
     bottom: 28px;
     opacity: 0;
-    transform: translateX(3px) scale(1.1);
+    transform: translateX(4px) scale(1.1);
   }
 }
 

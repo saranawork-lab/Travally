@@ -212,7 +212,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
             
             {activity.description && (
               <p className="text-xs text-slate-500 italic leading-relaxed max-w-[90%] line-clamp-2">
-                "{activity.description}"
+                &ldquo;{activity.description}&rdquo;
               </p>
             )}
           </div>

@@ -328,7 +328,7 @@ export default function ActivityDetailPage() {
         {activity.additionalRequirements && (
           <div className="p-4 rounded-2xl bg-orange-50/60 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-800/50 text-xs space-y-1">
             <span className="font-semibold text-orange-800 dark:text-orange-300 block">
-              Organizer's Requirements:
+              Organizer&apos;s Requirements:
             </span>
             <p className="text-orange-900 dark:text-orange-200 leading-relaxed">
               {activity.additionalRequirements}
@@ -449,7 +449,7 @@ export default function ActivityDetailPage() {
                 }}
                 className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold text-emerald-900 dark:text-emerald-200 bg-gradient-to-r from-emerald-100 via-teal-50 to-emerald-100 dark:from-emerald-950/80 dark:to-teal-950/70 hover:from-emerald-200 hover:to-teal-100 border border-emerald-300/80 dark:border-emerald-800/60 shadow-xs transition hover:scale-105 active:scale-95"
               >
-                I'm Interested in Joining
+                I&apos;m Interested in Joining
               </button>
             )}
           </div>

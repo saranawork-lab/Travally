@@ -43,7 +43,10 @@ export function middleware(request: NextRequest) {
       pathname === "/" ||
       pathname === "/login" ||
       pathname === "/register" ||
-      pathname.startsWith("/safety");
+      pathname === "/discover" ||
+      pathname.startsWith("/safety") ||
+      pathname.startsWith("/categories") ||
+      pathname.startsWith("/destinations");
 
     const response = isPublicPage
       ? NextResponse.next()
@@ -53,12 +56,15 @@ export function middleware(request: NextRequest) {
   }
 
   // If user is NOT authenticated:
-  // Public pages: landing (/), login (/login), register (/register), and safety (/safety)
+  // Public pages: landing (/), login (/login), register (/register), discover (/discover), safety (/safety), categories, destinations
   const isPublicPage =
     pathname === "/" ||
     pathname === "/login" ||
     pathname === "/register" ||
-    pathname.startsWith("/safety");
+    pathname === "/discover" ||
+    pathname.startsWith("/safety") ||
+    pathname.startsWith("/categories") ||
+    pathname.startsWith("/destinations");
 
   if (!isAuthenticated && !isPublicPage) {
     const loginUrl = new URL("/login", request.url);

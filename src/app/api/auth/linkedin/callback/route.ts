@@ -111,13 +111,32 @@ export async function GET(req: NextRequest) {
     const linkedinSub = userInfo.sub || "";
     const generatedLinkedinUrl = `https://www.linkedin.com/in/${linkedinSub}`;
 
-    // 3. Upsert User in Prisma DB with VERIFIED status
+    // 3. Find or Create User in database
     let user = await db.user.findUnique({
       where: { email },
       include: { profile: true },
     });
 
+    let isProfileComplete = false;
+
     if (user) {
+      // Check if mandatory profile details are filled
+      const profile = user.profile;
+      let prefs: any = {};
+      try {
+        prefs = typeof profile?.connectionPreferences === "string"
+          ? JSON.parse(profile.connectionPreferences)
+          : (profile?.connectionPreferences || {});
+      } catch { }
+
+      const hasPhone = Boolean(prefs?.phoneNumber);
+      const hasCity = Boolean(profile?.city && profile.city.trim() !== "");
+      const hasPincode = Boolean(profile?.pincode && profile.pincode.trim() !== "");
+      const hasDob = Boolean(profile?.birthDate);
+      const hasAddress = Boolean(profile?.address || prefs?.address);
+
+      isProfileComplete = Boolean(hasPhone && hasCity && hasPincode && hasDob && hasAddress);
+
       // User exists: Update profile to ensure LinkedIn Verified Member status
       await db.profile.upsert({
         where: { userId: user.id },
@@ -125,7 +144,7 @@ export async function GET(req: NextRequest) {
           isVerified: true,
           verificationStatus: "VERIFIED",
           linkedinUrl: user.profile?.linkedinUrl || generatedLinkedinUrl,
-          avatarUrl: user.profile?.avatarUrl || avatarUrl,
+          ...((!user.profile?.avatarUrl || user.profile.avatarUrl.includes("avatar.vercel.sh")) && { avatarUrl }),
         },
         create: {
           userId: user.id,
@@ -148,6 +167,10 @@ export async function GET(req: NextRequest) {
       });
     } else {
       // Create new user with verified status
+      const totalExistingUsers = await db.user.count();
+      const joinRank = totalExistingUsers + 365;
+      const membershipNumber = `TRV-${String(joinRank).padStart(4, "0")}`;
+
       const randomPasswordHash = await bcrypt.hash(
         `linkedin_${Math.random().toString(36)}_${Date.now()}`,
         10
@@ -165,20 +188,8 @@ export async function GET(req: NextRequest) {
               isVerified: true,
               verificationStatus: "VERIFIED",
               linkedinUrl: generatedLinkedinUrl,
-              city: "Bengaluru",
-              gender: "PREFER_NOT_TO_SAY",
-              bio: `Verified Member via LinkedIn (${displayName})`,
-              interests: JSON.stringify([
-                "Cinema",
-                "Coffee",
-                "City Exploration",
-                "Networking",
-              ]),
-              preferredActivities: JSON.stringify([
-                "Movies",
-                "Food and Cafes",
-                "Walking",
-              ]),
+              interests: JSON.stringify([]),
+              preferredActivities: JSON.stringify([]),
               connectionPreferences: JSON.stringify({
                 friendship: true,
                 activityPartner: true,
@@ -188,13 +199,15 @@ export async function GET(req: NextRequest) {
               discoveryVisible: true,
               membershipStatus: "ACTIVE",
               membershipTier: "FOUNDING_EXPLORER",
-              membershipNumber: `TRV-${Math.floor(100000 + Math.random() * 900000)}`,
+              membershipNumber,
               memberSince: new Date(),
             },
           },
         },
         include: { profile: true },
       });
+
+      isProfileComplete = false; // New user must fill remaining details
     }
 
     // 4. Issue session token and cookie
@@ -204,9 +217,14 @@ export async function GET(req: NextRequest) {
       role: user.role,
     });
 
-    const successRedirect = new URL("/tracking", requestOrigin);
-    successRedirect.searchParams.set("verified", "linkedin");
-    successRedirect.searchParams.set("welcome", encodeURIComponent(displayName));
+    const targetPath = isProfileComplete ? "/tracking" : "/onboarding";
+    const successRedirect = new URL(targetPath, requestOrigin);
+    if (isProfileComplete) {
+      successRedirect.searchParams.set("verified", "linkedin");
+      successRedirect.searchParams.set("welcome", encodeURIComponent(displayName));
+    } else {
+      successRedirect.searchParams.set("linkedin", "true");
+    }
 
     const response = NextResponse.redirect(successRedirect);
 

@@ -28,8 +28,8 @@ export const LinkedInAuthButton: React.FC<LinkedInAuthButtonProps> = ({
       <div className={`relative pt-2.5 ${className}`}>
         {/* Help Tooltip Icon */}
         <div className="absolute top-1 left-2 sm:left-2 z-20 group/tooltip">
-          <div className="w-5 h-5 rounded-full bg-white dark:bg-[#111815] flex items-center justify-center shadow-sm border border-slate-300 dark:border-slate-600 cursor-help">
-            <HelpCircle className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+          <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center shadow-sm border border-slate-200 cursor-help">
+            <HelpCircle className="w-3.5 h-3.5 text-[#0A66C2]" />
           </div>
           {/* Tooltip Popup */}
           <div className="absolute bottom-full left-1/2 -translate-x-1/4 mb-1 opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none w-[140px] z-30">

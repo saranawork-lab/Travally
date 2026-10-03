@@ -195,10 +195,6 @@ export function LandingPageClient() {
       a: "Yes, 100%. Safety is foundational to Travally: all members complete Government ID and mobile phone verification. Our Mutual Consent Gatekeeper means no one can ever direct-message you without your explicit approval. Plus, all first companion meetups are required to take place at verified, busy public venues (like indie film theaters, cultural centers, or cafes), and we feature dedicated women-only expedition filters.",
     },
     {
-      q: "How does the Government ID verification process work?",
-      a: "During onboarding, members submit an official government document (such as Aadhaar, Passport, or Voter ID). Our automated identity service checks authenticity and assigns the verified shield badge. Your private identification numbers and personal documents are never stored publicly or shared with other members.",
-    },
-    {
       q: "Can anyone on the platform message me out of the blue?",
       a: "Strictly no. Travally operates with a Mutual Approval Gatekeeper. Chat rooms unlock only when both the organizer and the applicant approve each other. You will never receive cold DMs, marketing messages, or unsolicited contact.",
     },
@@ -1029,7 +1025,7 @@ export function LandingPageClient() {
           <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-500/60 via-orange-500/60 to-teal-500/60 md:-translate-x-px" />
 
           {/* Step 1 */}
-          <div className="animate-reveal-bottom relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-14 group">
+          <div className="animate-reveal-bottom relative flex flex-row items-start md:items-center gap-4 md:gap-8 mb-14 group">
             {/* Left content (desktop) */}
             <div className="hidden md:flex md:w-[calc(50%-2rem)] justify-end">
               <div className="text-right space-y-2 max-w-xs">
@@ -1067,7 +1063,7 @@ export function LandingPageClient() {
           </div>
 
           {/* Step 2 */}
-          <div className="animate-reveal-bottom animation-delay-200 relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8 mb-14 group">
+          <div className="animate-reveal-bottom animation-delay-200 relative flex flex-row items-start md:items-center gap-4 md:gap-8 mb-14 group">
             {/* Left spacer (desktop) */}
             <div className="hidden md:block md:w-[calc(50%-2rem)]" />
             {/* Node */}
@@ -1092,7 +1088,7 @@ export function LandingPageClient() {
           </div>
 
           {/* Step 3 */}
-          <div className="animate-reveal-bottom animation-delay-400 relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8 group">
+          <div className="animate-reveal-bottom animation-delay-400 relative flex flex-row items-start md:items-center gap-4 md:gap-8 group">
             {/* Left content (desktop) */}
             <div className="hidden md:flex md:w-[calc(50%-2rem)] justify-end">
               <div className="text-right space-y-2 max-w-xs">

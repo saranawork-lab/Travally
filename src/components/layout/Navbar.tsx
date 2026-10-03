@@ -134,6 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               animate={shouldAnimateLogo}
               animateType={isSidebarOpen ? "smooth" : "stay"}
               themeVariant={isTransparent ? "dark" : "auto"}
+              revealAnimation={true}
             />
           </Link>
 
@@ -146,36 +147,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className="flex items-center shrink-0 transition hover:opacity-90"
                   title="Travally"
                 >
-                  <LogoMark
-                    size={28}
+                  <Logo
+                    size={26}
+                    showText
+                    textClassName="text-base sm:text-xl font-black tracking-tight"
                     animate={isAuthOrLandingPage}
                     themeVariant={isTransparent ? "dark" : "auto"}
                   />
                 </Link>
 
-                <div className="relative flex-1 min-w-0 max-w-[140px] xs:max-w-[180px]">
-                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => handleMobileSearch(e.target.value)}
-                    onFocus={() => setIsSearchFocused(true)}
-                    onBlur={() => setIsSearchFocused(false)}
-                    placeholder={isSearchFocused ? "" : "Travally"}
-                    aria-label="Search Travally"
-                    className="w-full pl-7 pr-6 py-1.5 rounded-full bg-slate-100/90 dark:bg-[#16201b] border border-slate-200/90 dark:border-emerald-950/80 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/40"
-                  />
-                  {searchQuery ? (
-                    <button
-                      type="button"
-                      onClick={() => handleMobileSearch("")}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5"
-                      aria-label="Clear search"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  ) : null}
-                </div>
               </>
             ) : (
               <Link href="/" className="flex items-center gap-1 transition hover:opacity-90 shrink-0">
@@ -184,6 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   showText
                   textClassName="text-base sm:text-xl font-black tracking-tight"
                   themeVariant={isTransparent ? "dark" : "auto"}
+                  revealAnimation={true}
                 />
               </Link>
             )}
@@ -210,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center gap-1.5 sm:gap-3">
               {currentUser && pathname === "/" ? (
                 <LiquidWaveButton href="/tracking">
-                  Go to App
+                  Join Free
                 </LiquidWaveButton>
               ) : pathname === "/login" ? (
                 <LiquidWaveButton href="/register" size="sm">
@@ -219,21 +200,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : pathname === "/register" ? (
                 <Link
                   href="/login"
-                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition whitespace-nowrap"
+                  className="group relative px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap overflow-hidden"
                 >
-                  Log In
+                  <span className="relative z-10 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Log In</span>
+                  <div className="absolute inset-0 bg-slate-100 dark:bg-slate-800 scale-0 group-hover:scale-100 rounded-full transition-transform duration-300 origin-center" />
                 </Link>
               ) : (
                 <>
                   <Link
                     href="/login"
-                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                    className={`group relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap overflow-hidden ${
                       isTransparent
-                        ? "text-white/90 hover:text-white hover:bg-white/10"
-                        : "text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-50 dark:hover:bg-[#131c18]"
+                        ? "text-white/90"
+                        : "text-slate-700 dark:text-slate-200"
                     }`}
                   >
-                    Log In
+                    <span className={`relative z-10 transition-colors ${isTransparent ? "group-hover:text-white" : "group-hover:text-emerald-600 dark:group-hover:text-emerald-400"}`}>Log In</span>
+                    <div className={`absolute inset-0 scale-0 group-hover:scale-100 rounded-full transition-transform duration-300 origin-center ${isTransparent ? "bg-white/10" : "bg-slate-50 dark:bg-[#131c18]"}`} />
                   </Link>
                   <LiquidWaveButton href="/register">
                     Join Free

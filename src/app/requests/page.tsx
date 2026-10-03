@@ -260,7 +260,7 @@ export default function RequestsPage() {
                   {/* Introductory Message */}
                   {req.introMessage && (
                     <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#16201b] border border-slate-200/60 dark:border-emerald-950/60 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                      <p className="italic">"{req.introMessage}"</p>
+                      <p className="italic">&ldquo;{req.introMessage}&rdquo;</p>
                     </div>
                   )}
 
@@ -367,10 +367,10 @@ export default function RequestsPage() {
             <div className="text-center py-16 px-4 bg-white dark:bg-[#111815] rounded-3xl border border-slate-200 dark:border-emerald-950/70">
               <Send className="w-10 h-10 text-slate-400 mx-auto mb-3" />
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                You haven't sent any requests
+                You haven&apos;t sent any requests
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Explore activities or travel plans and click "Join Activity" or "Join Expedition".
+                Explore activities or travel plans and click &quot;Join Activity&quot; or &quot;Join Expedition&quot;.
               </p>
               <div className="pt-4">
                 <Link

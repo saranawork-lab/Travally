@@ -21,8 +21,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/categories/food-cafes",
     "/categories/walking",
     "/categories/studying",
-    "/categories/events",
+    "/categories/events-pubs",
+    "/categories/shopping",
     "/categories/city-exploration",
+    "/categories/other",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -31,10 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const destinationRoutes = [
-    "/destinations/tokyo",
-    "/destinations/barcelona",
-    "/destinations/interlaken",
-    "/destinations/san-francisco",
+    "/destinations/goa",
+    "/destinations/manali",
+    "/destinations/kerala",
+    "/destinations/rajasthan",
+    "/destinations/bali",
+    "/destinations/dubai",
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),

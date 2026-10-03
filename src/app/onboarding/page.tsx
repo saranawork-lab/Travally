@@ -98,19 +98,13 @@ function OnboardingForm() {
   const [birthDate, setBirthDate] = useState("1998-06-15");
 
   // Lifestyle & Habits
-  const [smokingHabit, setSmokingHabit] = useState("NON_SMOKER");
-  const [drinkingHabit, setDrinkingHabit] = useState("SOCIAL");
-  const [dietaryPreference, setDietaryPreference] = useState("NON_VEG");
-  const [selectedLifestyleTags, setSelectedLifestyleTags] = useState<string[]>([
-    "📸 Photographer",
-    "🚗 Long Drives",
-  ]);
+  const [smokingHabit, setSmokingHabit] = useState("");
+  const [drinkingHabit, setDrinkingHabit] = useState("");
+  const [dietaryPreference, setDietaryPreference] = useState("");
+  const [selectedLifestyleTags, setSelectedLifestyleTags] = useState<string[]>([]);
 
   const [bio, setBio] = useState("");
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([
-    "☕ Coffee & Cafe Walks",
-    "🚗 Weekend Road Trips",
-  ]);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
   // Live calculated age from birthDate
   const calculatedAge = React.useMemo(() => {
@@ -399,7 +393,7 @@ function OnboardingForm() {
             Welcome, {displayName.split(" ")[0] || "Explorer"}!
           </h1>
           <p className="text-sm text-slate-600 dark:text-gray-400 max-w-lg mx-auto">
-            {isGoogle ? "Signed in with Google! " : ""}Let's personalize your companion matching preferences to get the most out of Travally.
+            {isGoogle ? "Signed in with Google! " : ""}Let&apos;s personalize your companion matching preferences to get the most out of Travally.
           </p>
         </div>
 

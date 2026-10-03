@@ -6,46 +6,86 @@ import { ActivityCard } from "@/components/activities/ActivityCard";
 import { ArrowLeft, Film, Coffee, Footprints, BookOpen, Music, ShoppingBag, MapPin, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 
-const CATEGORY_META: Record<string, { title: string; desc: string; icon: string }> = {
+const CATEGORY_META: Record<string, { title: string; desc: string; icon: string; dbEnum?: string }> = {
   movies: {
     title: "Movies & Cinema Companions",
     desc: "Find someone to watch indie movies, film screenings, and discuss over coffee afterwards.",
     icon: "Film",
+    dbEnum: "MOVIES",
   },
   "food-cafes": {
     title: "Food & Specialty Cafe Companions",
     desc: "Discover pastry lovers, specialty coffee enthusiasts, and food crawl partners in your city.",
     icon: "Coffee",
+    dbEnum: "FOOD_CAFES",
   },
   walking: {
     title: "Walking, Trails & Scenic Strolls",
     desc: "Connect with walking buddies for coastal trails, sunset promenades, and casual park strolls.",
     icon: "Footprints",
+    dbEnum: "WALKING",
   },
   studying: {
     title: "Study Sessions & Co-Working Companions",
     desc: "Find focused study partners for quiet library sessions, writing Pomodoros, and matcha breaks.",
     icon: "BookOpen",
+    dbEnum: "STUDYING",
   },
   events: {
     title: "Live Shows, Gigs & Event Companions",
     desc: "Never go to a live concert, folk gig, or theater showcase alone. Connect with fellow attendees.",
     icon: "Music",
+    dbEnum: "EVENTS",
+  },
+  "events-pubs": {
+    title: "Live Shows, Gigs & Event Companions",
+    desc: "Never go to a live concert, folk gig, or theater showcase alone. Connect with fellow attendees.",
+    icon: "Music",
+    dbEnum: "EVENTS",
+  },
+  shopping: {
+    title: "Shopping & Flea Market Companions",
+    desc: "Find partners for flea markets, vintage thrifting, and weekend shopping walks.",
+    icon: "ShoppingBag",
+    dbEnum: "SHOPPING",
   },
   "city-exploration": {
     title: "City Exploration & Architectural Walks",
     desc: "Explore historic alleyways, secret viewpoints, and architectural landmarks with fellow urban flâneurs.",
     icon: "MapPin",
+    dbEnum: "CITY_EXPLORATION",
+  },
+  other: {
+    title: "Local Activity Companions",
+    desc: "Discover partners for unique everyday activities, hobbies, and local meetups.",
+    icon: "Sparkles",
+    dbEnum: "OTHER",
   },
 };
+
+function getCategoryInfo(slug: string) {
+  const catKey = slug.toLowerCase();
+  if (CATEGORY_META[catKey]) {
+    return CATEGORY_META[catKey];
+  }
+  const formattedTitle = catKey
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+  return {
+    title: `${formattedTitle} Companions`,
+    desc: `Discover local companions and partners for ${formattedTitle.toLowerCase()} in your city.`,
+    icon: "Sparkles",
+    dbEnum: catKey.toUpperCase().replace(/-/g, "_"),
+  };
+}
 
 export async function generateMetadata({
   params,
 }: {
   params: { category: string };
 }): Promise<Metadata> {
-  const cat = CATEGORY_META[params.category.toLowerCase()];
-  if (!cat) return { title: "Activities — Travally" };
+  const cat = getCategoryInfo(params.category);
 
   return {
     title: `${cat.title} — Travally Social Companion Platform`,
@@ -63,13 +103,8 @@ export default async function CategorySEOPage({
   params: { category: string };
 }) {
   const catKey = params.category.toLowerCase();
-  const catInfo = CATEGORY_META[catKey];
-
-  if (!catInfo) {
-    notFound();
-  }
-
-  const dbCategoryEnum = catKey.toUpperCase().replace(/-/g, "_");
+  const catInfo = getCategoryInfo(catKey);
+  const dbCategoryEnum = catInfo.dbEnum || catKey.toUpperCase().replace(/-/g, "_");
 
   const activities = await db.activity.findMany({
     where: {

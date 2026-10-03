@@ -71,7 +71,7 @@ export default function AdminModerationPage() {
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Admin Access Restricted</h2>
         <p className="text-xs text-slate-500 leading-relaxed">{error}</p>
         <p className="text-[11px] text-brand-600 dark:text-brand-400 font-medium">
-          Tip: In demo mode, use the floating Persona Switcher at the bottom-right and select "Admin Moderator".
+          Tip: In demo mode, use the floating Persona Switcher at the bottom-right and select &quot;Admin Moderator&quot;.
         </p>
         <Link href="/" className="inline-flex px-4 py-2 rounded-xl text-xs font-semibold text-white bg-brand-600 hover:bg-brand-500 transition shadow-sm">
           Return to Home
@@ -152,7 +152,7 @@ export default function AdminModerationPage() {
                     <strong>Reported Target ID:</strong> {rep.targetId}
                     {rep.details && (
                       <span className="block mt-1">
-                        <strong>Reporter Notes:</strong> "{rep.details}"
+                        <strong>Reporter Notes:</strong> &ldquo;{rep.details}&rdquo;
                       </span>
                     )}
                   </p>

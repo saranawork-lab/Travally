@@ -16,13 +16,14 @@ export async function GET() {
           select: { createdAt: true }
         });
         if (userDoc?.createdAt) {
-          userNumber = await db.user.count({
+          const rawCount = await db.user.count({
             where: {
               createdAt: {
                 lte: userDoc.createdAt
               }
             }
           });
+          userNumber = 364 + (rawCount || 1);
         }
       } catch (err) {
         console.warn("Could not calculate userNumber:", err);
@@ -49,12 +50,13 @@ export async function GET() {
       take: 50
     });
 
-    const totalCount = await db.user.count();
+    const totalUsersInDb = await db.user.count();
+    const totalCount = totalUsersInDb > 0 ? 364 + totalUsersInDb : 365;
 
     return NextResponse.json({
       success: true,
       totalCount,
-      userNumber,
+      userNumber: userNumber || 365,
       users
     });
   } catch (error) {

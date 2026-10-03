@@ -103,7 +103,7 @@ export const JoinRequestModal: React.FC<JoinRequestModalProps> = ({
             Interested in Joining {type === "ACTIVITY" ? "Activity" : "Trip"}?
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Send a private request to <strong>{organizerName}</strong> for "{title}".
+            Send a private request to <strong>{organizerName}</strong> for &ldquo;{title}&rdquo;.
           </p>
         </div>
 

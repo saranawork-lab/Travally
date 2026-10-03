@@ -99,10 +99,10 @@ export async function GET(req: NextRequest) {
       const profile = user.profile;
       let prefs: any = {};
       try {
-        prefs = typeof profile?.connectionPreferences === "string" 
-          ? JSON.parse(profile.connectionPreferences) 
+        prefs = typeof profile?.connectionPreferences === "string"
+          ? JSON.parse(profile.connectionPreferences)
           : (profile?.connectionPreferences || {});
-      } catch {}
+      } catch { }
 
       const hasPhone = Boolean(prefs?.phoneNumber);
       const hasCity = Boolean(profile?.city && profile.city.trim() !== "");
@@ -122,7 +122,7 @@ export async function GET(req: NextRequest) {
     } else {
       // Calculate membership number
       const totalExistingUsers = await db.user.count();
-      const joinRank = totalExistingUsers + 1;
+      const joinRank = totalExistingUsers + 365;
       const membershipNumber = `TRV-${String(joinRank).padStart(4, "0")}`;
       const randomPassword = await bcrypt.hash(Math.random().toString(36), 10);
 
@@ -140,8 +140,8 @@ export async function GET(req: NextRequest) {
               membershipStatus: "ACTIVE",
               membershipTier: "FOUNDING_EXPLORER",
               membershipNumber,
-              interests: JSON.stringify(["Cinema", "Coffee", "City Exploration"]),
-              preferredActivities: JSON.stringify(["Food and Cafes", "Walking"]),
+              interests: JSON.stringify([]),
+              preferredActivities: JSON.stringify([]),
               connectionPreferences: JSON.stringify({
                 friendship: true,
                 activityPartner: true,

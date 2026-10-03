@@ -39,10 +39,19 @@ export const ConnectSection: React.FC = () => {
     e.preventDefault();
     setStatus(null);
 
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+    const cleanPhone = formData.phone.replace(/[^0-9]/g, "");
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim() || !cleanPhone) {
       setStatus({
         type: "error",
-        message: "Please fill in your name, email, and message.",
+        message: "Please fill in all mandatory fields including your 10-digit phone number.",
+      });
+      return;
+    }
+
+    if (cleanPhone.length !== 10) {
+      setStatus({
+        type: "error",
+        message: "Please enter a valid 10-digit phone number.",
       });
       return;
     }
@@ -244,17 +253,22 @@ export const ConnectSection: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-                    Phone (Optional)
+                    Phone Number <span className="text-rose-500">*</span>
                   </label>
                   <div className="relative">
                     <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                     <input
                       type="tel"
+                      required
+                      maxLength={10}
                       value={formData.phone}
                       onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
+                        setFormData({
+                          ...formData,
+                          phone: e.target.value.replace(/[^0-9]/g, "").slice(0, 10),
+                        })
                       }
-                      placeholder="Optional phone number"
+                      placeholder="10-digit mobile number"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-800/60 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
                     />
                   </div>

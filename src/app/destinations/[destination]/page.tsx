@@ -8,6 +8,42 @@ import { calculateTravelCompatibility } from "@/lib/scoring";
 import type { Metadata } from "next";
 
 const DESTINATION_META: Record<string, { name: string; country: string; desc: string; highlights: string[] }> = {
+  goa: {
+    name: "Goa",
+    country: "India",
+    desc: "Find verified travel companions for beach sunsets, coastal shacks, heritage Latin quarters, and road trips across Goa.",
+    highlights: ["Fontainhas Latin Quarter", "Arambol sunset drum circle", "Palolem kayaking", "South Goa heritage villas"],
+  },
+  manali: {
+    name: "Manali & Spiti Valley",
+    country: "India",
+    desc: "Connect with alpine trek lovers, mountain cafe enthusiasts, and Himalayan road trip companions.",
+    highlights: ["Old Manali cafe crawl", "Solang Valley hikes", "Atal Tunnel expedition", "Sethan stargazing"],
+  },
+  kerala: {
+    name: "Kerala Backwaters & Munnar",
+    country: "India",
+    desc: "Discover companion travelers for tranquil houseboat cruises, tea estate strolls, and coastal sunsets.",
+    highlights: ["Alleppey backwaters", "Munnar tea gardens", "Varkala cliff walks", "Kochi heritage art cafes"],
+  },
+  rajasthan: {
+    name: "Rajasthan Heritage Cities",
+    country: "India",
+    desc: "Explore historic forts, desert glamping, palace architecture, and vibrant bazaars with fellow travelers.",
+    highlights: ["Jaipur Hawa Mahal walks", "Udaipur lake sunsets", "Jaisalmer desert safari", "Blue City Jodhpur alleys"],
+  },
+  bali: {
+    name: "Bali & Nusa Islands",
+    country: "Indonesia",
+    desc: "Find travel buddies for tropical waterfalls, surf sessions, Ubud rice terraces, and sunset beach clubs.",
+    highlights: ["Ubud rice terrace walks", "Canggu sunset cafes", "Nusa Penida coastal hikes", "Uluwatu cliff views"],
+  },
+  dubai: {
+    name: "Dubai & Abu Dhabi",
+    country: "United Arab Emirates",
+    desc: "Connect with fellow travelers for architectural wonders, desert safaris, old souk walks, and marina cruises.",
+    highlights: ["Old Dubai creek & souks", "Desert dunes expedition", "Marina promenade walks", "Louvre Abu Dhabi art"],
+  },
   tokyo: {
     name: "Tokyo & Kyoto",
     country: "Japan",
@@ -34,13 +70,29 @@ const DESTINATION_META: Record<string, { name: string; country: string; desc: st
   },
 };
 
+function getDestinationInfo(slug: string) {
+  const destKey = slug.toLowerCase();
+  if (DESTINATION_META[destKey]) {
+    return DESTINATION_META[destKey];
+  }
+  const formattedName = destKey
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+  return {
+    name: formattedName,
+    country: "Popular Destination",
+    desc: `Find verified travel companions and partner explorers for upcoming expeditions to ${formattedName}.`,
+    highlights: ["City exploration", "Scenic viewpoints", "Local food trails", "Cultural landmarks"],
+  };
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: { destination: string };
 }): Promise<Metadata> {
-  const dest = DESTINATION_META[params.destination.toLowerCase()];
-  if (!dest) return { title: "Travel Expeditions — Travally" };
+  const dest = getDestinationInfo(params.destination);
 
   return {
     title: `Travel Companions for ${dest.name}, ${dest.country} — Travally`,
@@ -58,11 +110,7 @@ export default async function DestinationSEOPage({
   params: { destination: string };
 }) {
   const destKey = params.destination.toLowerCase();
-  const destInfo = DESTINATION_META[destKey];
-
-  if (!destInfo) {
-    notFound();
-  }
+  const destInfo = getDestinationInfo(destKey);
 
   const rawTrips = await db.travelPlan.findMany({
     where: {

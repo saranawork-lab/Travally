@@ -4,9 +4,10 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, phone, subject, message, publicKey: clientKey } = await req.json();
 
-    if (!name || !email || !message) {
+    const cleanPhone = phone ? String(phone).replace(/[^0-9]/g, "") : "";
+    if (!name || !email || !message || !cleanPhone || cleanPhone.length !== 10) {
       return NextResponse.json(
-        { error: "Name, email, and message are required." },
+        { error: "Name, email, message, and a valid 10-digit phone number are required." },
         { status: 400 }
       );
     }

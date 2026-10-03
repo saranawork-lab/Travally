@@ -13,21 +13,38 @@ import DesktopSidebar from "@/components/layout/DesktopSidebar";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Travally — Social Travel Companion & Activity Discovery",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://travally.in"),
+  title: {
+    default: "Travally — Social Travel Companion & Activity Discovery",
+    template: "%s | Travally",
+  },
   description:
-    "Connect with verified travel companions based on shared everyday activities, cafes, movies, local exploration, and upcoming travel expeditions. Mutual approval, transparent compatibility, and private chat.",
+    "Travally is the ultimate social travel companion app. Find verified travel buddies, plan trips, discover local activities, and connect with travelers worldwide. Find your perfect travel partner for backpacking, road trips, and city exploration.",
   keywords: [
-    "travally",
-    "travel companion",
-    "social companion",
-    "travel partner",
-    "activity buddy",
     "travel companion app",
-    "movie companion",
-    "explore companion",
+    "find travel buddy",
+    "travel partner",
+    "solo travel companions",
+    "backpacking companion",
+    "travel networking",
+    "find someone to travel with",
+    "social travel app",
+    "travally",
+    "local activity partner",
+    "trip planning community",
+    "travel meetups"
   ],
   authors: [{ name: "Travally Platform" }],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://travally.in"),
+  creator: "Travally",
+  publisher: "Travally",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Travally — Social Travel Companion & Discovery",
     description:
@@ -36,12 +53,33 @@ export const metadata: Metadata = {
     siteName: "Travally",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Travally - Find your travel companion",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Travally — Social Travel Companion Platform",
     description:
       "Find companions for everyday activities and travel adventures with mutual approval and safe coordination.",
+    images: ["/og-image.jpg"],
+    creator: "@travally",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   icons: {
     icon: [
@@ -51,6 +89,13 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
+};
+
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
+    { media: '(prefers-color-scheme: dark)', color: '#090d0b' },
+  ],
 };
 
 export default async function RootLayout({

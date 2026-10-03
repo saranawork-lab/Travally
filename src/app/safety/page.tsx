@@ -110,7 +110,7 @@ export default function SafetyCenterPage() {
             <strong>Maintain Financial Independence:</strong> Travally does not handle hotel or flight payments. Always book your own accommodations and transit directly with certified providers so your itinerary remains in your control.
           </p>
           <p>
-            <strong>Emergency Information & Insurance:</strong> Ensure you have comprehensive travel insurance and have saved contact details for local emergency services and your country's embassy.
+            <strong>Emergency Information & Insurance:</strong> Ensure you have comprehensive travel insurance and have saved contact details for local emergency services and your country&apos;s embassy.
           </p>
         </div>
       </section>

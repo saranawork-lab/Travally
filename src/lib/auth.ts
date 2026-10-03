@@ -78,13 +78,14 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       };
     }
 
-    let joinRank = 1;
+    let joinRank = 365;
     try {
-      joinRank = await db.user.count({
+      const rawCount = await db.user.count({
         where: { createdAt: { lte: user.createdAt } },
       });
+      joinRank = 364 + (rawCount || 1);
     } catch {
-      joinRank = 1;
+      joinRank = 365;
     }
 
     return {
@@ -100,6 +101,13 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
       membershipNumber: user.profile?.membershipNumber || `TRV-${String(joinRank).padStart(4, "0")}`,
     };
   } catch (error: any) {
+    if (
+      error?.digest === "DYNAMIC_SERVER_USAGE" ||
+      error?.name === "DynamicServerError" ||
+      error?.message?.includes("DYNAMIC_SERVER_USAGE")
+    ) {
+      throw error;
+    }
     if (error?.message?.includes("Malformed ObjectID")) {
       return null;
     }

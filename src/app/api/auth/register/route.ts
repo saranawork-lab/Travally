@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const totalExistingUsers = await db.user.count();
-    const joinRank = totalExistingUsers + 1;
+    const joinRank = totalExistingUsers + 365;
     const membershipNumber = `TRV-${String(joinRank).padStart(4, "0")}`;
 
     // Prepare connectionPreferences with saved phone number
