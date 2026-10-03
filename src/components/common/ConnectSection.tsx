@@ -151,7 +151,7 @@ export const ConnectSection: React.FC = () => {
                   <span className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 font-bold">
                     <Mail className="w-4 h-4" />
                   </span>
-                  Direct Channel • Send Us a Message
+                  Send Us a Message
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   We love hearing from travelers, activity organizers, and partners. Messages arrive directly in our inbox.
