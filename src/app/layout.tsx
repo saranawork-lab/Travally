@@ -89,6 +89,9 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
+  verification: {
+    google: "SDQ6ovdr9z7snwc1vv94LM1ywfHZFr_x5iVIMKMPjpY",
+  },
 };
 
 export const viewport = {
